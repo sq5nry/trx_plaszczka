@@ -7,4 +7,4 @@
 # const_0 = actually could be used  (8 / 10 /12) bit chips
 #
 # def recommended = 32 (0x...2) 0010 0000
-i2cset -y 1 0x0e 0x02 0x4031 w
+i2cset -y 2 0x0e 0x02 0x4031 w
