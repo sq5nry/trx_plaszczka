@@ -10,3 +10,5 @@ i2cset -y 2 0x19 0x03
 #phone amp only
 i2cset -y 2 0x25 0x08
 
+#speakers only
+i2cset -y 2 0x25 0x10
