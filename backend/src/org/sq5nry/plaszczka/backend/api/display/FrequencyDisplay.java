@@ -18,4 +18,10 @@ public interface FrequencyDisplay {
      * @throws IOException
      */
     void setMarker(int position) throws IOException;
+
+    /**
+     * Do not display leading zeroes. Implementation should usually enable it by default.
+     * @param blankLeadingZeroes
+     */
+    void setBlankLeadingZeroes(boolean blankLeadingZeroes);
 }

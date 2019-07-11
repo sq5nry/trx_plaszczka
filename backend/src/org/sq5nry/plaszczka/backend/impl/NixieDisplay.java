@@ -12,6 +12,7 @@ import java.io.IOException;
  * Optional dot marker above a digit; single dot at a time.
  */
 public class NixieDisplay implements FrequencyDisplay {
+    /* chipset */
     private Mcp23017 expanderA;
     private Mcp23017 expanderB;
     private final int EXPANDER_A_I2CADDR = 0x21;
@@ -22,6 +23,9 @@ public class NixieDisplay implements FrequencyDisplay {
 
     private int frequency;
     private byte markerPosition;
+    private boolean blankLeadingZeroes = true;
+
+    private byte[] _digits = new byte[6];
 
     public NixieDisplay(I2CBus bus) throws IOException {
         expanderA = create(bus, EXPANDER_A_I2CADDR);
@@ -48,6 +52,11 @@ public class NixieDisplay implements FrequencyDisplay {
         update(MARKER_ONLY);
     }
 
+    @Override
+    public void setBlankLeadingZeroes(boolean blankLeadingZeroes) {
+        this.blankLeadingZeroes = blankLeadingZeroes;
+    }
+
     /**
      * Get last set frequency. Actual displayed value is not verified.
      * @return frequency in Hz
@@ -69,16 +78,24 @@ public class NixieDisplay implements FrequencyDisplay {
         byte d1 = (byte) ((frequency / 10) % 10);
 
         if (!markerOnly) {
-            byte d7 = (byte) ((frequency / 10000000) % 10);
-            byte d6 = (byte) ((frequency / 1000000) % 10);
-            byte d5 = (byte) ((frequency / 100000) % 10);
-            byte d4 = (byte) ((frequency / 10000) % 10);
-            byte d3 = (byte) ((frequency / 1000) % 10);
-            byte d2 = (byte) ((frequency / 100) % 10);
+            _digits[5] = (byte) ((frequency / 10000000) % 10);
+            _digits[4] = (byte) ((frequency / 1000000) % 10);
+            _digits[3] = (byte) ((frequency / 100000) % 10);
+            _digits[2] = (byte) ((frequency / 10000) % 10);
+            _digits[1] = (byte) ((frequency / 1000) % 10);
+            _digits[0] = (byte) ((frequency / 100) % 10);
 
-            byte p1 = (byte) ((d7 << 4) | d6);
-            byte p2 = (byte) ((d5 << 4) | d4);
-            byte p3 = (byte) ((d3 << 4) | d2);
+            if (blankLeadingZeroes) {
+                for (int ct = 5; ct >= 0; ct--) {
+                    if (_digits[ct] == 0x0) {
+                        _digits[ct] = 0xA;
+                    } else break;
+                }
+            }
+
+            byte p1 = (byte) (((_digits[5] & 0xf) << 4) | (_digits[4] & 0xf));
+            byte p2 = (byte) (((_digits[3] & 0xf) << 4) | (_digits[2] & 0xf));
+            byte p3 = (byte) (((_digits[1] & 0xf) << 4) | (_digits[0] & 0xf));
 
             expanderA.writePort(Mcp23017.Port.GPIO_A, p1);
             expanderA.writePort(Mcp23017.Port.GPIO_B, p2);
