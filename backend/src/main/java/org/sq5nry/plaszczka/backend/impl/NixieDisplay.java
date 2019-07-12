@@ -1,7 +1,13 @@
 package org.sq5nry.plaszczka.backend.impl;
 
 import com.pi4j.io.i2c.I2CBus;
+import com.pi4j.io.i2c.I2CFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.display.FrequencyDisplay;
+import org.sq5nry.plaszczka.backend.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.i2c.chips.Mcp23017;
 
 import java.io.IOException;
@@ -11,7 +17,10 @@ import java.io.IOException;
  * Capacity up to 99999999Hz, single Hz digit not displayed.
  * Optional dot marker above a digit; single dot at a time.
  */
+@Component
 public class NixieDisplay implements FrequencyDisplay {
+    private static final Logger logger = LoggerFactory.getLogger(NixieDisplay.class);
+
     /* chipset */
     private Mcp23017 expanderA;
     private Mcp23017 expanderB;
@@ -27,33 +36,46 @@ public class NixieDisplay implements FrequencyDisplay {
 
     private byte[] _digits = new byte[6];
 
-    public NixieDisplay(I2CBus bus) throws IOException {
+    private I2CBus bus;
+
+    @Autowired
+    public void NixieDisplay(I2CBusProvider i2cBusProv) throws IOException, I2CFactory.UnsupportedBusNumberException {
+        bus = i2cBusProv.getBus();
+        logger.debug("creating expanders");
         expanderA = create(bus, EXPANDER_A_I2CADDR);
         expanderB = create(bus, EXPANDER_B_I2CADDR);
+        logger.debug("expanders created & initialized");
     }
 
     private static Mcp23017 create(I2CBus bus, int address) throws IOException {
+        logger.debug("creating expander @{}", address);
         Mcp23017 expander = new Mcp23017(bus, address);
+        logger.debug("initializing expander @{}", address);
         expander.initialize();
+        logger.debug("expander @{} initialized", address);
         expander.getDevice().write(Mcp23017.IODIR_A, Mcp23017.IODIR_ALL_OUTPUTS);
         expander.getDevice().write(Mcp23017.IODIR_B, Mcp23017.IODIR_ALL_OUTPUTS);
+        logger.debug("expander @{} configured", address);
         return expander;
     }
 
     @Override
     public void setFrequency(int frequency) throws IOException {
+        logger.debug("setting frequency to {}Hz", frequency);
         this.frequency = frequency;
         update(ALL);
     }
 
     @Override
     public void setMarker(int markerPosition) throws IOException {
+        logger.debug("setting marker at position {}", markerPosition);
         this.markerPosition = (byte) (markerPosition & 0x0F);
         update(MARKER_ONLY);
     }
 
     @Override
     public void setBlankLeadingZeroes(boolean blankLeadingZeroes) {
+        logger.debug("setting blank leading zeroes mode to {}", blankLeadingZeroes);
         this.blankLeadingZeroes = blankLeadingZeroes;
     }
 
@@ -75,6 +97,7 @@ public class NixieDisplay implements FrequencyDisplay {
     }
 
     private void update(boolean markerOnly) throws IOException {
+        logger.debug("updating display");
         byte d1 = (byte) ((frequency / 10) % 10);
 
         if (!markerOnly) {
