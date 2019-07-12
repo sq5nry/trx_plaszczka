@@ -39,7 +39,7 @@ public class NixieDisplay implements FrequencyDisplay {
     private byte[] _digits = new byte[6];
 
     @Autowired
-    public void NixieDisplay(I2CBusProvider i2cBusProv) throws IOException, I2CFactory.UnsupportedBusNumberException {
+    public NixieDisplay(I2CBusProvider i2cBusProv) throws IOException, I2CFactory.UnsupportedBusNumberException {
         bus = i2cBusProv.getBus();
         logger.debug("creating expanders");
         expanderA = create(bus, EXPANDER_A_I2CADDR);
