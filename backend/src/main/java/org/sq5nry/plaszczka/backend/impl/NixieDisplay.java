@@ -21,6 +21,8 @@ import java.io.IOException;
 public class NixieDisplay implements FrequencyDisplay {
     private static final Logger logger = LoggerFactory.getLogger(NixieDisplay.class);
 
+    private I2CBus bus;
+
     /* chipset */
     private Mcp23017 expanderA;
     private Mcp23017 expanderB;
@@ -35,8 +37,6 @@ public class NixieDisplay implements FrequencyDisplay {
     private boolean blankLeadingZeroes = true;
 
     private byte[] _digits = new byte[6];
-
-    private I2CBus bus;
 
     @Autowired
     public void NixieDisplay(I2CBusProvider i2cBusProv) throws IOException, I2CFactory.UnsupportedBusNumberException {

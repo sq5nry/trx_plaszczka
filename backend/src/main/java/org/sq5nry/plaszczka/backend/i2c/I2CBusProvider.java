@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+/**
+ * Wrapper for I2CBus as Spring thing. Could this be done springlier?
+ */
 public class I2CBusProvider {
     private static final Logger logger = LoggerFactory.getLogger(I2CBusProvider.class);
 

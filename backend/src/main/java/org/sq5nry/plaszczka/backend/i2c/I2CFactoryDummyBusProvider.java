@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Dummy I2C factory for local testing. Returns garbage & logs writes.
+ */
 public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
     private static final Logger logger = LoggerFactory.getLogger(I2CFactoryDummyBusProvider.class);
     private static final Random rand = new Random();
