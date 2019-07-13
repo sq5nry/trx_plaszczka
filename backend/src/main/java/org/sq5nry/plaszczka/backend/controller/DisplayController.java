@@ -18,10 +18,29 @@ public class DisplayController {
     @Autowired
     NixieDisplay freqDisplayService;
 
-    @RequestMapping(value = "/frequencyDisplay/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/frequencyDisplay/freq/{id}", method = RequestMethod.GET)
     public String setFrequency(@PathVariable Integer id) throws IOException {
-        logger.debug("getFrequency requested, freq={}", id);
+        logger.debug("display frequency requested, value={}", id);
         freqDisplayService.setFrequency(id);
-        return "f=" + freqDisplayService.getFrequency();
+        return "result=" + freqDisplayService.getFrequency() + "Hz";
+    }
+
+    @RequestMapping(value = "/frequencyDisplay/marker/{id}", method = RequestMethod.GET)
+    public String setMarker(@PathVariable Integer id) throws IOException {
+        logger.debug("display marker requested, tube={}", id);
+        freqDisplayService.setMarker(id);
+        return "result=Tube[" + freqDisplayService.getMarker() + ']';
+    }
+
+    @RequestMapping(value = "/frequencyDisplay/blanking/{id}", method = RequestMethod.GET)
+    public String setBlankLeadingZeroes(@PathVariable Boolean id) throws IOException {
+        logger.debug("blanking of leading zeroes requested, flag={}", id);
+        freqDisplayService.setBlankLeadingZeroes(id);
+
+        int frequency = freqDisplayService.getFrequency();
+        logger.debug("refresh display, freq={} Hz", frequency);
+        freqDisplayService.setFrequency(frequency);
+
+        return "result=BL[" + freqDisplayService.isBlankLeadingZeroes() + "], freq={}" + frequency + "Hz";
     }
 }

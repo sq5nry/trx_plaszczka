@@ -48,14 +48,14 @@ public class NixieDisplay implements FrequencyDisplay {
     }
 
     private static Mcp23017 create(I2CBus bus, int address) throws IOException {
-        logger.debug("creating expander @{}", address);
+        logger.debug("creating expander @x{}", Integer.toHexString(address));
         Mcp23017 expander = new Mcp23017(bus, address);
-        logger.debug("initializing expander @{}", address);
+        logger.debug("initializing expander @x{}", Integer.toHexString(address));
         expander.initialize();
-        logger.debug("expander @{} initialized", address);
+        logger.debug("expander @x{} initialized", Integer.toHexString(address));
         expander.getDevice().write(Mcp23017.IODIR_A, Mcp23017.IODIR_ALL_OUTPUTS);
         expander.getDevice().write(Mcp23017.IODIR_B, Mcp23017.IODIR_ALL_OUTPUTS);
-        logger.debug("expander @{} configured", address);
+        logger.debug("expander @x{} configured", Integer.toHexString(address));
         return expander;
     }
 
@@ -77,6 +77,10 @@ public class NixieDisplay implements FrequencyDisplay {
     public void setBlankLeadingZeroes(boolean blankLeadingZeroes) {
         logger.debug("setting blank leading zeroes mode to {}", blankLeadingZeroes);
         this.blankLeadingZeroes = blankLeadingZeroes;
+    }
+
+    public boolean isBlankLeadingZeroes() {
+        return blankLeadingZeroes;
     }
 
     /**

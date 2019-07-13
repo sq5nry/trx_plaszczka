@@ -16,7 +16,7 @@ public class NixieDisplayTest {
     @Test
     public void testMaxNumber() throws Exception {
         I2CBusProvider prov = new I2CBusProvider();
-        NixieDisplay disp = new NixieDisplay(prov);
-        disp.setFrequency(1234567);
+        NixieDisplay disp =  new NixieDisplay(prov);
+        disp.setFrequency(9999999);
     }
 }

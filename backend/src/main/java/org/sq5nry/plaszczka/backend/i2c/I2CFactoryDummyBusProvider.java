@@ -36,7 +36,7 @@ public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
 
                     @Override
                     public void write(byte b) throws IOException {
-                        logger.debug("write byte {}", b);
+                        logger.debug("write byte x{}", String.format("%02X", b));
                     }
 
                     @Override
@@ -51,17 +51,17 @@ public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
 
                     @Override
                     public void write(int address, byte b) throws IOException {
-                        logger.debug("write byte at address {} {}", b, address);
+                        logger.debug("write byte @x{} x{}", Integer.toHexString(address), String.format("%02X", b));
                     }
 
                     @Override
                     public void write(int address, byte[] buffer, int offset, int size) throws IOException {
-                        logger.debug("write part of buffer at address {} {}", new String(buffer), address);
+                        logger.debug("write part of buffer @x{} x{}", Integer.toHexString(address), new String(buffer));
                     }
 
                     @Override
                     public void write(int address, byte[] buffer) throws IOException {
-                        logger.debug("write buffer at address {} {}", new String(buffer), address);
+                        logger.debug("write buffer @x{} x{}", Integer.toHexString(address), new String(buffer));
                     }
 
                     @Override

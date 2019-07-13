@@ -6,18 +6,18 @@ import com.pi4j.io.i2c.I2CDevice;
 import java.io.IOException;
 
 public abstract class GenericChip {
-    private I2CBus bus;
+    private I2CBus i2CBus;
     private I2CDevice device;
     private int address;
     private I2CDeviceState state = I2CDeviceState.CREATED;
 
-    public GenericChip(I2CBus bus, int address) {
-        this.bus = bus;
+    public GenericChip(I2CBus i2CBus, int address) {
+        this.i2CBus = i2CBus;
         this.address = address;
     }
 
     public void initialize() throws IOException {
-        device = bus.getDevice(address);
+        device = i2CBus.getDevice(address);
         state = I2CDeviceState.INITIALIZED;
     }
 
