@@ -1,4 +1,4 @@
-package org.sq5nry.plaszczka.backend.i2c;
+package org.sq5nry.plaszczka.backend.hw.i2c;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
@@ -24,7 +24,7 @@ public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
     }
 
     public I2CBus getBus(final int busNumber, final long lockAquireTimeout, final TimeUnit lockAquireTimeoutUnit) throws I2CFactory.UnsupportedBusNumberException, IOException {
-        logger.debug("returning dummy i2c bus implementation");
+        logger.debug("returning dummy i2c hw implementation");
         return new I2CBus() {
             @Override
             public I2CDevice getDevice(int address) throws IOException {

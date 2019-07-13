@@ -1,4 +1,4 @@
-package org.sq5nry.plaszczka.backend.i2c;
+package org.sq5nry.plaszczka.backend.hw.i2c;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
@@ -9,6 +9,7 @@ public abstract class GenericChip {
     private I2CBus i2CBus;
     private I2CDevice device;
     private int address;
+
     private I2CDeviceState state = I2CDeviceState.CREATED;
 
     public GenericChip(I2CBus i2CBus, int address) {
@@ -27,5 +28,9 @@ public abstract class GenericChip {
 
     public int getAddress() {
         return address;
+    }
+
+    public I2CDeviceState getState() {
+        return state;
     }
 }

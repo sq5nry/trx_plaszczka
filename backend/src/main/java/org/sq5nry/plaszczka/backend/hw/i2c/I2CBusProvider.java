@@ -1,4 +1,4 @@
-package org.sq5nry.plaszczka.backend.i2c;
+package org.sq5nry.plaszczka.backend.hw.i2c;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory;
@@ -20,7 +20,7 @@ public class I2CBusProvider {
     private int busNr;
 
     public I2CBus getBus() throws IOException, I2CFactory.UnsupportedBusNumberException {
-        logger.debug("i2c bus {}", busNr);
+        logger.debug("i2c hw {}", busNr);
         return I2CFactory.getInstance(busNr);
     }
 }

@@ -1,8 +1,8 @@
-package org.sq5nry.plaszczka.backend.i2c.chips;
+package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
 import com.pi4j.io.i2c.I2CBus;
 import org.apache.commons.lang3.BitField;
-import org.sq5nry.plaszczka.backend.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
 import java.io.IOException;
 

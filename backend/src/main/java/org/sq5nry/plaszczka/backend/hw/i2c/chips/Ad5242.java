@@ -1,9 +1,9 @@
-package org.sq5nry.plaszczka.backend.i2c.chips;
+package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
 import com.pi4j.io.i2c.I2CBus;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.sq5nry.plaszczka.backend.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
 @Component
 @Scope("prototype")

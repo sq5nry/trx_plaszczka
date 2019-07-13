@@ -9,12 +9,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 @Configuration
-@PropertySource("classpath:i2c.properties")
+@PropertySources({
+        @PropertySource("classpath:i2c.properties"),
+        @PropertySource("classpath:spi.properties")
+})
 public class Launcher {
     private static final Logger logger = LoggerFactory.getLogger(Launcher.class);
 
@@ -32,5 +36,7 @@ public class Launcher {
         Class clazz = Class.forName(i2cProviderClass);
         I2CProviderImpl provider = (I2CProviderImpl) clazz.newInstance();
         I2CFactory.setFactory(provider);
+
+        //TODO spi?
     }
 }
