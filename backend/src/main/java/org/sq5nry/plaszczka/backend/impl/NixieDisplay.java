@@ -1,7 +1,6 @@
 package org.sq5nry.plaszczka.backend.impl;
 
 import com.pi4j.io.i2c.I2CBus;
-import com.pi4j.io.i2c.I2CFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +38,17 @@ public class NixieDisplay implements FrequencyDisplay {
     private byte[] _digits = new byte[6];
 
     @Autowired
-    public NixieDisplay(I2CBusProvider i2cBusProv) throws IOException, I2CFactory.UnsupportedBusNumberException {
-        bus = i2cBusProv.getBus();
+    public NixieDisplay(I2CBusProvider i2cBusProv) throws Exception {
         logger.debug("creating expanders");
+        bus = i2cBusProv.getBus();
+        initialize();
+        logger.debug("expanders created & initialized");
+    }
+
+    @Override
+    public void initialize() throws Exception {
         expanderA = create(bus, EXPANDER_A_I2CADDR);
         expanderB = create(bus, EXPANDER_B_I2CADDR);
-        logger.debug("expanders created & initialized");
     }
 
     private static Mcp23017 create(I2CBus bus, int address) throws IOException {

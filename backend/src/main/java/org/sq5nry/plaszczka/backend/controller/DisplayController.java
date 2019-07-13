@@ -43,4 +43,11 @@ public class DisplayController {
 
         return "result=BL[" + freqDisplayService.isBlankLeadingZeroes() + "], freq={}" + frequency + "Hz";
     }
+
+    @RequestMapping(value = "/frequencyDisplay/initialize", method = RequestMethod.GET)
+    public String initialize() throws Exception {
+        logger.debug("initializing module");
+        freqDisplayService.initialize();
+        return "result=module reinitialized successfully";
+    }
 }
