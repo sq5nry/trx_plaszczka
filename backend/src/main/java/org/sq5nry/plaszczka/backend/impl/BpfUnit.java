@@ -1,10 +1,11 @@
 package org.sq5nry.plaszczka.backend.impl;
 
 import com.pi4j.io.i2c.I2CBus;
-import org.apache.commons.lang3.BitField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.inputfilter.Band;
 import org.sq5nry.plaszczka.backend.api.inputfilter.BandPassFilter;
@@ -17,20 +18,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@PropertySource("classpath:trx_config.properties")
 public class BpfUnit implements BandPassFilter {
     private static final Logger logger = LoggerFactory.getLogger(BpfUnit.class);
 
-    private I2CBus bus;
-
     private Map<Integer, GenericChip> chipset = new HashMap<>();
 
-    private final int EXPANDER_I2CADDR = 0x27;//TODO config
+    private static final int EXPANDER_ADDR = 0x27;//TODO config
 
-    private Band band = Band.M20;   //TODO config
-    private byte attenuation = 0;    //TODO config
+    @Value("${default.band}")
+    private String DEFAULT_BAND = "20m"; //TODO from config doesnt work
+
+    private Band band;
+    private byte attenuation = 0;
     private byte[] buffer = new byte[2];
-
-    private BitField ATT = new BitField(0xF000);
 
     private enum FeatureBits {
         M6(Band.M6, (byte)0x00, (byte)0x02), M10(Band.M10, (byte)0x00, (byte)0x01), M12(Band.M12, (byte)0x80, (byte)0x00),
@@ -39,7 +40,8 @@ public class BpfUnit implements BandPassFilter {
         M160(Band.M160, (byte)0x01, (byte)0x00), M4(Band.M4, (byte)0x00, (byte)0x08), M60(Band.M60, (byte)0x00, (byte)0x04);
 
         Band relatedBand;
-        byte p0, p1;
+        byte p0;
+        byte p1;
 
         FeatureBits(Band relatedBand, byte p0, byte p1) {
             this.relatedBand = relatedBand;
@@ -67,9 +69,9 @@ public class BpfUnit implements BandPassFilter {
 
     @Autowired
     public BpfUnit(I2CBusProvider i2cBusProv) throws Exception {
+        band = Band.fromMeters(DEFAULT_BAND);
         logger.debug("creating expanders");
-        bus = i2cBusProv.getBus();
-        chipset.put(EXPANDER_I2CADDR, create(bus, EXPANDER_I2CADDR));
+        chipset.put(EXPANDER_ADDR, create(i2cBusProv.getBus(), EXPANDER_ADDR));
         logger.debug("expander created & initialized");
     }
 
@@ -91,26 +93,26 @@ public class BpfUnit implements BandPassFilter {
 
     @Override
     public void setAttenuation(int db) throws IOException {
-        if (db < 0 || db > 32) {
-            throw new IllegalArgumentException("Attenuation out of range 0..32dB");
+        if (db < 0 || db > 30) {
+            throw new IllegalArgumentException("Attenuation out of range 0..30dB");
         }
         logger.debug("setting attenuation to {}dB", db);
-        this.attenuation = (byte) (db & 0x0F);
+        this.attenuation = (byte) (db >> 1);
         update();
     }
 
     private void update() throws IOException {
         FeatureBits bits = FeatureBits.getByBand(band);
         buffer[0] = bits.getP0();
-        buffer[1] = (byte) (bits.getP1() | ATT.setByte(attenuation));
-        ((Pcf8575) chipset.get(EXPANDER_I2CADDR)).writePort(buffer);
+        buffer[1] = (byte) (bits.getP1() | (attenuation << 4));
+        ((Pcf8575) chipset.get(EXPANDER_ADDR)).writePort(buffer);
     }
 
     public Band getBand() {
         return band;
     }
 
-    public byte getAttenuation() {
-        return attenuation;
+    public int getAttenuation() {
+        return attenuation << 1;
     }
 }
