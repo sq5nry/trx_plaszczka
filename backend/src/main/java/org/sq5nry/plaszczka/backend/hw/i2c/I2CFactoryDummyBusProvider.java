@@ -27,40 +27,48 @@ public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
         return new I2CBus() {
             @Override
             public I2CDevice getDevice(int address) {
+                logger.debug("returning device @{}", String.format("%02X", address));
                 return new I2CDevice() {
+                    private int address;
+
+                    public I2CDevice setAddress(int address) {
+                        this.address = address;
+                        return this;
+                    }
+
                     @Override
                     public int getAddress() {
-                        return 0;
+                        return address;
                     }
 
                     @Override
                     public void write(byte b) {
-                        logger.debug("write byte x{}", String.format("%02X", b));
+                        logger.debug("[@{}] write byte x{}", String.format("%02X", address), String.format("%02X", b));
                     }
 
                     @Override
                     public void write(byte[] buffer, int offset, int size) {
-                        logger.debug("write part of buffer {}", new String(buffer));
+                        logger.debug("[@{}] write part of buffer {}", String.format("%02X", address), new String(buffer));
                     }
 
                     @Override
                     public void write(byte[] buffer) {
-                        logger.debug("write buffer {}", HexUtils.toHexString(buffer));
+                        logger.debug("[@{}] write buffer {}", String.format("%02X", address), HexUtils.toHexString(buffer));
                     }
 
                     @Override
                     public void write(int address, byte b) {
-                        logger.debug("write byte @x{} x{}", Integer.toHexString(address), String.format("%02X", b));
+                        logger.debug("[@{}] write byte @x{} x{}", String.format("%02X", address), Integer.toHexString(address), String.format("%02X", b));
                     }
 
                     @Override
                     public void write(int address, byte[] buffer, int offset, int size) {
-                        logger.debug("write part of buffer @x{} x{}", Integer.toHexString(address), HexUtils.toHexString(buffer));
+                        logger.debug("[@{}] write part of buffer @x{} x{}", String.format("%02X", address), Integer.toHexString(address), HexUtils.toHexString(buffer));
                     }
 
                     @Override
                     public void write(int address, byte[] buffer) {
-                        logger.debug("write buffer @x{} x{}", Integer.toHexString(address), HexUtils.toHexString(buffer));
+                        logger.debug("[@{}] write buffer @x{} x{}", String.format("%02X", address), Integer.toHexString(address), HexUtils.toHexString(buffer));
                     }
 
                     @Override
@@ -87,7 +95,7 @@ public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
                     public int read(byte[] writeBuffer, int writeOffset, int writeSize, byte[] readBuffer, int readOffset, int readSize) {
                         return rand.nextInt();
                     }
-                };
+                }.setAddress(address);
             }
 
             @Override

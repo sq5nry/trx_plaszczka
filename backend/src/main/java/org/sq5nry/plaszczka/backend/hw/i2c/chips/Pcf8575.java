@@ -28,7 +28,7 @@ public class Pcf8575 extends Pcf8574 {
         if (p.length == 2) {
             getDevice().write(p);
         } else {
-            throw new IllegalArgumentException("port data size != 2");
+            throw new IllegalArgumentException("port data size != 2 bytes");
         }
     }
 

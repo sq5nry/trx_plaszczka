@@ -5,19 +5,19 @@ import org.sq5nry.plaszczka.backend.api.Mode;
 public interface HModeMixer {
     /**
      * Adjust mixer DC bias
-     * @param bias 0..4096
+     * @param voltage 0..5V
      */
-    void setBiasPoint(int bias);
+    void setBiasPoint(float voltage) throws Exception;
 
     /**
      * Adjust LO squarer threshold
-     * @param threshold 0..4096
+     * @param percentage 0..100
      */
-    void setSquarerThreshold(int threshold);
+    void setSquarerThreshold(float percentage) throws Exception;
 
     /**
      * Post mixer roofing filter.
      * @param mode
      */
-    void setRoofingFilter(Mode mode);
+    void setRoofingFilter(Mode mode) throws Exception;;
 }

@@ -20,10 +20,9 @@ import java.util.Map;
  * Optional dot marker above a digit; single dot at a time.
  */
 @Component
-public class NixieDisplayUnit implements FrequencyDisplay {
+public class NixieDisplayUnit implements FrequencyDisplay, Reinitializable {
     private static final Logger logger = LoggerFactory.getLogger(NixieDisplayUnit.class);
-
-    private I2CBus bus;
+    private final I2CBus bus;
 
     private Map<Integer, GenericChip> chipset = new HashMap<>();
 
@@ -109,6 +108,7 @@ public class NixieDisplayUnit implements FrequencyDisplay {
 
     private void update(boolean markerOnly) throws IOException {
         logger.debug("updating display");
+        byte[] p = new byte[4];
         byte d1 = (byte) ((frequency / 10) % 10);
 
         if (!markerOnly) {
@@ -127,28 +127,28 @@ public class NixieDisplayUnit implements FrequencyDisplay {
                 }
             }
 
-            byte p1 = (byte) (((_digits[5] & 0xf) << 4) | (_digits[4] & 0xf));
-            byte p2 = (byte) (((_digits[3] & 0xf) << 4) | (_digits[2] & 0xf));
-            byte p3 = (byte) (((_digits[1] & 0xf) << 4) | (_digits[0] & 0xf));
+            p[0] = (byte) (((_digits[5] & 0xf) << 4) | (_digits[4] & 0xf));
+            p[1] = (byte) (((_digits[3] & 0xf) << 4) | (_digits[2] & 0xf));
+            p[2] = (byte) (((_digits[1] & 0xf) << 4) | (_digits[0] & 0xf));
 
-            if (p1 != _port[0]) {   //TODO optimize
-                ((Mcp23017) chipset.get(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p1);
-                _port[0] = p1;
+            if (p[0] != _port[0]) {   //TODO optimize
+                ((Mcp23017) chipset.get(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[0]);
+                _port[0] = p[0];
             }
-            if (p2 != _port[1]) {
-                ((Mcp23017) chipset.get(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p2);
-                _port[1] = p2;
+            if (p[1] != _port[1]) {
+                ((Mcp23017) chipset.get(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[1]);
+                _port[1] = p[1];
             }
-            if (p3 != _port[2]) {
-                ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p3);
-                _port[2] = p3;
+            if (p[2] != _port[2]) {
+                ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[2]);
+                _port[2] = p[2];
             }
         }
 
-        byte p4 = (byte) ((d1 << 4) | markerPosition);
-        if (p4 != _port[3]) {
-            ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p4);
-            _port[3] = p4;
+        p[3] = (byte) ((d1 << 4) | markerPosition);
+        if (p[3] != _port[3]) {
+            ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[3]);
+            _port[3] = p[3];
         }
     }
 }

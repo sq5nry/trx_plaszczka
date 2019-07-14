@@ -7,8 +7,6 @@ import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import java.io.IOException;
 
 public class Pcf8574 extends GenericChip {
-    public BitField P0 = new BitField(0xFF);
-
     public Pcf8574(I2CBus bus, int address) {
         super(bus, address);
     }
@@ -38,5 +36,10 @@ public class Pcf8574 extends GenericChip {
      */
     public void writePort(int data) throws IOException {
         getDevice().write((byte) data);
+    }
+
+    @Override
+    public String toString() {
+        return "Pcf8574{" + Integer.toHexString(getAddress()) + "}";
     }
 }

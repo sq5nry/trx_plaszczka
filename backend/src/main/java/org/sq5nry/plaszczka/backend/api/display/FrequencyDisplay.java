@@ -1,6 +1,6 @@
 package org.sq5nry.plaszczka.backend.api.display;
 
-import org.sq5nry.plaszczka.backend.api.Reinitializable;
+import org.sq5nry.plaszczka.backend.impl.Reinitializable;
 
 import java.io.IOException;
 

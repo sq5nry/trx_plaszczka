@@ -23,6 +23,9 @@ public abstract class GenericChip {
     }
 
     public I2CDevice getDevice() {
+        if (state != I2CDeviceState.INITIALIZED) {
+            throw new IllegalStateException("device not initialized");
+        }
         return device;
     }
 
