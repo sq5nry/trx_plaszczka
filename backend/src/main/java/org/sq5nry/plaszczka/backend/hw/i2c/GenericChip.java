@@ -17,9 +17,10 @@ public abstract class GenericChip {
         this.address = address;
     }
 
-    public void initialize() throws IOException {
+    public GenericChip initialize() throws IOException {
         device = i2CBus.getDevice(address);
         state = I2CDeviceState.INITIALIZED;
+        return this;
     }
 
     public I2CDevice getDevice() {

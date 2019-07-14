@@ -6,6 +6,14 @@ import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
 import java.io.IOException;
 
+/**
+ * The PCF8574/74A provides general-purpose remote I/O expansion via the two-wire bidirectional I2C-bus
+ * (serial clock (SCL), serial data (SDA)).The devices consist of eight quasi-bidirectional ports, 100 kHz I2C-bus
+ * interface, three hardware address inputs and interrupt output operating between 2.5 V and 6 V. The quasi-bidirectional
+ * port can be independently assigned as an input to monitor interrupt status or keypads, or as an output to activate
+ * indicator devices such as LEDs. System master can read from the input port or write to the output port through
+ * a single register.
+ */
 public class Pcf8574 extends GenericChip {
     public Pcf8574(I2CBus bus, int address) {
         super(bus, address);

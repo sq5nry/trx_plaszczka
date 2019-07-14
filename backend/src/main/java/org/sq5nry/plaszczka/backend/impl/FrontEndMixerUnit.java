@@ -10,7 +10,7 @@ import org.sq5nry.plaszczka.backend.api.mixer.HModeMixer;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Ad5321;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Dac;
+import org.sq5nry.plaszczka.backend.hw.i2c.chips.GenericDac;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
 
 import java.io.IOException;
@@ -39,15 +39,8 @@ public class FrontEndMixerUnit implements HModeMixer, Reinitializable {
         Pcf8574 expander = new Pcf8574(bus, EXPANDER_ADDR);
         expander.initialize();
         chipset.put(EXPANDER_ADDR, expander);
-
-        Ad5321 adcSquarer = new Ad5321(bus, DAC_SQUARER_ADDR);
-        adcSquarer.initialize();
-        chipset.put(DAC_SQUARER_ADDR, adcSquarer);
-
-        Ad5321 adcBias = new Ad5321(bus, DAC_BIAS_ADDR);
-        adcBias.initialize();
-        chipset.put(DAC_BIAS_ADDR, adcBias);
-
+        chipset.put(DAC_SQUARER_ADDR, new Ad5321(bus, DAC_SQUARER_ADDR).initialize());
+        chipset.put(DAC_BIAS_ADDR, new Ad5321(bus, DAC_BIAS_ADDR).initialize());
         initialize();
         logger.debug("chipset created & initialized");
     }
@@ -65,7 +58,7 @@ public class FrontEndMixerUnit implements HModeMixer, Reinitializable {
     @Override
     public void setBiasPoint(float voltage) throws Exception {
         logger.debug("setting mixer trafo bias point at {}V", voltage);
-        Dac dac = (Dac) chipset.get(DAC_BIAS_ADDR);
+        GenericDac dac = (GenericDac) chipset.get(DAC_BIAS_ADDR);
         dac.setVoltage(voltage);
         this.biasPoint = voltage;
     }
@@ -77,7 +70,7 @@ public class FrontEndMixerUnit implements HModeMixer, Reinitializable {
     @Override
     public void setSquarerThreshold(float percentage) throws Exception {
         logger.debug("setting squarer threshold at {}%", percentage);
-        Dac dac = (Dac) chipset.get(DAC_SQUARER_ADDR);
+        GenericDac dac = (GenericDac) chipset.get(DAC_SQUARER_ADDR);
         dac.setData((int) ((dac.getMaxData()*percentage)/100));
         this.squarer = percentage;
     }

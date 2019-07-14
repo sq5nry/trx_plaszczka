@@ -33,14 +33,8 @@ public class AudioUnit implements AfAmplifier, Reinitializable {
     public AudioUnit(I2CBusProvider i2cBusProv) throws Exception {
         logger.debug("creating chipset");
         bus = i2cBusProv.getBus();
-        Pcf8574 expander = new Pcf8574(bus, EXPANDER_ADDR);
-        expander.initialize();
-        chipset.put(EXPANDER_ADDR, expander);
-
-        Tda7309 audioProc = new Tda7309(bus, AUDIO_PROCESSOR_ADDR);
-        audioProc.initialize();
-        chipset.put(AUDIO_PROCESSOR_ADDR, audioProc);
-
+        chipset.put(EXPANDER_ADDR, new Pcf8574(bus, EXPANDER_ADDR).initialize());
+        chipset.put(AUDIO_PROCESSOR_ADDR, new Tda7309(bus, AUDIO_PROCESSOR_ADDR).initialize());
         initialize();
         logger.debug("chipset created & initialized");
     }

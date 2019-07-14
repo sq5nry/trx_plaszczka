@@ -4,6 +4,7 @@ import com.pi4j.io.i2c.I2CBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.display.FrequencyDisplay;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
@@ -11,6 +12,7 @@ import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Mcp23017;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -150,5 +152,29 @@ public class NixieDisplayUnit implements FrequencyDisplay, Reinitializable {
             ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[3]);
             _port[3] = p[3];
         }
+    }
+
+    private boolean ticker = false;
+    public void setArbitraryDigits(byte[] _digits) throws IOException {
+        byte[] p = new byte[4];
+        p[0] = (byte) (((_digits[0] & 0xf) << 4) | (_digits[1] & 0xf));
+        p[1] = (byte) (((_digits[2] & 0xf) << 4) | (_digits[3] & 0xf));
+        p[2] = (byte) (((_digits[4] & 0xf) << 4) | (_digits[5] & 0xf));
+        p[3] = (byte) (((_digits[6] & 0xf) << 4) | ((ticker = !ticker) ? 5 : 0));
+
+        ((Mcp23017) chipset.get(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[0]);
+        ((Mcp23017) chipset.get(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[1]);
+        ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[2]);
+        ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[3]);
+    }
+
+    //TODO put into heheszki
+    @Scheduled(fixedRate = 1000)
+    public void reportCurrentTime() throws IOException {
+        Calendar cal = Calendar.getInstance();
+        int hr = cal.get(Calendar.HOUR);
+        int min = cal.get(Calendar.MINUTE);
+        int sec = cal.get(Calendar.SECOND);
+        setArbitraryDigits(new byte[]{(byte) (hr/10), (byte) (hr&10), (byte) (min/10), (byte) (min%10), 0xa, (byte) (sec/10), (byte) (sec%10)});
     }
 }

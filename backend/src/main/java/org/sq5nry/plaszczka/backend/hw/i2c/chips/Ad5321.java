@@ -63,7 +63,7 @@ public class Ad5321 extends GenericDac {
      */
     public void setData(int data) throws IOException {
         if (data<0 || data>MAX) {
-            throw new IllegalArgumentException("DAC data out of 0..4095 range");
+            throw new IllegalArgumentException("DAC data out of 0..MAX range");
         }
         this.data = data;
         update();   //TODO if fails, data value in object is untrue
@@ -77,6 +77,11 @@ public class Ad5321 extends GenericDac {
     @Override
     public int getMaxData() {
         return MAX;
+    }
+
+    @Override
+    public void setData(int data, int channel) throws Exception {
+        throw new UnsupportedOperationException("single channel only");
     }
 
     @Override

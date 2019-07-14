@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 
@@ -19,6 +20,7 @@ import javax.annotation.PostConstruct;
         @PropertySource("classpath:i2c.properties"),
         @PropertySource("classpath:spi.properties")
 })
+@EnableScheduling
 public class Launcher {
     private static final Logger logger = LoggerFactory.getLogger(Launcher.class);
 

@@ -43,32 +43,32 @@ public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
 
                     @Override
                     public void write(byte b) {
-                        logger.debug("[@{}] write byte x{}", String.format("%02X", address), String.format("%02X", b));
+                        logger.debug("[@{}] write byte x{}", String.format("%02X", this.address), String.format("%02X", b));
                     }
 
                     @Override
                     public void write(byte[] buffer, int offset, int size) {
-                        logger.debug("[@{}] write part of buffer {}", String.format("%02X", address), new String(buffer));
+                        logger.debug("[@{}] write part of buffer {}", String.format("%02X", this.address), new String(buffer));
                     }
 
                     @Override
                     public void write(byte[] buffer) {
-                        logger.debug("[@{}] write buffer {}", String.format("%02X", address), HexUtils.toHexString(buffer));
+                        logger.debug("[@{}] write buffer {}", String.format("%02X", this.address), HexUtils.toHexString(buffer));
                     }
 
                     @Override
                     public void write(int address, byte b) {
-                        logger.debug("[@{}] write byte @x{} x{}", String.format("%02X", address), Integer.toHexString(address), String.format("%02X", b));
+                        logger.debug("[@{}] write byte @x{} x{}", String.format("%02X", this.address), Integer.toHexString(address), String.format("%02X", b));
                     }
 
                     @Override
                     public void write(int address, byte[] buffer, int offset, int size) {
-                        logger.debug("[@{}] write part of buffer @x{} x{}", String.format("%02X", address), Integer.toHexString(address), HexUtils.toHexString(buffer));
+                        logger.debug("[@{}] write part of buffer @x{} x{}", String.format("%02X", this.address), Integer.toHexString(address), HexUtils.toHexString(buffer));
                     }
 
                     @Override
                     public void write(int address, byte[] buffer) {
-                        logger.debug("[@{}] write buffer @x{} x{}", String.format("%02X", address), Integer.toHexString(address), HexUtils.toHexString(buffer));
+                        logger.debug("[@{}] write buffer @x{} x{}", String.format("%02X", this.address), Integer.toHexString(address), HexUtils.toHexString(buffer));
                     }
 
                     @Override
