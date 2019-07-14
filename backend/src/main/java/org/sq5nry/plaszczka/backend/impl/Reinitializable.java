@@ -5,7 +5,7 @@ package org.sq5nry.plaszczka.backend.impl;
  */
 public interface Reinitializable {
     /**
-     * Initialize a module as during power up.
+     * Initialize a module as during power up. Default initial settings are applied.
      * @throws Exception
      */
     void initialize() throws Exception;
