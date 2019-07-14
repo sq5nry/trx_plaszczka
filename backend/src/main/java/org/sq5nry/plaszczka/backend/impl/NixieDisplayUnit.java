@@ -172,7 +172,7 @@ public class NixieDisplayUnit implements FrequencyDisplay, Reinitializable {
     @Scheduled(fixedRate = 1000)
     public void reportCurrentTime() throws IOException {
         Calendar cal = Calendar.getInstance();
-        int hr = cal.get(Calendar.HOUR);
+        int hr = cal.get(Calendar.HOUR_OF_DAY);
         int min = cal.get(Calendar.MINUTE);
         int sec = cal.get(Calendar.SECOND);
         setArbitraryDigits(new byte[]{(byte) (hr/10), (byte) (hr&10), (byte) (min/10), (byte) (min%10), 0xa, (byte) (sec/10), (byte) (sec%10)});
