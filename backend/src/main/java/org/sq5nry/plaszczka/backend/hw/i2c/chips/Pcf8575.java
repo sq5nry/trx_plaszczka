@@ -34,6 +34,6 @@ public class Pcf8575 extends Pcf8574 {
 
     @Override
     public String toString() {
-        return "Pcf8575{" + Integer.toHexString(getAddress()) + "}";
+        return "PCF8575{" + Integer.toHexString(getAddress()) + "}";
     }
 }

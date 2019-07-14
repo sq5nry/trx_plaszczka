@@ -17,19 +17,19 @@ public class BandPassFiltersController {
     private static final Logger logger = LoggerFactory.getLogger(BandPassFiltersController.class);
 
     @Autowired
-    private BpfUnit bpfService;
+    private BpfUnit bpfUnit;
 
     @RequestMapping(value = "/bandPassFilter/band/{id}", method = RequestMethod.GET)
     public String setFrequency(@PathVariable String id) throws IOException {
         logger.debug("band filter requested, band={}", id);
-        bpfService.setBand(Band.fromMeters(id));
-        return "result=" + bpfService.getBand();
+        bpfUnit.setBand(Band.fromMeters(id));
+        return "result=" + bpfUnit.getBand();
     }
 
     @RequestMapping(value = "/bandPassFilter/attenuator/{id}", method = RequestMethod.GET)
     public String setMarker(@PathVariable Integer id) throws IOException {
         logger.debug("attenuator requested, att={}", id);
-        bpfService.setAttenuation(id);
-        return "result=att" + bpfService.getAttenuation() + "dB";
+        bpfUnit.setAttenuation(id);
+        return "result=att" + bpfUnit.getAttenuation() + "dB";
     }
 }

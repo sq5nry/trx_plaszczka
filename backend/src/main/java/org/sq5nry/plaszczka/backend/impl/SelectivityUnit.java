@@ -72,6 +72,7 @@ public class SelectivityUnit implements Selectivity, Reinitializable {
 
     @Override
     public void setFilter(Bandwidth bandwidth) throws Exception {
+        logger.debug("setting {} selectivity filter", bandwidth);
         this.bw = bandwidth;
         FeatureBits bw = FeatureBits.getByBandwidth(bandwidth);
         logger.debug("setting bandwidth filter: {}", bw);

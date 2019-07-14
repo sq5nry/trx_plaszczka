@@ -14,12 +14,12 @@ public class SelectivityController {
     private static final Logger logger = LoggerFactory.getLogger(SelectivityController.class);
 
     @Autowired
-    SelectivityUnit selectivityService;
+    SelectivityUnit selectivityUnit;
 
     @GetMapping(value = "/selectivity/{freq}")
     public String setRoofingFilter(@PathVariable int freq) throws Exception {
         logger.debug("selectivity requested, bw={}", freq);
-        selectivityService.setFilter(Bandwidth.fromBandwidth(freq));
-        return "result=" + selectivityService.getFilter();
+        selectivityUnit.setFilter(Bandwidth.fromBandwidth(freq));
+        return "result=" + selectivityUnit.getFilter();
     }
 }

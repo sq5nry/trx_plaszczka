@@ -64,6 +64,7 @@ public class FrontEndMixerUnit implements HModeMixer, Reinitializable {
 
     @Override
     public void setBiasPoint(float voltage) throws Exception {
+        logger.debug("setting mixer trafo bias point at {}V", voltage);
         Dac dac = (Dac) chipset.get(DAC_BIAS_ADDR);
         dac.setVoltage(voltage);
         this.biasPoint = voltage;
@@ -75,6 +76,7 @@ public class FrontEndMixerUnit implements HModeMixer, Reinitializable {
 
     @Override
     public void setSquarerThreshold(float percentage) throws Exception {
+        logger.debug("setting squarer threshold at {}%", percentage);
         Dac dac = (Dac) chipset.get(DAC_SQUARER_ADDR);
         dac.setData((int) ((dac.getMaxData()*percentage)/100));
         this.squarer = percentage;
@@ -86,6 +88,7 @@ public class FrontEndMixerUnit implements HModeMixer, Reinitializable {
 
     @Override
     public void setRoofingFilter(Mode mode) throws IOException {
+        logger.debug("setting roofing filter for {}", mode);
         Pcf8574 expander = (Pcf8574) chipset.get(EXPANDER_ADDR);
         switch(mode) {
             case CW:

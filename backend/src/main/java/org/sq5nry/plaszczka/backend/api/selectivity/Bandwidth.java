@@ -16,4 +16,8 @@ public enum Bandwidth {
         }
         throw new IllegalArgumentException("unsupported bandwidth frequency: " + freq + "Hz");
     }
+
+    public String toString() {
+        return freq + "Hz";
+    }
 }

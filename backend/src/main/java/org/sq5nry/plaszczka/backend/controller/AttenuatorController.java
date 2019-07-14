@@ -15,12 +15,12 @@ public class AttenuatorController {
     private static final Logger logger = LoggerFactory.getLogger(AttenuatorController.class);
 
     @Autowired
-    private BpfUnit bpfService;
+    private BpfUnit bpfUnit;
 
     @GetMapping(value = "/attenuator/{id}")
     public String setMarker(@PathVariable Integer id) throws IOException {
         logger.debug("attenuator requested, att={}", id);
-        bpfService.setAttenuation(id);
-        return "result=att " + bpfService.getAttenuation() + "dB";
+        bpfUnit.setAttenuation(id);
+        return "result=att " + bpfUnit.getAttenuation() + "dB";
     }
 }
