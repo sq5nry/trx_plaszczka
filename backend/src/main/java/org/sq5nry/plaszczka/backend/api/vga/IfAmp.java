@@ -16,7 +16,7 @@ public interface IfAmp {
      *  Step Size: 	            19.6mV 	6.06dB/s
      *  Recommended Default Value: 	32 	194dB/s, 0.675s/131dB
      */
-    void setDecaySpeedInDecayStateForHangMode(int speed);
+    void setDecaySpeedInDecayStateForHangMode(int speed) throws Exception;
 
     /**
      * Vspa sets the decay speed for the AGC in Attack/Decay-Mode.
@@ -30,7 +30,7 @@ public interface IfAmp {
      *  Step Size: 	                19.6mV 	6.06dB/s
      *  Recommended Default Value: 	8 	48.5dB/s, 2.7s/131dB
      */
-    void setDecaySpeedForAttackDecayMode(int speed);
+    void setDecaySpeedForAttackDecayMode(int speed) throws Exception;
 
     /**
      * Vleak sets the decay speed during the HANG state in Hang-Mode. The speed can be 0 but usually a little
@@ -44,7 +44,7 @@ public interface IfAmp {
      *  Step Size: 	                1.78mV 	0.551dB/s
      *  Recommended Default Value: 	4 	7.14mV, 2.21dB/s
      */
-    void setDecaySpeedInHangStateForHangMode(int speed);
+    void setDecaySpeedInHangStateForHangMode(int speed) throws Exception;
 
     /**
      * Vfloor sets the compensation for the noise floor of the diode detector. Vfloor is subtracted from the output
@@ -63,7 +63,7 @@ public interface IfAmp {
      *  Step Size: 	                2.99mV 	0.1dB
      *  Recommended Default Value: 	151 	0.452V, 15.1dB
      */
-    void setNoiseFloorCompensation(int val);
+    void setNoiseFloorCompensation(int val) throws Exception;
 
     /**
      * Vath sets the threshold value used for automatically choosing the AGC strategy.
@@ -77,7 +77,7 @@ public interface IfAmp {
      *  Step Size: 	                15.3mV 	0.515dB
      *  Recommended Default Value: 	112 	1.71V, -73.3dBm, S9
      */
-    void setStrategyThreshold(int val);
+    void setStrategyThreshold(int val) throws Exception;
 
     /**
      * Vhth represents the hang threshold value used to set the direction of the hang integrator.
@@ -92,7 +92,7 @@ public interface IfAmp {
      *  Step Size: 	                15.3mV 	0.515dB
      *  Recommended Default Value: 	20 	0.305V, 10.3dB
      */
-    void setHangThreshold(int val);
+    void setHangThreshold(int val) throws Exception;
 
     /**
      * Vloop has a dual function:
@@ -111,7 +111,7 @@ public interface IfAmp {
      *  Step Size: 	                15.3mV 	0.515dB
      *  Recommended Default Value: 	12 	0.184V, 6.2dB
      */
-    void setVLoop(int val);
+    void setVLoop(int val) throws Exception;
 
     /**
      * Vgain is used to set the maximum allowed gain of the signal path. This control is usually called IF-gain
@@ -124,7 +124,7 @@ public interface IfAmp {
      *  Step Size: 	                15.3mV 	0.515dB
      *  Recommended Default Value: 	0 	0V, 109.6dB gain
      */
-    void setMaximumGain(int gain);
+    void setMaximumGain(int gain) throws Exception;
 
 
     /**
@@ -140,7 +140,7 @@ public interface IfAmp {
      *  Step Size: 	                15.3mV
      *  Recommended Default Value: 	15 	0V, 2.0s
      */
-    void setMaximumHangTimeInHangMode(int val);
+    void setMaximumHangTimeInHangMode(int val) throws Exception;
 
     /**
      * Attack sets the attack time of the AGC in both Attack/Decay-Mode and Hang-Mode.
@@ -152,7 +152,7 @@ public interface IfAmp {
      *  Step Size: 	            392Ω 	1.3ms
      *  Recommended Default Value: 	10 	0V, 85ms
      */
-    void setAttackTime(int val);
+    void setAttackTime(int val) throws Exception;
 
     /**
      * Vhot is the "hang on transmit" bit. If set, the hang integrator is forced deep in to HANG state quickly.
@@ -161,7 +161,7 @@ public interface IfAmp {
      *
      * @param enabled HOT enabled
      */
-    void setHangOnTransmit(boolean enabled);
+    void setHangOnTransmit(boolean enabled) throws Exception;
 
     /**
      * Vmute is used to completely mute the signal path. If set, all AD600's in the signal path are disabled.
@@ -170,5 +170,5 @@ public interface IfAmp {
      *
      * @param enabled Signal Path Muted
      */
-    void setMute(boolean enabled);
+    void setMute(boolean enabled) throws Exception;
 }

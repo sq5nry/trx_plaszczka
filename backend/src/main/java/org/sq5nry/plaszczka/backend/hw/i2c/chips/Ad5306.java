@@ -3,7 +3,7 @@ package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 import com.pi4j.io.i2c.I2CBus;
 
 /**
- * The AD5306 is a quad 12-bit buffered voltage output DACs in 16-lead TSSOP packages that operate from a single 2.5 V
+ * The AD5306 is a quad 8-bit buffered voltage output DACs in 16-lead TSSOP packages that operate from a single 2.5 V
  * to 5.5 V supply, consuming 500 μA at 3 V. Their on-chip output amplifiers allow rail-to-rail output swing with a slew
  * rate of 0.7 V/μs. A 2-wire serial interface, which operates at clock rates up to 400 kHz, is used. This interface
  * is SMBus-compatible at VDD < 3.6 V. Multiple devices can be placed on the same bus.
@@ -11,7 +11,7 @@ import com.pi4j.io.i2c.I2CBus;
  * https://www.analog.com/en/products/ad5306.html
  */
 public class Ad5306 extends GenericDac {
-    public static final int MAX = 4095;
+    public static final int MAX = 255;
 
     /**
      * 0: Output range for that DAC set at 0 V to VREF.
@@ -40,6 +40,18 @@ public class Ad5306 extends GenericDac {
      */
     public static final byte CTRL_N_PD = 0x1;
 
+    public enum DacChannel {
+        DAC_A(1), DAC_B(2), DAC_C(3), DAC_D(4);
+
+        int ch;
+        DacChannel(int ch) {
+            this.ch = ch;
+        }
+
+        public int getValue() {
+            return ch;
+        }
+    }
     public enum DacPointer {
         DAC_A((byte)0x1), DAC_B((byte)0x2),
         DAC_C((byte)0x4), DAC_D((byte)0x8);
@@ -102,8 +114,8 @@ public class Ad5306 extends GenericDac {
         if (data<0 || data>MAX) {
             throw new IllegalArgumentException("DAC data out of 0..MAX range");
         }
-        buffer[0] = (byte) (data & 0x00FF);
-        buffer[1] = (byte) ((control << 4) | ((data & 0x0F00) >> 8));
+        buffer[0] = (byte) ((data & 0x000F) << 4);
+        buffer[1] = (byte) ((control << 4) | ((data & 0x000F) >> 4));
         getDevice().write(DacPointer.fromInt(channel).byteValue(), buffer);
     }
 

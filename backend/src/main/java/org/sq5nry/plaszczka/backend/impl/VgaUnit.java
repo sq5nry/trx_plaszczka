@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.vga.IfAmp;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Ad5306;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Ad5321;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Ad7999;
+import org.sq5nry.plaszczka.backend.hw.i2c.chips.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,88 +20,112 @@ public class VgaUnit implements IfAmp {
     private final I2CBus bus;
     private Map<Integer, GenericChip> chipset = new HashMap<>();
 
-    private final int DAC_1 = 0x0e;
-    private final int DAC_2 = 0x0f;
-    private final int DAC_3 = 0x2f;
+    private final int DAC_IC18 = 0x0e;
+    private final int DAC_IC19 = 0x0f;
+    private final int DAC = 0x2f;
+    private final int RDAC = 0x2f;
     private final int ADC = 0x29;
-
-    /*
-    AD5306 0e
-    AD5306 0f
-    AD7999 29
-    AD5242 2f
-     */
 
     @Autowired
     public VgaUnit(I2CBusProvider i2cBusProv) throws Exception {
         logger.debug("creating chipset");
         bus = i2cBusProv.getBus();
-        chipset.put(DAC_1, new Ad5306(bus, DAC_1).initialize());
-        chipset.put(DAC_2, new Ad5306(bus, DAC_2).initialize());
-        chipset.put(DAC_3, new Ad5321(bus, DAC_3).initialize());
+        chipset.put(DAC_IC18, new Ad5306(bus, DAC_IC18).initialize());
+        chipset.put(DAC_IC19, new Ad5306(bus, DAC_IC19).initialize());
+        chipset.put(DAC, new Ad5321(bus, DAC).initialize());
         chipset.put(ADC, new Ad7999(bus, ADC).initialize());
-
-        //initialize();
+        chipset.put(RDAC, new Ad5242(bus, ADC).initialize());
+        initialize();
         logger.debug("chipset created & initialized");
     }
 
-    @Override
-    public void setDecaySpeedInDecayStateForHangMode(int speed) {
-
+    private void initialize() {
+        Ad5306 dac18 = (Ad5306) chipset.get(DAC_IC18);
+        dac18.setVRef(3.894f);
+        Ad5306 dac19 = (Ad5306) chipset.get(DAC_IC19);
+        dac19.setVRef(5.0f);
     }
 
     @Override
-    public void setDecaySpeedForAttackDecayMode(int speed) {
-
+    //32
+    public void setDecaySpeedInDecayStateForHangMode(int speed) throws Exception {
+        GenericDac dac = (GenericDac) chipset.get(DAC_IC19);
+        dac.setData(speed, Ad5306.DacChannel.DAC_A.getValue());
     }
 
     @Override
-    public void setDecaySpeedInHangStateForHangMode(int speed) {
-
+    //8
+    public void setDecaySpeedForAttackDecayMode(int speed) throws Exception {
+        GenericDac dac = (GenericDac) chipset.get(DAC_IC19);
+        dac.setData(speed, Ad5306.DacChannel.DAC_B.getValue());
     }
 
     @Override
-    public void setNoiseFloorCompensation(int val) {
-
+    //4
+    public void setDecaySpeedInHangStateForHangMode(int speed) throws Exception {
+        GenericDac dac = (GenericDac) chipset.get(DAC_IC19);
+        dac.setData(speed, Ad5306.DacChannel.DAC_C.getValue());
     }
 
     @Override
-    public void setStrategyThreshold(int val) {
-
+    // 0x0f 0x08 0x9037 w ???
+    //151?
+    public void setNoiseFloorCompensation(int val) throws Exception {
+        GenericDac dac = (GenericDac) chipset.get(DAC_IC19);
+        dac.setData(val, Ad5306.DacChannel.DAC_D.getValue());
     }
 
     @Override
-    public void setHangThreshold(int val) {
-
+    //112
+    public void setStrategyThreshold(int val) throws Exception {
+        GenericDac dac = (GenericDac) chipset.get(DAC_IC18);
+        dac.setData(val, Ad5306.DacChannel.DAC_A.getValue());
     }
 
     @Override
-    public void setVLoop(int val) {
-
+    //20
+    public void setHangThreshold(int val) throws Exception {
+        GenericDac dac = (GenericDac) chipset.get(DAC_IC18);
+        dac.setData(val, Ad5306.DacChannel.DAC_B.getValue());
     }
 
     @Override
-    public void setMaximumGain(int gain) {
-
+    //12
+    public void setVLoop(int val) throws Exception {
+        GenericDac dac = (GenericDac) chipset.get(DAC_IC18);
+        dac.setData(val, Ad5306.DacChannel.DAC_C.getValue());
     }
 
     @Override
-    public void setMaximumHangTimeInHangMode(int val) {
-
+    //0
+    public void setMaximumGain(int gain) throws Exception {
+        GenericDac dac = (GenericDac) chipset.get(DAC_IC18);
+        dac.setData(gain, Ad5306.DacChannel.DAC_C.getValue());
     }
 
     @Override
-    public void setAttackTime(int val) {
-
+    //15
+    public void setMaximumHangTimeInHangMode(int val) throws Exception {
+        Ad5242 rdac = (Ad5242) chipset.get(RDAC);
+        rdac.setData(val, Ad5242.Rdac.RDAC2);
     }
 
     @Override
-    public void setHangOnTransmit(boolean enabled) {
-
+    //10
+    public void setAttackTime(int val) throws Exception {
+        Ad5242 rdac = (Ad5242) chipset.get(RDAC);
+        rdac.setData(val, Ad5242.Rdac.RDAC1);
     }
 
     @Override
-    public void setMute(boolean enabled) {
+    public void setHangOnTransmit(boolean enabled) throws Exception {
+        Ad5242 rdac = (Ad5242) chipset.get(RDAC);
+        rdac.setOutPin(enabled, Ad5242.OutPin.O1);
+    }
 
+    @Override
+    public void setMute(boolean enabled) throws Exception {
+        Ad5242 rdac = (Ad5242) chipset.get(RDAC);
+        rdac.setOutPin(enabled, Ad5242.OutPin.O2);
     }
 }
