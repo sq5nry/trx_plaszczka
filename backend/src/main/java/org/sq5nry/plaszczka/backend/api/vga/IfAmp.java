@@ -126,7 +126,6 @@ public interface IfAmp {
      */
     void setMaximumGain(int gain) throws Exception;
 
-
     /**
      * Vspd sets the maximum hang time of the AGC in Hang-Mode.
      * This is the interval starting when the hang integrator begins to integrate towards the DECAY phase until

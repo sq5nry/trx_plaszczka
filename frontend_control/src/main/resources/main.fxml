@@ -108,9 +108,8 @@
             <Label font="$x5" text="Attenuator" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <GridPane blendMode="SRC_OVER" GridPane.columnIndex="0" GridPane.margin="$x2" GridPane.rowIndex="2">
               <children>
-                <ToggleButton mnemonicParsing="false" text="Enable" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
-                <Slider blockIncrement="10.0" majorTickUnit="4.0" max="30.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <Label text="0 dB" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                <Slider fx:id="att_reg" blockIncrement="10.0" majorTickUnit="4.0" max="30.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                <Label fx:id="att_disp" text="0 dB" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                   <GridPane.margin>
                     <Insets right="5.0" />
                   </GridPane.margin>
@@ -120,9 +119,8 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints maxHeight="64.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="89.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="64.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="107.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
             <Circle fill="#ffc633" radius="43.0" strokeType="INSIDE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
@@ -134,20 +132,20 @@
             <Line endX="545.3389892578125" endY="-280.0951843261719" rotate="135.0" startX="462.49835205078125" startY="-280.22802734375" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <GridPane GridPane.columnIndex="2" GridPane.rowIndex="0">
               <children>
-                <Slider minorTickCount="5" showTickLabels="true" showTickMarks="true" value="50.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Slider fx:id="mix_squarer" minorTickCount="5" showTickLabels="true" showTickMarks="true" value="50.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
                   <GridPane.margin>
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
                   </GridPane.margin>
                 </Slider>
-                <Slider majorTickUnit="1.0" max="5.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="2.5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Slider fx:id="mix_bias" majorTickUnit="1.0" max="5.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="2.5" GridPane.columnIndex="0" GridPane.rowIndex="1">
                   <GridPane.margin>
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
                   </GridPane.margin>
                 </Slider>
                 <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2">
                   <children>
-                    <Label text="50%" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                    <Label text="2.5V" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                    <Label fx:id="mix_squarer_disp" text="50%" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                    <Label fx:id="mix_bias_disp" text="2.5V" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                     <Label text="squarer" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
                     <Label text="bias" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
                   </children>
@@ -172,7 +170,7 @@
             </GridPane>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <Label font="$x5" text="Roofing Filter" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <ComboBox promptText="SSB" visibleRowCount="2" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <ComboBox fx:id="mix_roof" promptText="SSB" visibleRowCount="2" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
               <items>
                 <FXCollections fx:factory="observableArrayList">
                   <String fx:value="SSB" />
@@ -182,7 +180,7 @@
             </ComboBox>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <Label font="$x5" text="Selectivity Filter" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <ComboBox promptText="2.4k" visibleRowCount="3" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <ComboBox fx:id="sel" promptText="2.4k" visibleRowCount="3" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
               <items>
                 <FXCollections fx:factory="observableArrayList">
                   <String fx:value="350" />
@@ -219,22 +217,22 @@
               <content>
                 <GridPane minHeight="-Infinity" prefHeight="209.0" prefWidth="150.9998779296875">
                   <children>
-                    <RadioButton mnemonicParsing="false" onAction="#enable160m" prefWidth="56.0" text="160m" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <RadioButton fx:id="bpf_160m" mnemonicParsing="false" onAction="#bpfBandChanged" prefWidth="56.0" text="160m" GridPane.columnIndex="0" GridPane.rowIndex="0">
                       <toggleGroup>
                         <ToggleGroup fx:id="x9" />
                       </toggleGroup>
                     </RadioButton>
-                    <RadioButton mnemonicParsing="false" onAction="#enable80m" text="80m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                    <RadioButton mnemonicParsing="false" onAction="#enable60m" text="60m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                    <RadioButton mnemonicParsing="false" onAction="#enable30m" text="40m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                    <RadioButton mnemonicParsing="false" text="30m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                    <RadioButton mnemonicParsing="false" selected="true" text="20m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                    <RadioButton mnemonicParsing="false" text="17m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                    <RadioButton mnemonicParsing="false" text="15m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-                    <RadioButton mnemonicParsing="false" text="12m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-                    <RadioButton mnemonicParsing="false" text="10m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-                    <RadioButton mnemonicParsing="false" text="6m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-                    <RadioButton mnemonicParsing="false" text="4m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+                    <RadioButton fx:id="bpf_80m" mnemonicParsing="false" onAction="#bpfBandChanged" text="80m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <RadioButton fx:id="bpf_60m" mnemonicParsing="false" onAction="#bpfBandChanged" text="60m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <RadioButton fx:id="bpf_40m" mnemonicParsing="false" onAction="#bpfBandChanged" text="40m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <RadioButton fx:id="bpf_30m" mnemonicParsing="false" onAction="#bpfBandChanged" text="30m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <RadioButton fx:id="bpf_20m" mnemonicParsing="false" onAction="#bpfBandChanged" selected="true" text="20m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                    <RadioButton fx:id="bpf_17m" mnemonicParsing="false" onAction="#bpfBandChanged" text="17m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                    <RadioButton fx:id="bpf_15m" mnemonicParsing="false" onAction="#bpfBandChanged" text="15m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                    <RadioButton fx:id="bpf_12m" mnemonicParsing="false" onAction="#bpfBandChanged" text="12m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                    <RadioButton fx:id="bpf_10m" mnemonicParsing="false" onAction="#bpfBandChanged" text="10m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                    <RadioButton fx:id="bpf_6m" mnemonicParsing="false" onAction="#bpfBandChanged" text="6m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                    <RadioButton fx:id="bpf_4m" mnemonicParsing="false" onAction="#bpfBandChanged" text="4m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="11" />
                     <Label text="1.8-2MHz" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                     <Label text="3.5-3.8MHz" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     <Label text="5.357-5.362MHz" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -861,7 +859,7 @@
             </GridPane>
             <ImageView fitHeight="104.31774349547982" fitWidth="156.9999542236328" pickOnBounds="true" preserveRatio="true" rotate="20.0" GridPane.columnIndex="8" GridPane.rowIndex="0">
               <image>
-                <Image url="@../../../../assets/img/seal.jpg" />
+                <Image url="@img/seal.jpg" />
               </image>
               <rotationAxis>
                 <Point3D z="-1.0" />
