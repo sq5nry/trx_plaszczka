@@ -137,7 +137,7 @@
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
                   </GridPane.margin>
                 </Slider>
-                <Slider fx:id="mix_bias" majorTickUnit="1.0" max="5.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="2.5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Slider fx:id="mix_bias" majorTickUnit="1.0" max="5.0" minorTickCount="5" nodeOrientation="LEFT_TO_RIGHT" showTickLabels="true" showTickMarks="true" value="2.5" GridPane.columnIndex="0" GridPane.rowIndex="1">
                   <GridPane.margin>
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
                   </GridPane.margin>
@@ -170,7 +170,7 @@
             </GridPane>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <Label font="$x5" text="Roofing Filter" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <ComboBox fx:id="mix_roof" promptText="SSB" visibleRowCount="2" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <ComboBox fx:id="mix_roof" onAction="#mixRoofingChanged" promptText="SSB" visibleRowCount="2" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
               <items>
                 <FXCollections fx:factory="observableArrayList">
                   <String fx:value="SSB" />
@@ -180,12 +180,12 @@
             </ComboBox>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <Label font="$x5" text="Selectivity Filter" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <ComboBox fx:id="sel" promptText="2.4k" visibleRowCount="3" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <ComboBox fx:id="selectivity" onAction="#selectivityChanged" promptText="2.4k" visibleRowCount="3" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
               <items>
                 <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="350" />
-                  <String fx:value="1.8k" />
-                  <String fx:value="2.4k" />
+                  <String fx:value="500" />
+                  <String fx:value="1800" />
+                  <String fx:value="2400" />
                 </FXCollections>
               </items>
             </ComboBox>
