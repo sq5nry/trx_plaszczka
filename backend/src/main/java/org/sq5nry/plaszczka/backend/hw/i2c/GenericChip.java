@@ -21,6 +21,11 @@ public abstract class GenericChip {
 
     public GenericChip initialize() throws IOException {
         device = i2CBus.getDevice(address);
+        if ((address >= 0x30 && address <= 0x37) || (address >= 0x50 && address <= 0x5F)) {
+            device.read();
+        } else {
+            device.write((byte) 0);
+        }
         return this;
     }
 
