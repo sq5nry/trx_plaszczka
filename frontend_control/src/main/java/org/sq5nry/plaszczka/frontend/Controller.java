@@ -1,19 +1,35 @@
 package org.sq5nry.plaszczka.frontend;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 
-import java.net.HttpURLConnection;
+import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+
+import static org.apache.http.protocol.HTTP.USER_AGENT;
+
 
 public class Controller implements Initializable {
     private static final Logger logger = Logger.getLogger(Controller.class);
@@ -25,6 +41,7 @@ public class Controller implements Initializable {
     private static final String MIXER_BIAS = "/mixer/bias/";
     private static final String MIXER_ROOFING = "/mixer/roofingMode/";
     private static final String SELECTIVITY = "/selectivity/";
+    private static final String INITIALIZE = "/mgmt/initialize/rx";
 
     @FXML private Label att_disp;
     @FXML private Slider att_reg;
@@ -36,6 +53,17 @@ public class Controller implements Initializable {
     
     @FXML private ComboBox mix_roof;
     @FXML private ComboBox selectivity;
+
+    @FXML private Rectangle box_att;
+    @FXML private Rectangle box_bpf;
+    @FXML private Circle box_mixer;
+    @FXML private Rectangle box_mixRoofing;
+    @FXML private Rectangle box_selectivity;
+    @FXML private Polygon box_vga;
+    @FXML private Rectangle box_detRoofing;
+    @FXML private Rectangle box_detector;
+    @FXML private Polygon box_audio;
+    @FXML private Label box_disp;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -89,14 +117,75 @@ public class Controller implements Initializable {
         sendRequest(BACKEND_ROOT_URL + MIXER_ROOFING + roof);
     }
 
-    private void sendRequest(String url) {
+    @FXML
+    private void reinitialize(ActionEvent event) {
+        Map response = sendRequest(BACKEND_ROOT_URL + INITIALIZE);
+        for (Object name: response.keySet()) {
+            String unitName = (String) name;
+            String state = (String) response.get(name);
+            if ("AudioUnit".equals(unitName)) {
+                setUnitColor(box_audio, state);
+            } else if ("BpfUnit".equals(unitName)) {
+                setUnitColor(box_att, state);
+                setUnitColor(box_bpf, state);
+            } else if ("QSDUnit".equals(unitName)) {
+                setUnitColor(box_detector, state);
+                setUnitColor(box_detRoofing, state);
+            } else if ("FrontEndMixerUnit".equals(unitName)) {
+                setUnitColor(box_mixer, state);
+                setUnitColor(box_mixRoofing, state);
+            } else if ("NixieDisplayUnit".equals(unitName)) {
+                setUnitColor(box_disp, state);
+            } else if ("SelectivityUnit".equals(unitName)) {
+                setUnitColor(box_selectivity, state);
+            } else if ("VgaUnit".equals(unitName)) {
+                setUnitColor(box_vga, state);
+            }
+        }
+        logger.debug("response=" + response.values());
+    }
+
+    private void setUnitColor(Shape unit, String state) {
+        if ("INITIALIZED".equals(state)) {
+            unit.setFill(Color.GREENYELLOW);
+        } else {
+            unit.setFill(Color.RED);
+        }
+    }
+
+    private void setUnitColor(Labeled label, String state) {
+        if ("INITIALIZED".equals(state)) {
+            label.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
+        } else {
+            label.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+        }
+    }
+
+    public void shutdown() {
+        logger.debug("shutting down");
+        client.getConnectionManager().shutdown();
+    }
+
+    HttpClient client = null;
+    private Map sendRequest(String url) {
         logger.debug("sendRequest: " + url);
+
+        client = new DefaultHttpClient();
+        HttpGet request = new HttpGet(url);
+
+        // add request header
+        request.addHeader("User-Agent", USER_AGENT);
+        HttpResponse response = null;
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-            con.setRequestMethod("GET");
-            logger.debug("response code: " + con.getResponseCode());
-        } catch (Exception e) {
+            response = client.execute(request);
+            if (response.getEntity().getContentLength() != 0) {
+                ObjectMapper mapper = new ObjectMapper();
+                return mapper.readValue(response.getEntity().getContent(), Map.class);
+            }
+        } catch (IOException e) {
             logger.warn("error sending request to backend", e);
         }
+        logger.debug("response code: " + response.getStatusLine().getStatusCode());
+        return new HashMap();
     }
 }
