@@ -14,11 +14,6 @@ public abstract class GenericChip {
         this.address = address;
     }
 
-    public GenericChip(I2CBus i2CBus, int address) {
-        this.i2CBus = i2CBus;
-        this.address = address;
-    }
-
     public GenericChip initialize() throws IOException {
         device = i2CBus.getDevice(address);
         if ((address >= 0x30 && address <= 0x37) || (address >= 0x50 && address <= 0x5F)) {
