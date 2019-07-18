@@ -41,7 +41,9 @@ public class Controller implements Initializable {
     private static final String MIXER_BIAS = "/mixer/bias/";
     private static final String MIXER_ROOFING = "/mixer/roofingMode/";
     private static final String SELECTIVITY = "/selectivity/";
+    private static final String AUDIO_VOL = "/audio/volume/";
     private static final String INITIALIZE = "/mgmt/initialize/rx";
+
 
     @FXML private Label att_disp;
     @FXML private Slider att_reg;
@@ -53,6 +55,9 @@ public class Controller implements Initializable {
     
     @FXML private ComboBox mix_roof;
     @FXML private ComboBox selectivity;
+
+    @FXML private Slider audio_l_vol;
+    @FXML private Slider audio_r_vol;
 
     @FXML private Rectangle box_att;
     @FXML private Rectangle box_bpf;
@@ -72,7 +77,21 @@ public class Controller implements Initializable {
 
         mix_squarer.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setMixerSquarer());
         mix_bias.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setMixerBias());
+        audio_l_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume(audio_l_vol, Channel.L));
+        audio_r_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume(audio_r_vol, Channel.R));
     }
+
+    private void setVolume(Slider slider, Channel channel) {
+        int vol = (int) slider.getValue();
+        if (channel == Channel.L) { //TODO check coupler
+            audio_r_vol.setValue(vol);
+        } else {
+            audio_l_vol.setValue(vol);
+        }
+        sendRequest(BACKEND_ROOT_URL + AUDIO_VOL + "/BOTH/" + (-vol));
+    }
+
+    private enum Channel { L, R }
 
     public static final DecimalFormat DEC_FORMAT_2DIG = new DecimalFormat("#.00");
     private void setMixerSquarer() {
