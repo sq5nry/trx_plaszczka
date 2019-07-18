@@ -1,29 +1,26 @@
 package org.sq5nry.plaszczka.backend.impl;
 
-import com.pi4j.io.i2c.I2CBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.audio.*;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Tda7309;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
-public class AudioUnit implements AfAmplifier, Reinitializable {
+public class AudioUnit extends Unit implements AfAmplifier, Reinitializable {
     private static final Logger logger = LoggerFactory.getLogger(FrontEndMixerUnit.class);
-
-    private final I2CBus bus;
-    private Map<Integer, GenericChip> chipset = new HashMap<>();
 
     private final int EXPANDER_ADDR = 0x25;
     private final int AUDIO_PROCESSOR_ADDR = 0x19;
+
+    private static final byte OUTPUT_AMP_HEADPHONES = 0x08;
+    private static final byte OUTPUT_AMP_SPEAKERS = 0x10;
+    private static final byte OUTPUT_AMP_REC = 0x04;
 
     private OutputAmplifier outputAmp;
     private int volume_r;
@@ -31,23 +28,22 @@ public class AudioUnit implements AfAmplifier, Reinitializable {
 
     @Autowired
     public AudioUnit(I2CBusProvider i2cBusProv) throws Exception {
-        logger.debug("creating chipset");
-        bus = i2cBusProv.getBus();
-        chipset.put(EXPANDER_ADDR, new Pcf8574(bus, EXPANDER_ADDR).initialize());
-        chipset.put(AUDIO_PROCESSOR_ADDR, new Tda7309(bus, AUDIO_PROCESSOR_ADDR).initialize());
-        initialize();
-        logger.debug("chipset created & initialized");
+        super(i2cBusProv);
+        addToChipset(new Pcf8574(EXPANDER_ADDR));
+        addToChipset(new Tda7309(AUDIO_PROCESSOR_ADDR));
+        initializeChipset();
+        initializeUnit();
     }
 
     @Override
-    public void initialize() throws Exception {
+    public void initializeUnit() throws Exception {
         //TODO
         //Tda7309 audioProc = (Tda7309) chipset.get(AUDIO_PROCESSOR_ADDR);
     }
 
     @Override
     public void setInput(InputSelector mode) throws Exception {
-        Tda7309 audioProc = (Tda7309) chipset.get(AUDIO_PROCESSOR_ADDR);
+        Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch (mode) {
             case II_MONO:
                 audioProc.setInputMux(Tda7309.INPUTS_IN3);  //TODO check I/Q vs L/R assignment
@@ -66,7 +62,7 @@ public class AudioUnit implements AfAmplifier, Reinitializable {
 
     @Override
     public void setVolume(int volume, Channel channel) throws Exception {
-        Tda7309 audioProc = (Tda7309) chipset.get(AUDIO_PROCESSOR_ADDR);
+        Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch (channel) {
             case BOTH:
                 audioProc.setChannel(Tda7309.CHANNEL_BOTH); //TODO check if volume set right way. If so, send bytes at once
@@ -96,7 +92,7 @@ public class AudioUnit implements AfAmplifier, Reinitializable {
 
     @Override
     public void setMuteLoudness(MuteAndLoudness loudness) throws Exception {
-        Tda7309 audioProc = (Tda7309) chipset.get(AUDIO_PROCESSOR_ADDR);
+        Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch(loudness) {
             case LOUD_ON_10DB:
                 audioProc.setLoudness(Tda7309.LOUD_ON_10DB);
@@ -121,13 +117,9 @@ public class AudioUnit implements AfAmplifier, Reinitializable {
         }
     }
 
-    private static final byte OUTPUT_AMP_HEADPHONES = 0x08;
-    private static final byte OUTPUT_AMP_SPEAKERS = 0x10;
-    private static final byte OUTPUT_AMP_REC = 0x04;
-
     @Override
     public void setOutputAmplifier(OutputAmplifier amp) throws IOException {
-        Pcf8574 expander = (Pcf8574) chipset.get(EXPANDER_ADDR);
+        Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         byte data = 0x00;
         if (amp.isHeadphones()) {
             data |= OUTPUT_AMP_HEADPHONES;

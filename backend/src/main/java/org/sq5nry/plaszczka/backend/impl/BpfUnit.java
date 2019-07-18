@@ -1,6 +1,5 @@
 package org.sq5nry.plaszczka.backend.impl;
 
-import com.pi4j.io.i2c.I2CBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,20 +8,15 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.inputfilter.Band;
 import org.sq5nry.plaszczka.backend.api.inputfilter.BandPassFilter;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8575;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 @PropertySource("classpath:trx_config.properties")
-public class BpfUnit implements BandPassFilter {
+public class BpfUnit extends Unit implements BandPassFilter {
     private static final Logger logger = LoggerFactory.getLogger(BpfUnit.class);
-
-    private Map<Integer, GenericChip> chipset = new HashMap<>();
 
     private static final int EXPANDER_ADDR = 0x27;//TODO config
 
@@ -69,19 +63,10 @@ public class BpfUnit implements BandPassFilter {
 
     @Autowired
     public BpfUnit(I2CBusProvider i2cBusProv) throws Exception {
+        super(i2cBusProv);
         band = Band.fromMeters(DEFAULT_BAND);
-        logger.debug("creating expanders");
-        chipset.put(EXPANDER_ADDR, create(i2cBusProv.getBus(), EXPANDER_ADDR));
-        logger.debug("expander created & initialized");
-    }
-
-    private static Pcf8575 create(I2CBus bus, int address) throws IOException {
-        logger.debug("creating expander @x{}", Integer.toHexString(address));
-        Pcf8575 expander = new Pcf8575(bus, address);
-        logger.debug("initializing expander @x{}", Integer.toHexString(address));
-        expander.initialize();
-        logger.debug("expander @x{} initialized", Integer.toHexString(address));
-        return expander;
+        addToChipset(new Pcf8575(EXPANDER_ADDR));
+        initializeChipset();
     }
 
     @Override
@@ -105,7 +90,7 @@ public class BpfUnit implements BandPassFilter {
         FeatureBits bits = FeatureBits.getByBand(band);
         buffer[0] = bits.getP0();
         buffer[1] = (byte) (bits.getP1() | (attenuation << 4));
-        ((Pcf8575) chipset.get(EXPANDER_ADDR)).writePort(buffer);
+        ((Pcf8575) getChip(EXPANDER_ADDR)).writePort(buffer);
     }
 
     public Band getBand() {

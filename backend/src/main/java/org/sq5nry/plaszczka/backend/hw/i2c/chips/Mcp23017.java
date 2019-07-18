@@ -1,6 +1,5 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
-import com.pi4j.io.i2c.I2CBus;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
 import java.io.IOException;
@@ -33,8 +32,8 @@ public class Mcp23017 extends GenericChip  {
     public static final byte IODIR_B = 0x01;
     public static final byte IODIR_ALL_OUTPUTS = 0x00;
 
-    public Mcp23017(I2CBus bus, int address) {
-        super(bus, address);
+    public Mcp23017(int address) {
+        super(address);
     }
 
     public void writePort(Mcp23017.Port port, byte value) throws IOException {

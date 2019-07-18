@@ -1,6 +1,5 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
-import com.pi4j.io.i2c.I2CBus;
 import org.apache.commons.lang3.BitField;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
@@ -15,8 +14,8 @@ import java.io.IOException;
  * a single register.
  */
 public class Pcf8574 extends GenericChip {
-    public Pcf8574(I2CBus bus, int address) {
-        super(bus, address);
+    public Pcf8574(int address) {
+        super(address);
     }
 
     /**

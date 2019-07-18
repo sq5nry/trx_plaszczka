@@ -1,20 +1,16 @@
 package org.sq5nry.plaszczka.backend.impl;
 
-import com.pi4j.io.i2c.I2CBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.display.FrequencyDisplay;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Mcp23017;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Nixie seven-tube frequency display in format XX.XXX.XX
@@ -22,11 +18,8 @@ import java.util.Map;
  * Optional dot marker above a digit; single dot at a time.
  */
 @Component
-public class NixieDisplayUnit implements FrequencyDisplay, Reinitializable {
+public class NixieDisplayUnit extends Unit implements FrequencyDisplay, Reinitializable {
     private static final Logger logger = LoggerFactory.getLogger(NixieDisplayUnit.class);
-    private final I2CBus bus;
-
-    private Map<Integer, GenericChip> chipset = new HashMap<>();
 
     private final int EXPANDER_A_I2CADDR = 0x21;
     private final int EXPANDER_B_I2CADDR = 0x20;
@@ -43,28 +36,23 @@ public class NixieDisplayUnit implements FrequencyDisplay, Reinitializable {
 
     @Autowired
     public NixieDisplayUnit(I2CBusProvider i2cBusProv) throws Exception {
-        logger.debug("creating expanders");
-        bus = i2cBusProv.getBus();
-        initialize();
-        logger.debug("expanders created & initialized");
+        super(i2cBusProv);
+        addToChipset(new Mcp23017(EXPANDER_A_I2CADDR));
+        addToChipset(new Mcp23017(EXPANDER_B_I2CADDR));
+        initializeChipset();
+        initializeUnit();
     }
 
     @Override
-    public void initialize() throws Exception {
-        chipset.put(EXPANDER_A_I2CADDR, create(bus, EXPANDER_A_I2CADDR));
-        chipset.put(EXPANDER_B_I2CADDR, create(bus, EXPANDER_B_I2CADDR));
+    public void initializeUnit() throws Exception {
+        initializeExpander((Mcp23017) getChip(EXPANDER_A_I2CADDR));
+        initializeExpander((Mcp23017) getChip(EXPANDER_B_I2CADDR));
+        logger.debug("unit initialized");
     }
 
-    private static Mcp23017 create(I2CBus bus, int address) throws IOException {
-        logger.debug("creating expander @x{}", Integer.toHexString(address));
-        Mcp23017 expander = new Mcp23017(bus, address);
-        logger.debug("initializing expander @x{}", Integer.toHexString(address));
-        expander.initialize();
-        logger.debug("expander @x{} initialized", Integer.toHexString(address));
+    private static void initializeExpander(Mcp23017 expander) throws IOException {
         expander.getDevice().write(Mcp23017.IODIR_A, Mcp23017.IODIR_ALL_OUTPUTS);
         expander.getDevice().write(Mcp23017.IODIR_B, Mcp23017.IODIR_ALL_OUTPUTS);
-        logger.debug("expander @x{} configured", Integer.toHexString(address));
-        return expander;
     }
 
     @Override
@@ -134,22 +122,22 @@ public class NixieDisplayUnit implements FrequencyDisplay, Reinitializable {
             p[2] = (byte) (((_digits[1] & 0xf) << 4) | (_digits[0] & 0xf));
 
             if (p[0] != _port[0]) {   //TODO optimize
-                ((Mcp23017) chipset.get(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[0]);
+                ((Mcp23017) getChip(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[0]);
                 _port[0] = p[0];
             }
             if (p[1] != _port[1]) {
-                ((Mcp23017) chipset.get(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[1]);
+                ((Mcp23017) getChip(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[1]);
                 _port[1] = p[1];
             }
             if (p[2] != _port[2]) {
-                ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[2]);
+                ((Mcp23017) getChip(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[2]);
                 _port[2] = p[2];
             }
         }
 
         p[3] = (byte) ((d1 << 4) | markerPosition);
         if (p[3] != _port[3]) {
-            ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[3]);
+            ((Mcp23017) getChip(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[3]);
             _port[3] = p[3];
         }
     }
@@ -162,10 +150,10 @@ public class NixieDisplayUnit implements FrequencyDisplay, Reinitializable {
         p[2] = (byte) (((_digits[4] & 0xf) << 4) | (_digits[5] & 0xf));
         p[3] = (byte) (((_digits[6] & 0xf) << 4) | ((ticker = !ticker) ? 5 : 0));
 
-        ((Mcp23017) chipset.get(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[0]);
-        ((Mcp23017) chipset.get(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[1]);
-        ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[2]);
-        ((Mcp23017) chipset.get(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[3]);
+        ((Mcp23017) getChip(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[0]);
+        ((Mcp23017) getChip(EXPANDER_A_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[1]);
+        ((Mcp23017) getChip(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_A, p[2]);
+        ((Mcp23017) getChip(EXPANDER_B_I2CADDR)).writePort(Mcp23017.Port.GPIO_B, p[3]);
     }
 
     //TODO put into heheszki

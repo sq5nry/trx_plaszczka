@@ -1,7 +1,5 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
-import com.pi4j.io.i2c.I2CBus;
-
 import java.io.IOException;
 
 /**
@@ -16,8 +14,8 @@ import java.io.IOException;
  * http://www.ti.com/product/PCF8575
  */
 public class Pcf8575 extends Pcf8574 {
-    public Pcf8575(I2CBus bus, int address) {
-        super(bus, address);
+    public Pcf8575(int address) {
+        super(address);
     }
 
     public void writePort(byte p0, byte p1) throws IOException {

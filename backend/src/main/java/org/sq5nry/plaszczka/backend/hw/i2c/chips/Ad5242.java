@@ -1,6 +1,5 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
-import com.pi4j.io.i2c.I2CBus;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
 import java.io.IOException;
@@ -47,8 +46,8 @@ public class Ad5242 extends GenericChip {
     }
 
 
-    public Ad5242(I2CBus bus, int address) {
-        super(bus, address);
+    public Ad5242(int address) {
+        super(address);
     }
 
     public void setData(int data, Rdac rdac) throws IOException {

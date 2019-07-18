@@ -1,7 +1,5 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
-import com.pi4j.io.i2c.I2CBus;
-
 import java.io.IOException;
 
 /**
@@ -38,8 +36,8 @@ public class Ad5321 extends GenericDac {
     private PD_MODE pdMode;
     private int data;
 
-    public Ad5321(I2CBus i2CBus, int address) {
-        super(i2CBus, address);
+    public Ad5321(int address) {
+        super(address);
         pdMode = PD_MODE.PD_POWER_DOWN_HI_Z;
     }
 

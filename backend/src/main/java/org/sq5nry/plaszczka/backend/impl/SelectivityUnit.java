@@ -1,25 +1,17 @@
 package org.sq5nry.plaszczka.backend.impl;
 
-import com.pi4j.io.i2c.I2CBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.selectivity.Bandwidth;
 import org.sq5nry.plaszczka.backend.api.selectivity.Selectivity;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Component
-public class SelectivityUnit implements Selectivity, Reinitializable {
+public class SelectivityUnit extends Unit implements Selectivity, Reinitializable {
     private static final Logger logger = LoggerFactory.getLogger(SelectivityUnit.class);
-
-    private final I2CBus bus;
-    private Map<Integer, GenericChip> chipset = new HashMap<>();
 
     private final int EXPANDER_ADDR = 0x23;
 
@@ -53,20 +45,17 @@ public class SelectivityUnit implements Selectivity, Reinitializable {
 
     @Autowired
     public SelectivityUnit(I2CBusProvider i2cBusProv) throws Exception {
-        logger.debug("creating chipset");
-        bus = i2cBusProv.getBus();
-        Pcf8574 expander = new Pcf8574(bus, EXPANDER_ADDR);
-        expander.initialize();
-        chipset.put(EXPANDER_ADDR, expander);
-        initialize();
-        logger.debug("chipset created & initialized");
+        super(i2cBusProv);
+        addToChipset(new Pcf8574(EXPANDER_ADDR));
+        initializeChipset();
+        initializeUnit();
     }
 
     @Override
-    public void initialize() throws Exception {
+    public void initializeUnit() throws Exception {
         FeatureBits defBw = FeatureBits.BW_NONE;
         logger.debug("initializing unit with defaults: {}", defBw);
-        Pcf8574 expander = (Pcf8574) chipset.get(EXPANDER_ADDR);
+        Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         expander.writePort(defBw.getP());
     }
 
@@ -76,7 +65,7 @@ public class SelectivityUnit implements Selectivity, Reinitializable {
         this.bw = bandwidth;
         FeatureBits bw = FeatureBits.getByBandwidth(bandwidth);
         logger.debug("setting bandwidth filter: {}", bw);
-        Pcf8574 expander = (Pcf8574) chipset.get(EXPANDER_ADDR);
+        Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         expander.writePort(bw.getP());
     }
 

@@ -47,7 +47,7 @@ public class DisplayController {
     @RequestMapping(value = "/frequencyDisplay/initialize", method = RequestMethod.GET)
     public String initialize() throws Exception {
         logger.debug("initializing module");
-        freqDisplayService.initialize();
+        freqDisplayService.initializeUnit();
         return "result=module reinitialized successfully";
     }
 }

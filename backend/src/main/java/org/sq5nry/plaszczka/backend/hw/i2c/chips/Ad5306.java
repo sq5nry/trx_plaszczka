@@ -1,7 +1,5 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
-import com.pi4j.io.i2c.I2CBus;
-
 /**
  * The AD5306 is a quad 8-bit buffered voltage output DACs in 16-lead TSSOP packages that operate from a single 2.5 V
  * to 5.5 V supply, consuming 500 μA at 3 V. Their on-chip output amplifiers allow rail-to-rail output swing with a slew
@@ -90,8 +88,8 @@ public class Ad5306 extends GenericDac {
     private byte[] buffer;
 
 
-    public Ad5306(I2CBus i2CBus, int address) {
-        super(i2CBus, address);
+    public Ad5306(int address) {
+        super(address);
         buffer = new byte[4];
     }
 

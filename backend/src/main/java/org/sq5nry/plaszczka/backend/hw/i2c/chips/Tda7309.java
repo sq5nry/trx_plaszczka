@@ -1,6 +1,5 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
-import com.pi4j.io.i2c.I2CBus;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
 import java.io.IOException;
@@ -42,8 +41,8 @@ public class Tda7309 extends GenericChip {
     private byte input = INPUTS_MUTE;
     private byte channel = CHANNEL_BOTH;
 
-    public Tda7309(I2CBus i2CBus, int address) {
-        super(i2CBus, address);
+    public Tda7309(int address) {
+        super(address);
     }
 
     /**

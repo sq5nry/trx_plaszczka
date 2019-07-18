@@ -10,7 +10,9 @@ public abstract class GenericChip {
     private I2CDevice device;
     private int address;
 
-    private I2CDeviceState state = I2CDeviceState.CREATED;
+    public GenericChip(int address) {
+        this.address = address;
+    }
 
     public GenericChip(I2CBus i2CBus, int address) {
         this.i2CBus = i2CBus;
@@ -19,22 +21,18 @@ public abstract class GenericChip {
 
     public GenericChip initialize() throws IOException {
         device = i2CBus.getDevice(address);
-        state = I2CDeviceState.INITIALIZED;
         return this;
     }
 
     public I2CDevice getDevice() {
-        if (state != I2CDeviceState.INITIALIZED) {
-            throw new IllegalStateException("device not initialized");
-        }
         return device;
+    }
+
+    public void setI2CBus(I2CBus i2CBus) {
+        this.i2CBus = i2CBus;
     }
 
     public int getAddress() {
         return address;
-    }
-
-    public I2CDeviceState getState() {
-        return state;
     }
 }

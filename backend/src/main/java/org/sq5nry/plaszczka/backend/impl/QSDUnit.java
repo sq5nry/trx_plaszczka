@@ -1,26 +1,20 @@
 package org.sq5nry.plaszczka.backend.impl;
 
-import com.pi4j.io.i2c.I2CBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.Mode;
 import org.sq5nry.plaszczka.backend.api.detector.Detector;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
+import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8575;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
-public class QSDUnit implements Detector {
+public class QSDUnit extends Unit implements Detector {
     private static final Logger logger = LoggerFactory.getLogger(QSDUnit.class);
-
-    private final I2CBus bus;
-    private Map<Integer, GenericChip> chipset = new HashMap<>();
 
     private final int EXPANDER_ADDR = 0x26;
 
@@ -55,12 +49,9 @@ public class QSDUnit implements Detector {
 
     @Autowired
     public QSDUnit(I2CBusProvider i2cBusProv) throws Exception {
-        logger.debug("creating chipset");
-        bus = i2cBusProv.getBus();
-        Pcf8574 expander = new Pcf8574(bus, EXPANDER_ADDR);
-        expander.initialize();
-        chipset.put(EXPANDER_ADDR, expander);
-        logger.debug("chipset created & initialized");
+        super(i2cBusProv);
+        addToChipset(new Pcf8575(EXPANDER_ADDR));
+        initializeChipset();
     }
 
     @Override
@@ -86,7 +77,7 @@ public class QSDUnit implements Detector {
     }
 
     private void update() throws IOException {
-        Pcf8574 expander = (Pcf8574) chipset.get(EXPANDER_ADDR);
+        Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         byte qsdEn = qsdEnabled ? QSD_ENABLED_BIT : 0x0;
         expander.writePort(FeatureBits.getByMode(mode).getP() | qsdEn);
     }
