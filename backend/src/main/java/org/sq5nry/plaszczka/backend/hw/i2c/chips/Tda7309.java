@@ -45,6 +45,10 @@ public class Tda7309 extends GenericChip {
         super(address);
     }
 
+    //TODO chip fails to accept any data with LSB = 1, need to replace
+    private void writeTmp(byte val) throws IOException {
+        getDevice().write((byte) (val & 0xfe));
+    }
     /**
      * Set volume.
      * @param volume 0..95dB reflecting negative actual value. Higher value corresponds to MUTE condition
@@ -54,7 +58,7 @@ public class Tda7309 extends GenericChip {
             throw new IllegalArgumentException("negative volume");
         }
         this.volume = (byte) (volume & 0x7F);
-        getDevice().write((byte) (CTRL_VOLUME | volume));
+        writeTmp((byte) (CTRL_VOLUME | volume));
     }
 
     /**
@@ -63,7 +67,7 @@ public class Tda7309 extends GenericChip {
      * @throws IOException
      */
     public void setInputMux(byte input) throws IOException {
-        getDevice().write((byte) (CTRL_INPUTS | input));
+        writeTmp((byte) (CTRL_INPUTS | input));
         this.input = input;
     }
 
@@ -73,7 +77,7 @@ public class Tda7309 extends GenericChip {
      * @throws IOException
      */
     public void setChannel(byte channel) throws IOException {
-        getDevice().write((byte) (CTRL_CHANNEL | channel));
+        writeTmp((byte) (CTRL_CHANNEL | channel));
         this.channel = channel;
     }
 
@@ -84,7 +88,7 @@ public class Tda7309 extends GenericChip {
      */
     public void setMute(byte mute) throws IOException {
         this.mute = (byte) (mute & MUTE_MASK);
-        getDevice().write((byte) (mute | CTRL_MUTE_LOUD));
+        writeTmp((byte) (mute | CTRL_MUTE_LOUD));
     }
 
     /**
@@ -94,7 +98,7 @@ public class Tda7309 extends GenericChip {
      */
     public void setLoudness(byte loud) throws IOException {
         this.loud = (byte) (loud & LOUD_MASK);
-        getDevice().write((byte) (loud | CTRL_MUTE_LOUD));
+        writeTmp((byte) (loud | CTRL_MUTE_LOUD));
     }
 
     @Override
