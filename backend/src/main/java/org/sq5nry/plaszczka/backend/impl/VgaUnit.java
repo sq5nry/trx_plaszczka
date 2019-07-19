@@ -25,7 +25,7 @@ public class VgaUnit extends Unit implements IfAmp, Reinitializable {
         addToChipset(new Ad5306(DAC_IC19));
         addToChipset(new Ad5321(DAC));
         addToChipset(new Ad7999(ADC));
-        addToChipset(new Ad5242(ADC));
+        addToChipset(new Ad5242(RDAC));
         initializeChipset();
         initializeUnit();
     }
