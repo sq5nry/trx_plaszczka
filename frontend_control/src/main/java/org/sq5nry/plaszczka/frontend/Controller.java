@@ -41,7 +41,27 @@ public class Controller implements Initializable {
         audio_input.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setAudioInput(newVal.toString()));
         vga_ifGain.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setIfGain(newVal.toString()));
         vga_vloop.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVLoop(newVal.toString()));
+        freq_slider_mhz.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> freqChanged(null));
+        freq_slider_khz.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> freqChanged(null));
+        freq_slider_hz.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> freqChanged(null));
     }
+
+    @FXML
+    private void freqChanged(ActionEvent e) {
+        logger.debug("freqChanged");
+    }
+
+    /*
+     * Freq control
+     */
+    @FXML Slider freq_slider_mhz;
+    @FXML Slider freq_slider_khz;
+    @FXML Slider freq_slider_hz;
+    @FXML TextField freq_mhz;
+    @FXML TextField freq_khz;
+    @FXML TextField freq_hz;
+
+
 
     /*
      * IF amp

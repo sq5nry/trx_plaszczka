@@ -51,9 +51,4 @@ public class Pcf8574 extends GenericChip {
         }
         getDevice().write((byte) data);
     }
-
-    @Override
-    public String toString() {
-        return "PCF8574{" + Integer.toHexString(getAddress()) + "}";
-    }
 }

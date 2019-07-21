@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.Mode;
 import org.sq5nry.plaszczka.backend.api.detector.Detector;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8575;
 
 import java.io.IOException;
-
-import static org.sq5nry.plaszczka.backend.impl.Unit.State.FAILED;
+import java.util.List;
 
 @Component
 public class QSDUnit extends Unit implements Detector {
@@ -22,7 +22,7 @@ public class QSDUnit extends Unit implements Detector {
 
     private Mode mode;
     private boolean qsdEnabled;
-    private static final byte QSD_ENABLED_BIT = 0x02;
+    private static final byte QSD_DISABLED_BIT = 0x02;
 
     private enum FeatureBits {
         CW(Mode.CW, (byte)0x01), SSB(Mode.SSB, (byte)0x00);
@@ -52,23 +52,20 @@ public class QSDUnit extends Unit implements Detector {
     @Autowired
     public QSDUnit(I2CBusProvider i2cBusProv) throws Exception {
         super(i2cBusProv);
-        addToChipset(new Pcf8575(EXPANDER_ADDR));
-        initializeChipset();
-        initializeUnit();
     }
 
     @Override
-    public void initializeUnit() {
+    public void createChipset(List<GenericChip> chipset) {
+        chipset.add(new Pcf8575(EXPANDER_ADDR));
+    }
+
+    @Override
+    public void initializeUnit() throws Exception {
         super.initializeUnit();
         logger.debug("initializing unit with defaults");
         mode = Mode.SSB;
         qsdEnabled = false;
-        try {
-            update();
-        } catch(Exception e) {
-            logger.debug("unit initialization failed", e);  //TODO move to template
-            state = FAILED;
-        }
+        update();
     }
 
     @Override
@@ -95,7 +92,7 @@ public class QSDUnit extends Unit implements Detector {
 
     private void update() throws IOException {
         Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
-        byte qsdEn = qsdEnabled ? QSD_ENABLED_BIT : 0x0;
+        byte qsdEn = (!qsdEnabled) ? QSD_DISABLED_BIT : 0x0;
         expander.writePort(FeatureBits.getByMode(mode).getP() | qsdEn);
     }
 }

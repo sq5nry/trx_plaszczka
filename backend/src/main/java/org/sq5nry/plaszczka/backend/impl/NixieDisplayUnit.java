@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.display.FrequencyDisplay;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Mcp23017;
 
 import java.io.IOException;
 import java.util.Calendar;
-
-import static org.sq5nry.plaszczka.backend.impl.Unit.State.FAILED;
+import java.util.List;
 
 /**
  * Nixie seven-tube frequency display in format XX.XXX.XX
@@ -39,23 +39,19 @@ public class NixieDisplayUnit extends Unit implements FrequencyDisplay, Reinitia
     @Autowired
     public NixieDisplayUnit(I2CBusProvider i2cBusProv) throws Exception {
         super(i2cBusProv);
-        addToChipset(new Mcp23017(EXPANDER_A_I2CADDR));
-        addToChipset(new Mcp23017(EXPANDER_B_I2CADDR));
-        initializeChipset();
-        initializeUnit();
     }
 
     @Override
-    public void initializeUnit() {
+    public void createChipset(List<GenericChip> chipset) {
+        chipset.add(new Mcp23017(EXPANDER_A_I2CADDR));
+        chipset.add(new Mcp23017(EXPANDER_B_I2CADDR));
+    }
+
+    @Override
+    public void initializeUnit() throws Exception {
         super.initializeUnit();
-        try {
-            initializeExpander((Mcp23017) getChip(EXPANDER_A_I2CADDR));
-            initializeExpander((Mcp23017) getChip(EXPANDER_B_I2CADDR));
-            logger.debug("unit initialized");
-        } catch(Exception e) {
-            logger.debug("unit initialization failed", e);  //TODO move to template
-            state = FAILED;
-        }
+        initializeExpander((Mcp23017) getChip(EXPANDER_A_I2CADDR));
+        initializeExpander((Mcp23017) getChip(EXPANDER_B_I2CADDR));
     }
 
     private static void initializeExpander(Mcp23017 expander) throws IOException {

@@ -29,9 +29,4 @@ public class Pcf8575 extends Pcf8574 {
             throw new IllegalArgumentException("port data size != 2 bytes");
         }
     }
-
-    @Override
-    public String toString() {
-        return "PCF8575{" + Integer.toHexString(getAddress()) + "}";
-    }
 }

@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.selectivity.Bandwidth;
 import org.sq5nry.plaszczka.backend.api.selectivity.Selectivity;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
 
-import static org.sq5nry.plaszczka.backend.impl.Unit.State.FAILED;
+import java.util.List;
 
 @Component
 public class SelectivityUnit extends Unit implements Selectivity, Reinitializable {
@@ -48,23 +49,20 @@ public class SelectivityUnit extends Unit implements Selectivity, Reinitializabl
     @Autowired
     public SelectivityUnit(I2CBusProvider i2cBusProv) throws Exception {
         super(i2cBusProv);
-        addToChipset(new Pcf8574(EXPANDER_ADDR));
-        initializeChipset();
-        initializeUnit();
     }
 
     @Override
-    public void initializeUnit() {
+    public void createChipset(List<GenericChip> chipset) {
+        chipset.add(new Pcf8574(EXPANDER_ADDR));
+    }
+
+    @Override
+    public void initializeUnit() throws Exception {
         super.initializeUnit();
-        try {
-            FeatureBits defBw = FeatureBits.BW_NONE;
-            logger.debug("initializing unit with defaults: {}", defBw);
-            Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
-            expander.writePort(defBw.getP());
-        } catch(Exception e) {
-            logger.debug("unit initialization failed", e);  //TODO move to template
-            state = FAILED;
-        }
+        FeatureBits defBw = FeatureBits.BW_NONE;
+        logger.debug("initializing unit with defaults: {}", defBw);
+        Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
+        expander.writePort(defBw.getP());
     }
 
     @Override

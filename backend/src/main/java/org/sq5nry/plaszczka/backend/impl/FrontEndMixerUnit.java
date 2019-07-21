@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.Mode;
 import org.sq5nry.plaszczka.backend.api.mixer.HModeMixer;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Ad5321;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.GenericDac;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
 
 import java.io.IOException;
-
-import static org.sq5nry.plaszczka.backend.impl.Unit.State.FAILED;
+import java.util.List;
 
 @Component
 public class FrontEndMixerUnit extends Unit implements HModeMixer, Reinitializable {
@@ -30,27 +30,24 @@ public class FrontEndMixerUnit extends Unit implements HModeMixer, Reinitializab
     @Autowired
     public FrontEndMixerUnit(I2CBusProvider i2cBusProv) throws Exception {
         super(i2cBusProv);
-        addToChipset(new Pcf8574(EXPANDER_ADDR));
-        addToChipset(new Ad5321(DAC_SQUARER_ADDR));
-        addToChipset(new Ad5321(DAC_BIAS_ADDR));
-        initializeChipset();
-        initializeUnit();
     }
 
     @Override
-    public void initializeUnit() {
+    public void initializeUnit() throws Exception {
         super.initializeUnit();
-        try {
-            Ad5321 adcBias = (Ad5321) getChip(DAC_BIAS_ADDR);
-            Ad5321 adcSquarer = (Ad5321) getChip(DAC_SQUARER_ADDR);
-            adcBias.setVoltage(0.0f);
-            adcBias.setPDMode(Ad5321.PD_MODE.PD_NORMAL_OPERATION);
-            adcSquarer.setVoltage(0.0f);
-            adcSquarer.setPDMode(Ad5321.PD_MODE.PD_NORMAL_OPERATION);
-        } catch(Exception e) {
-            logger.debug("unit initialization failed", e);  //TODO move to template
-            state = FAILED;
-        }
+        Ad5321 adcBias = (Ad5321) getChip(DAC_BIAS_ADDR);
+        Ad5321 adcSquarer = (Ad5321) getChip(DAC_SQUARER_ADDR);
+        adcBias.setVoltage(0.0f);
+        adcBias.setPDMode(Ad5321.PD_MODE.PD_NORMAL_OPERATION);
+        adcSquarer.setVoltage(0.0f);
+        adcSquarer.setPDMode(Ad5321.PD_MODE.PD_NORMAL_OPERATION);
+    }
+
+    @Override
+    public void createChipset(List<GenericChip> chipset) {
+        chipset.add(new Pcf8574(EXPANDER_ADDR));
+        chipset.add(new Ad5321(DAC_SQUARER_ADDR));
+        chipset.add(new Ad5321(DAC_BIAS_ADDR));
     }
 
     @Override

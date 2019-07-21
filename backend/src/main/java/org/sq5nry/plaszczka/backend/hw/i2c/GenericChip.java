@@ -35,4 +35,9 @@ public abstract class GenericChip {
     public int getAddress() {
         return address;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{address=0x" + Integer.toHexString(address) + '}';
+    }
 }

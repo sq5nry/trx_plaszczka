@@ -108,9 +108,4 @@ public class Tda7309 extends GenericChip {
         this.loud = (byte) (loud & LOUD_MASK);
         writeTmp((byte) (loud | CTRL_MUTE_LOUD));
     }
-
-    @Override
-    public String toString() {
-        return "TDA7309{" + Integer.toHexString(getAddress()) + "}";
-    }   //TODO to super
 }

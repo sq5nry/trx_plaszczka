@@ -5,8 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.vga.IfAmp;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.*;
+
+import java.util.List;
 
 @Component
 public class VgaUnit extends Unit implements IfAmp, Reinitializable {
@@ -21,13 +24,15 @@ public class VgaUnit extends Unit implements IfAmp, Reinitializable {
     @Autowired
     public VgaUnit(I2CBusProvider i2cBusProv) throws Exception {
         super(i2cBusProv);
-        addToChipset(new Ad5306(DAC_IC18));
-        addToChipset(new Ad5306(DAC_IC19));
-        addToChipset(new Ad5321(DAC));
-        addToChipset(new Ad7999(ADC));
-        addToChipset(new Ad5242(RDAC));
-        initializeChipset();
-        initializeUnit();
+    }
+
+    @Override
+    public void createChipset(List<GenericChip> chipset) {
+        chipset.add(new Ad5306(DAC_IC18));
+        chipset.add(new Ad5306(DAC_IC19));
+        chipset.add(new Ad5321(DAC));
+        chipset.add(new Ad7999(ADC));
+        chipset.add(new Ad5242(RDAC));
     }
 
     @Override

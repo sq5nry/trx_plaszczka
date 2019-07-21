@@ -5,11 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.audio.*;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Tda7309;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class AudioUnit extends Unit implements AfAmplifier, Reinitializable {
@@ -29,10 +31,12 @@ public class AudioUnit extends Unit implements AfAmplifier, Reinitializable {
     @Autowired
     public AudioUnit(I2CBusProvider i2cBusProv) throws Exception {
         super(i2cBusProv);
-        addToChipset(new Pcf8574(EXPANDER_ADDR));
-        addToChipset(new Tda7309(AUDIO_PROCESSOR_ADDR));
-        initializeChipset();
-        initializeUnit();
+    }
+
+    @Override
+    public void createChipset(List<GenericChip> chipset) {
+        chipset.add(new Pcf8574(EXPANDER_ADDR));
+        chipset.add(new Tda7309(AUDIO_PROCESSOR_ADDR));
     }
 
     @Override

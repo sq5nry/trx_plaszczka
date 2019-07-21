@@ -3,29 +3,28 @@ package org.sq5nry.plaszczka.backend.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.inputfilter.Band;
 import org.sq5nry.plaszczka.backend.api.inputfilter.BandPassFilter;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8575;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
-@PropertySource("classpath:trx_config.properties")
+//@PropertySource("classpath:trx_config.properties")
 public class BpfUnit extends Unit implements BandPassFilter {
     private static final Logger logger = LoggerFactory.getLogger(BpfUnit.class);
 
     private static final int EXPANDER_ADDR = 0x27;//TODO config
 
-    @Value("${default.band}")
-    private String DEFAULT_BAND = "20m"; //TODO from config doesnt work
+    private static final String DEFAULT_BAND = "20m"; //TODO from config doesnt work
 
     private Band band;
     private byte attenuation = 0;
-    private byte[] buffer = new byte[2];
+    private byte[] buffer;
 
     private enum FeatureBits {
         M6(Band.M6, (byte)0x00, (byte)0x02), M10(Band.M10, (byte)0x00, (byte)0x01), M12(Band.M12, (byte)0x80, (byte)0x00),
@@ -64,10 +63,16 @@ public class BpfUnit extends Unit implements BandPassFilter {
     @Autowired
     public BpfUnit(I2CBusProvider i2cBusProv) throws Exception {
         super(i2cBusProv);
-        band = Band.fromMeters(DEFAULT_BAND);
-        addToChipset(new Pcf8575(EXPANDER_ADDR));
-        initializeChipset();
-        initializeUnit();
+    }
+
+    @Override
+    public void createChipset(List<GenericChip> chipset) {
+        chipset.add(new Pcf8575(EXPANDER_ADDR));
+    }
+
+    public void initializeUnit() throws Exception {
+        super.initializeUnit();
+        setBand(Band.fromMeters(DEFAULT_BAND));
     }
 
     @Override
@@ -89,6 +94,9 @@ public class BpfUnit extends Unit implements BandPassFilter {
 
     private void update() throws IOException {
         FeatureBits bits = FeatureBits.getByBand(band);
+        if (buffer == null) {
+            buffer = new byte[2];
+        }
         buffer[0] = bits.getP0();
         buffer[1] = (byte) (bits.getP1() | (attenuation << 4));
         ((Pcf8575) getChip(EXPANDER_ADDR)).writePort(buffer);
