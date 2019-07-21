@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.display.FrequencyDisplay;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Mcp23017;
+import org.sq5nry.plaszczka.backend.hw.chips.Mcp23017;
 
 import java.io.IOException;
 import java.util.Calendar;

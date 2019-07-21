@@ -8,8 +8,8 @@ import org.sq5nry.plaszczka.backend.api.Mode;
 import org.sq5nry.plaszczka.backend.api.detector.Detector;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8575;
+import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
+import org.sq5nry.plaszczka.backend.hw.chips.Pcf8575;
 
 import java.io.IOException;
 import java.util.List;

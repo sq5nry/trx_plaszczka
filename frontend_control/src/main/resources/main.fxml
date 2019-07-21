@@ -544,7 +544,7 @@
                   <children>
                     <TextField fx:id="freq_mhz" alignment="CENTER_RIGHT" onAction="#freqChanged" prefHeight="19.0" prefWidth="28.0" text="14" GridPane.columnIndex="0" GridPane.rowIndex="1">
                       <GridPane.margin>
-                        <Insets left="25.0" />
+                        <Insets left="20.0" />
                       </GridPane.margin>
                     </TextField>
                     <TextField fx:id="freq_khz" alignment="CENTER" onAction="#freqChanged" prefWidth="200.0" text="024" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -898,9 +898,9 @@
                       <RowConstraints maxHeight="76.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Slider fx:id="freq_slider_khz" orientation="VERTICAL" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-                        <Slider fx:id="freq_slider_hz" layoutX="43.0" layoutY="10.0" orientation="VERTICAL" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-                        <Slider fx:id="freq_slider_mhz" layoutX="96.0" layoutY="10.0" orientation="VERTICAL" GridPane.halignment="CENTER" />
+                        <Slider fx:id="freq_slider_khz" majorTickUnit="100.0" max="999.0" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                        <Slider fx:id="freq_slider_hz" layoutX="43.0" layoutY="10.0" majorTickUnit="100.0" max="999.0" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                        <Slider fx:id="freq_slider_mhz" layoutX="96.0" layoutY="10.0" majorTickUnit="4.0" max="54.0" min="1.0" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.halignment="CENTER" />
                         <Label text="MHz" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                         <Label text="kHz" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                         <Label text="Hz" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />

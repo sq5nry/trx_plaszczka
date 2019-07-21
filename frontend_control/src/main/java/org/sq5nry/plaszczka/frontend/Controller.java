@@ -46,10 +46,7 @@ public class Controller implements Initializable {
         freq_slider_hz.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> freqChanged(null));
     }
 
-    @FXML
-    private void freqChanged(ActionEvent e) {
-        logger.debug("freqChanged");
-    }
+
 
     /*
      * Freq control
@@ -61,7 +58,21 @@ public class Controller implements Initializable {
     @FXML TextField freq_khz;
     @FXML TextField freq_hz;
 
+    public static final DecimalFormat DEC_FORMAT_3DIG = new DecimalFormat("000");
+    public static final DecimalFormat DEC_FORMAT_2DIG = new DecimalFormat("#00");
 
+    @FXML
+    private void freqChanged(ActionEvent e) {
+        logger.debug("freqChanged");
+        String MHz = DEC_FORMAT_2DIG.format(freq_slider_mhz.getValue());
+        freq_mhz.textProperty().setValue(MHz);
+        String kHz = DEC_FORMAT_3DIG.format(freq_slider_khz.getValue());
+        freq_khz.textProperty().setValue(kHz);
+        String Hz = DEC_FORMAT_3DIG.format(freq_slider_hz.getValue());
+        freq_hz.textProperty().setValue(Hz);
+
+        comm.sendRequest(BackendCommunicator.FREQ_DISPLAY + MHz + kHz + Hz);
+    }
 
     /*
      * IF amp
@@ -200,7 +211,7 @@ public class Controller implements Initializable {
     @FXML private Label mix_bias_disp;
     @FXML private ComboBox mix_roof;
 
-    public static final DecimalFormat DEC_FORMAT_2DIG = new DecimalFormat("#.00");
+    public static final DecimalFormat DEC_FORMAT_1_2DIG = new DecimalFormat("#.00");
     private void setMixerSquarer() {
         float fill = (float) mix_squarer.getValue();
         comm.sendRequest(BackendCommunicator.MIXER_SQUARER + fill);
@@ -243,6 +254,39 @@ public class Controller implements Initializable {
         logger.debug("bpfBandChanged: " + event);
         String band = ((RadioButton) event.getSource()).getId().substring(4);
         comm.sendRequest(BackendCommunicator.BAND + band);
+        if (band.equals("20m")) {
+            freq_slider_mhz.setValue(14);
+            freq_slider_mhz.setDisable(true);
+
+            freq_slider_khz.setMajorTickUnit(35);
+            freq_slider_khz.setMinorTickCount(5);
+            freq_slider_khz.setMin(0);
+            freq_slider_khz.setMax(350);
+        } else if (band.equals("30m")) {
+            freq_slider_mhz.setValue(10);
+            freq_slider_mhz.setDisable(true);
+
+            freq_slider_khz.setMajorTickUnit(5);
+            freq_slider_khz.setMinorTickCount(5);
+            freq_slider_khz.setMin(100);
+            freq_slider_khz.setMax(150);
+        } else if (band.equals("40m")) {
+            freq_slider_mhz.setValue(7);
+            freq_slider_mhz.setDisable(true);
+
+            freq_slider_khz.setMajorTickUnit(20);
+            freq_slider_khz.setMinorTickCount(5);
+            freq_slider_khz.setMin(0);
+            freq_slider_khz.setMax(200);
+        } else if (band.equals("80m")) {
+            freq_slider_mhz.setValue(3);
+            freq_slider_mhz.setDisable(true);
+
+            freq_slider_khz.setMajorTickUnit(30);
+            freq_slider_khz.setMinorTickCount(5);
+            freq_slider_khz.setMin(500);
+            freq_slider_khz.setMax(800);
+        }
     }
 
     /*

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.vga.IfAmp;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.*;
+import org.sq5nry.plaszczka.backend.hw.chips.*;
 
 import java.util.List;
 

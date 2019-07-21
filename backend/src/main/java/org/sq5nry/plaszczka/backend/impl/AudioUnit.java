@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.audio.*;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Tda7309;
+import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
+import org.sq5nry.plaszczka.backend.hw.chips.Tda7309;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.sq5nry.plaszczka.backend.hw.i2c.chips;
+package org.sq5nry.plaszczka.backend.hw.chips;
 
 import java.io.IOException;
 

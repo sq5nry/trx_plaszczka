@@ -1,4 +1,4 @@
-package org.sq5nry.plaszczka.backend.hw.i2c.chips;
+package org.sq5nry.plaszczka.backend.hw.chips;
 
 import org.apache.commons.lang3.BitField;
 import org.slf4j.Logger;

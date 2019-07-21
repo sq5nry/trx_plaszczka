@@ -8,7 +8,7 @@ import org.sq5nry.plaszczka.backend.api.selectivity.Bandwidth;
 import org.sq5nry.plaszczka.backend.api.selectivity.Selectivity;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
+import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 
 import java.util.List;
 

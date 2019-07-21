@@ -8,7 +8,7 @@ import org.sq5nry.plaszczka.backend.api.inputfilter.Band;
 import org.sq5nry.plaszczka.backend.api.inputfilter.BandPassFilter;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8575;
+import org.sq5nry.plaszczka.backend.hw.chips.Pcf8575;
 
 import java.io.IOException;
 import java.util.List;

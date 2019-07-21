@@ -2,6 +2,8 @@ package org.sq5nry.plaszczka.backend;
 
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.impl.I2CProviderImpl;
+import com.pi4j.platform.Platform;
+import com.pi4j.platform.PlatformManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,8 @@ public class Launcher {
 
     @PostConstruct
     private void init() throws Exception {
+        PlatformManager.setPlatform(Platform.BANANAPI); //TODO config
+
         logger.debug("setting i2c factory: {}", i2cProviderClass);
         Class clazz = Class.forName(i2cProviderClass);
         I2CProviderImpl provider = (I2CProviderImpl) clazz.newInstance();
