@@ -67,6 +67,7 @@ public class BpfUnit extends Unit implements BandPassFilter {
         band = Band.fromMeters(DEFAULT_BAND);
         addToChipset(new Pcf8575(EXPANDER_ADDR));
         initializeChipset();
+        initializeUnit();
     }
 
     @Override

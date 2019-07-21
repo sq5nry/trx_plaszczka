@@ -34,6 +34,7 @@ public class FrontEndMixerUnit extends Unit implements HModeMixer, Reinitializab
         addToChipset(new Ad5321(DAC_SQUARER_ADDR));
         addToChipset(new Ad5321(DAC_BIAS_ADDR));
         initializeChipset();
+        initializeUnit();
     }
 
     @Override

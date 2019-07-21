@@ -36,8 +36,8 @@ public class Controller implements Initializable {
 
         mix_squarer.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setMixerSquarer());
         mix_bias.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setMixerBias());
-        audio_l_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume(audio_l_vol, Channel.L));
-        audio_r_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume(audio_r_vol, Channel.R));
+        audio_l_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume((int) audio_l_vol.getValue(), Channel.L));
+        audio_r_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume((int) audio_r_vol.getValue(), Channel.R));
         audio_input.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setAudioInput(newVal.toString()));
         vga_ifGain.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setIfGain(newVal.toString()));
         vga_vloop.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVLoop(newVal.toString()));
@@ -101,8 +101,7 @@ public class Controller implements Initializable {
     boolean audioLRCoupled = true;
     String lastChannel;
     int lastLvol, lastRvol;
-    private void setVolume(Slider slider, Channel channel) {
-        int vol = (int) slider.getValue();
+    private void setVolume(int vol, Channel channel) {
         if (audioLRCoupled) {
             if (channel == Channel.L) { //TODO check coupler
                 audio_r_vol.setValue(vol);
@@ -159,6 +158,17 @@ public class Controller implements Initializable {
         if (audio_out_rec.isSelected()) buf.append("rec_");
         if (audio_out_speaker.isSelected()) buf.append("speaker_");
         comm.sendRequest(BackendCommunicator.AUDIO_OUTPUT + buf.toString());
+    }
+
+    @FXML CheckBox audio_mute;
+    @FXML
+    private void audioMuteRequested(ActionEvent event) {
+        if (((CheckBox)event.getSource()).isSelected()) {
+            setVolume(-96, Channel.L);  //TODO
+        } else {
+            setVolume(lastLvol, Channel.L);
+            setVolume(lastRvol, Channel.R);
+        }
     }
 
     /*
@@ -293,7 +303,7 @@ public class Controller implements Initializable {
     }
 
     private void setUnitColor(Labeled label, String state) {
-        if ("INITIALIZED".equals(state)) {
+        if (state.contains("INITIALIZED")) {
             label.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         } else {
             label.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));

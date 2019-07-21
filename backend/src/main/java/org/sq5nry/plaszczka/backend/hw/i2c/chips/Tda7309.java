@@ -1,5 +1,7 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
 import java.io.IOException;
@@ -10,6 +12,8 @@ import java.io.IOException;
  * Control is accomplished by serial I2C bus microprocessor interface.
  */
 public class Tda7309 extends GenericChip {
+    private static final Logger logger = LoggerFactory.getLogger(Tda7309.class);
+
     private static final byte CTRL_VOLUME = 0x00;
     private static final byte CTRL_MUTE_LOUD = (byte) 0x80;
     private static final byte CTRL_INPUTS = (byte) 0xa0;
@@ -47,7 +51,11 @@ public class Tda7309 extends GenericChip {
 
     //TODO chip fails to accept any data with LSB = 1, need to replace
     private void writeTmp(byte val) throws IOException {
-        getDevice().write((byte) (val & 0xfe));
+        byte data = (byte) (val & 0xfe);
+        if (logger.isDebugEnabled()) {
+            logger.debug("write: {}", String.format("%02X", data));
+        }
+        getDevice().write(data);
     }
     /**
      * Set volume.

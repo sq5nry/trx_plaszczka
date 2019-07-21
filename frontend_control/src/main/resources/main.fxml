@@ -318,6 +318,11 @@
                 </CheckBox>
                 <Label text="L" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
                 <Label text="R" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                        <CheckBox fx:id="audio_mute" layoutX="36.0" layoutY="114.0" mnemonicParsing="false" onAction="#audioMuteRequested" text="mute" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </CheckBox>
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="10.0" prefWidth="17.0" />
@@ -326,7 +331,8 @@
               <rowConstraints>
                 <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="69.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
             <GridPane GridPane.columnIndex="8" GridPane.rowIndex="3">
