@@ -154,10 +154,10 @@ public class Controller implements Initializable {
     @FXML
     private void audioOutChanged(ActionEvent event) {
         logger.debug("audioOutChanged: " + event);
-        StringBuffer buf = new StringBuffer();
-        if (audio_out_headphones.isSelected()) buf.append("_head");
-        if (audio_out_rec.isSelected()) buf.append("_rec");
-        if (audio_out_speaker.isSelected()) buf.append("_speaker");
+        StringBuffer buf = new StringBuffer("_");
+        if (audio_out_headphones.isSelected()) buf.append("head_");
+        if (audio_out_rec.isSelected()) buf.append("rec_");
+        if (audio_out_speaker.isSelected()) buf.append("speaker_");
         comm.sendRequest(BackendCommunicator.AUDIO_OUTPUT + buf.toString());
     }
 
