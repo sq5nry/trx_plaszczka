@@ -1,5 +1,8 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The AD5306 is a quad 8-bit buffered voltage output DACs in 16-lead TSSOP packages that operate from a single 2.5 V
  * to 5.5 V supply, consuming 500 μA at 3 V. Their on-chip output amplifiers allow rail-to-rail output swing with a slew
@@ -9,6 +12,8 @@ package org.sq5nry.plaszczka.backend.hw.i2c.chips;
  * https://www.analog.com/en/products/ad5306.html
  */
 public class Ad5306 extends GenericDac {
+    private static final Logger logger = LoggerFactory.getLogger(Ad5306.class);
+
     public static final int MAX = 255;
 
     /**
@@ -110,7 +115,10 @@ public class Ad5306 extends GenericDac {
     @Override
     public void setData(int data, int channel) throws Exception {
         if (data<0 || data>MAX) {
-            throw new IllegalArgumentException("DAC data out of 0..MAX range");
+            if (data>MAX) data = MAX;
+            if (data<0) data = 0;
+            logger.error("DAC data out of 0..MAX range, limiting!");    //TODO fix calculation roundings
+            //throw new IllegalArgumentException("DAC data out of 0..MAX range");
         }
         buffer[0] = (byte) ((data & 0x000F) << 4);
         buffer[1] = (byte) ((control << 4) | ((data & 0x000F) >> 4));
