@@ -1,7 +1,6 @@
 package org.sq5nry.plaszczka.backend.hw.chips;
 
-import com.pi4j.wiringpi.Gpio;
-import com.pi4j.wiringpi.GpioUtil;
+import com.pi4j.io.gpio.*;
 import com.pi4j.wiringpi.Spi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +13,11 @@ public class Ad9954 {
 
     //private SpiDevice dev;
 
-    private static final int CHANNEL = 1;
+    private static final int CHANNEL = 0;
     private static final double RESOLUTION  = 4294967296.0d;
-    private int resetPin = 0;
-    private int updatePin = 2;
+    private static final Pin RESET_P = BananaPiPin.GPIO_00;
+    private static final Pin UPDATE_P = BananaPiPin.GPIO_02;
+    GpioPinDigitalOutput r, u;
     private long refClk;
 
     public Ad9954(long refClk) {
@@ -32,23 +32,23 @@ public class Ad9954 {
             logger.debug("spi initialized: {}", fdSpi);
         }
 
-        logger.debug("initializing wiringPiSetup");
-        int fdGpio = Gpio.wiringPiSetup();
-        if (fdGpio <= -1) {
-            logger.error("gpio setup failed: {}", fdGpio);
-            return;
-        } else {
-            logger.debug("gpio initialized: {}", fdGpio);
-        }
+//        logger.debug("initializing wiringPiSetup");
+//        int fdGpio = Gpio.wiringPiSetup();
+//        if (fdGpio <= -1) {
+//            logger.error("gpio setup failed: {}", fdGpio);
+//            return;
+//        } else {
+//            logger.debug("gpio initialized: {}", fdGpio);
+//        }
 
-        GpioUtil.export(resetPin, GpioUtil.DIRECTION_OUT);
-        Gpio.pinMode (resetPin, Gpio.OUTPUT) ;
+        final GpioController gpio = GpioFactory.getInstance();
+        r = gpio.provisionDigitalOutputPin(RESET_P, "reset", PinState.LOW);
+        // provision gpio pin as an output pin and turn on
+        u = gpio.provisionDigitalOutputPin(UPDATE_P, "update", PinState.LOW);
 
-        GpioUtil.export(updatePin, GpioUtil.DIRECTION_OUT);
-        Gpio.pinMode (updatePin, Gpio.OUTPUT) ;
-
-        Gpio.digitalWrite(resetPin, Gpio.LOW);
-        Gpio.digitalWrite(updatePin, Gpio.LOW);
+        // set shutdown state for this pin: keep as output pin, set to low state
+        r.setShutdownOptions(false, PinState.LOW);  //TODO what for?
+        u.setShutdownOptions(false, PinState.LOW);
     }
 
     public void setFrequency(int freq) {
@@ -75,15 +75,15 @@ public class Ad9954 {
 
     private void reset() {
         logger.debug("reset");
-        Gpio.digitalWrite(resetPin, Gpio.HIGH);
+        r.high();
         delay(1);
-        Gpio.digitalWrite(resetPin, Gpio.LOW);
+        r.low();
     }
 
     private void update() {
         logger.debug("update");
-        Gpio.digitalWrite(updatePin, Gpio.HIGH);
-        Gpio.digitalWrite(updatePin, Gpio.LOW);
+        u.high();
+        u.low();
     }
 
     private void writeRegister(byte registerInfo[], int len, byte data[]) {
