@@ -12,6 +12,8 @@ import org.sq5nry.plaszczka.backend.hw.i2c.chips.Mcp23017;
 import java.io.IOException;
 import java.util.Calendar;
 
+import static org.sq5nry.plaszczka.backend.impl.Unit.State.FAILED;
+
 /**
  * Nixie seven-tube frequency display in format XX.XXX.XX
  * Capacity up to 99999999Hz, single Hz digit not displayed.
@@ -44,10 +46,16 @@ public class NixieDisplayUnit extends Unit implements FrequencyDisplay, Reinitia
     }
 
     @Override
-    public void initializeUnit() throws Exception {
-        initializeExpander((Mcp23017) getChip(EXPANDER_A_I2CADDR));
-        initializeExpander((Mcp23017) getChip(EXPANDER_B_I2CADDR));
-        logger.debug("unit initialized");
+    public void initializeUnit() {
+        super.initializeUnit();
+        try {
+            initializeExpander((Mcp23017) getChip(EXPANDER_A_I2CADDR));
+            initializeExpander((Mcp23017) getChip(EXPANDER_B_I2CADDR));
+            logger.debug("unit initialized");
+        } catch(Exception e) {
+            logger.debug("unit initialization failed", e);  //TODO move to template
+            state = FAILED;
+        }
     }
 
     private static void initializeExpander(Mcp23017 expander) throws IOException {

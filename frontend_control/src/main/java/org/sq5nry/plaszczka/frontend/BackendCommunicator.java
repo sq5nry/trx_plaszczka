@@ -18,15 +18,33 @@ public class BackendCommunicator {
 
     public static final String BAND = "/bandPassFilter/band/";
     public static final String ATT = "/bandPassFilter/attenuator/";
+
     public static final String MIXER_SQUARER = "/mixer/squarerThreshold/";
     public static final String MIXER_BIAS = "/mixer/bias/";
     public static final String MIXER_ROOFING = "/mixer/roofingMode/";
+
+    public static final String IFAMP_DECAYSPEEDINDECAYSTATEFORHANGMODE = "/ifAmp/decaySpeedInDecayStateForHangMode/";
+    public static final String IFAMP_DECAYSPEEDFORATTACKDECAYMODE = "/ifAmp/decaySpeedForAttackDecayMode/";
+    public static final String IFAMP_DECAYSPEEDINHANGSTATEFORHANGMODE = "/ifAmp/decaySpeedInHangStateForHangMode/";
+    public static final String IFAMP_NOISEFLOORCOMPENSATION = "/ifAmp/noiseFloorCompensation/";
+    public static final String IFAMP_STRATEGYTHRESHOLD = "/ifAmp/strategyThreshold/";
+    public static final String IFAMP_HANGTHRESHOLD = "/ifAmp/hangThreshold/";
+    public static final String IFAMP_VLOOP = "/ifAmp/VLoop/";
+    public static final String IFAMP_MAXIMUMGAIN = "/ifAmp/maximumGain/";
+    public static final String IFAMP_MAXIMUMHANGTIMEINHANGMODE = "/ifAmp/maximumHangTimeInHangMode/";
+    public static final String IFAMP_ATTACKTIME = "/ifAmp/attackTime/";
+    public static final String IFAMP_HANGONTRANSMIT = "/ifAmp/hangOnTransmit/";
+    public static final String IFAMP_MUTE = "/ifAmp/mute/";
+
     public static final String SELECTIVITY = "/selectivity/";
+
     public static final String DETECTOR_ENA = "/detector/enabled/";
     public static final String DETECTOR_MODE = "/detector/mode/";
+
     public static final String AUDIO_VOL = "/audio/volume/";
     public static final String AUDIO_OUTPUT = "/audio/output/";
     public static final String AUDIO_INPUT = "/audio/input/";
+
     public static final String INITIALIZE = "/mgmt/initialize/rx";
 
     private String rootUrl;

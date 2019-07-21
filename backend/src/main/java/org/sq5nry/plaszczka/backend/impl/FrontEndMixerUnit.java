@@ -13,6 +13,8 @@ import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
 
 import java.io.IOException;
 
+import static org.sq5nry.plaszczka.backend.impl.Unit.State.FAILED;
+
 @Component
 public class FrontEndMixerUnit extends Unit implements HModeMixer, Reinitializable {
     private static final Logger logger = LoggerFactory.getLogger(FrontEndMixerUnit.class);
@@ -35,13 +37,19 @@ public class FrontEndMixerUnit extends Unit implements HModeMixer, Reinitializab
     }
 
     @Override
-    public void initializeUnit() throws Exception {
-        Ad5321 adcBias = (Ad5321) getChip(DAC_BIAS_ADDR);
-        Ad5321 adcSquarer = (Ad5321) getChip(DAC_SQUARER_ADDR);
-        adcBias.setVoltage(0.0f);
-        adcBias.setPDMode(Ad5321.PD_MODE.PD_NORMAL_OPERATION);
-        adcSquarer.setVoltage(0.0f);
-        adcSquarer.setPDMode(Ad5321.PD_MODE.PD_NORMAL_OPERATION);
+    public void initializeUnit() {
+        super.initializeUnit();
+        try {
+            Ad5321 adcBias = (Ad5321) getChip(DAC_BIAS_ADDR);
+            Ad5321 adcSquarer = (Ad5321) getChip(DAC_SQUARER_ADDR);
+            adcBias.setVoltage(0.0f);
+            adcBias.setPDMode(Ad5321.PD_MODE.PD_NORMAL_OPERATION);
+            adcSquarer.setVoltage(0.0f);
+            adcSquarer.setPDMode(Ad5321.PD_MODE.PD_NORMAL_OPERATION);
+        } catch(Exception e) {
+            logger.debug("unit initialization failed", e);  //TODO move to template
+            state = FAILED;
+        }
     }
 
     @Override

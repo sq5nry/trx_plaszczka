@@ -14,14 +14,14 @@ import java.util.Map;
 /**
  * A physical realization of a functional module, usually enclosed in a metal box.
  */
-public class Unit {
+public abstract class Unit {
     private static final Logger logger = LoggerFactory.getLogger(Unit.class);
 
     private I2CBus bus;
     private Map<Integer, GenericChip> chipset = new HashMap<>();
-    private State state = State.CREATED;
+    State state = State.CREATED;
 
-    public enum State { CREATED, INITIALIZED, FAILED }
+    public enum State { CREATED, CHIPSET_INITIALIZED, UNIT_INITIALIZED, FAILED }
 
     public Unit(I2CBusProvider i2cBusProv) throws IOException, I2CFactory.UnsupportedBusNumberException {
         bus = i2cBusProv.getBus();
@@ -35,19 +35,23 @@ public class Unit {
         return chipset.get(address);
     }
 
-    public void initializeChipset() throws IOException {
+    public void initializeChipset() {
         state = State.CREATED;
         try {
             for(GenericChip chip: chipset.values()) {
                 chip.setI2CBus(bus);
                 chip.initialize();
             }
-            state = State.INITIALIZED;
+            state = State.CHIPSET_INITIALIZED;
         } catch(IOException e) {
+            logger.warn("unit chipset initialization failed", e);
             state = State.FAILED;
-            throw e;
         }
         logger.debug("chipset created & initialized");
+    }
+
+    public void initializeUnit() {
+        logger.debug("default unit initialization: no-op");
     }
 
     public State getState() {

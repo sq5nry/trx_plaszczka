@@ -39,14 +39,24 @@ public class Controller implements Initializable {
         audio_l_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume(audio_l_vol, Channel.L));
         audio_r_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume(audio_r_vol, Channel.R));
         audio_input.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setAudioInput(newVal.toString()));
+        vga_ifGain.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setIfGain(newVal.toString()));
     }
 
     /*
      * IF amp
      */
+    @FXML Slider vga_ifGain;
+    @FXML TextField vga_ifGain_disp;
+
     @FXML
     private void vgaOpenLoopRequested(ActionEvent event) {
 
+    }
+
+    private void setIfGain(String xxx) {    //TODO param needed?
+        float gain = (float) vga_ifGain.getValue();
+        comm.sendRequest(BackendCommunicator.IFAMP_MAXIMUMGAIN + gain);
+        vga_ifGain_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(gain));
     }
 
     /*

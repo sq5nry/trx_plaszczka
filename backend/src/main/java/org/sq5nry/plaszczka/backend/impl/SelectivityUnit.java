@@ -9,6 +9,8 @@ import org.sq5nry.plaszczka.backend.api.selectivity.Selectivity;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8574;
 
+import static org.sq5nry.plaszczka.backend.impl.Unit.State.FAILED;
+
 @Component
 public class SelectivityUnit extends Unit implements Selectivity, Reinitializable {
     private static final Logger logger = LoggerFactory.getLogger(SelectivityUnit.class);
@@ -52,11 +54,17 @@ public class SelectivityUnit extends Unit implements Selectivity, Reinitializabl
     }
 
     @Override
-    public void initializeUnit() throws Exception {
-        FeatureBits defBw = FeatureBits.BW_NONE;
-        logger.debug("initializing unit with defaults: {}", defBw);
-        Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
-        expander.writePort(defBw.getP());
+    public void initializeUnit() {
+        super.initializeUnit();
+        try {
+            FeatureBits defBw = FeatureBits.BW_NONE;
+            logger.debug("initializing unit with defaults: {}", defBw);
+            Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
+            expander.writePort(defBw.getP());
+        } catch(Exception e) {
+            logger.debug("unit initialization failed", e);  //TODO move to template
+            state = FAILED;
+        }
     }
 
     @Override

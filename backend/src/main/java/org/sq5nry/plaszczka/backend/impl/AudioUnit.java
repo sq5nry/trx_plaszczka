@@ -36,12 +36,6 @@ public class AudioUnit extends Unit implements AfAmplifier, Reinitializable {
     }
 
     @Override
-    public void initializeUnit() throws Exception {
-        //TODO
-        //Tda7309 audioProc = (Tda7309) chipset.get(AUDIO_PROCESSOR_ADDR);
-    }
-
-    @Override
     public void setInput(InputSelector mode) throws Exception {
         Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch (mode) {

@@ -1,5 +1,8 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 
 /**
@@ -16,6 +19,8 @@ import java.io.IOException;
  * https://www.analog.com/en/products/ad5321.html
  */
 public class Ad5321 extends GenericDac {
+    private static final Logger logger = LoggerFactory.getLogger(Ad5321.class);
+
     public static final int MAX = 4095;
     public static final int VREF = 5;
 
@@ -61,7 +66,10 @@ public class Ad5321 extends GenericDac {
      */
     public void setData(int data) throws IOException {
         if (data<0 || data>MAX) {
-            throw new IllegalArgumentException("DAC data out of 0..MAX range");
+            if (data>MAX) data = MAX;
+            if (data<0) data = 0;
+            logger.error("DAC data out of 0..MAX range, limiting!");    //TODO fix calculation roundings
+            //throw new IllegalArgumentException("DAC data out of 0..MAX range");
         }
         this.data = data;
         update();   //TODO if fails, data value in object is untrue
