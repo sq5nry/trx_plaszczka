@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 public class Pcf8574 extends GenericChip {
     private static final Logger logger = LoggerFactory.getLogger(Pcf8574.class);
-    
+
     public Pcf8574(int address) {
         super(address);
     }

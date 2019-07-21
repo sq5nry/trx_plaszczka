@@ -12,6 +12,8 @@ import org.sq5nry.plaszczka.backend.hw.i2c.chips.Pcf8575;
 
 import java.io.IOException;
 
+import static org.sq5nry.plaszczka.backend.impl.Unit.State.FAILED;
+
 @Component
 public class QSDUnit extends Unit implements Detector {
     private static final Logger logger = LoggerFactory.getLogger(QSDUnit.class);
@@ -52,6 +54,21 @@ public class QSDUnit extends Unit implements Detector {
         super(i2cBusProv);
         addToChipset(new Pcf8575(EXPANDER_ADDR));
         initializeChipset();
+        initializeUnit();
+    }
+
+    @Override
+    public void initializeUnit() {
+        super.initializeUnit();
+        logger.debug("initializing unit with defaults");
+        mode = Mode.SSB;
+        qsdEnabled = false;
+        try {
+            update();
+        } catch(Exception e) {
+            logger.debug("unit initialization failed", e);  //TODO move to template
+            state = FAILED;
+        }
     }
 
     @Override
