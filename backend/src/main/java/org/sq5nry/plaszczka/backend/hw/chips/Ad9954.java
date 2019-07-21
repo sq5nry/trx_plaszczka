@@ -23,6 +23,7 @@ public class Ad9954 {
     public Ad9954(long refClk) {
         this.refClk = refClk;
 
+        logger.debug("initializing wiringPiSPISetup, channel={}", CHANNEL);
         int fdSpi = Spi.wiringPiSPISetup(CHANNEL, 5000000);
         if (fdSpi <= -1) {
             logger.error("spi setup failed: {}", fdSpi);
@@ -31,6 +32,7 @@ public class Ad9954 {
             logger.debug("spi initialized: {}", fdSpi);
         }
 
+        logger.debug("initializing wiringPiSetup");
         int fdGpio = Gpio.wiringPiSetup();
         if (fdGpio <= -1) {
             logger.error("gpio setup failed: {}", fdGpio);
