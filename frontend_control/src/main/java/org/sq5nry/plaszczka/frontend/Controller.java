@@ -40,6 +40,7 @@ public class Controller implements Initializable {
         audio_r_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume(audio_r_vol, Channel.R));
         audio_input.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setAudioInput(newVal.toString()));
         vga_ifGain.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setIfGain(newVal.toString()));
+        vga_vloop.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVLoop(newVal.toString()));
     }
 
     /*
@@ -48,15 +49,43 @@ public class Controller implements Initializable {
     @FXML Slider vga_ifGain;
     @FXML TextField vga_ifGain_disp;
 
+    @FXML Slider vga_vloop;
+    @FXML TextField vga_vloop_disp;
+
     @FXML
     private void vgaOpenLoopRequested(ActionEvent event) {
-
+        comm.sendRequest(BackendCommunicator.IFAMP_VLOOP + "131");
+        boolean isOpen = ((ToggleButton)event.getSource()).isSelected();
+        vga_vloop.setDisable(isOpen);   //deactivate manual gain control
+        if (isOpen) {
+            vga_vloop_disp.textProperty().setValue("131");
+        } else {
+            setIfGain("");  //TODO fix not setting previous value after deactivation
+        }
     }
 
     private void setIfGain(String xxx) {    //TODO param needed?
         float gain = (float) vga_ifGain.getValue();
         comm.sendRequest(BackendCommunicator.IFAMP_MAXIMUMGAIN + gain);
         vga_ifGain_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(gain));
+    }
+
+    private void setVLoop(String xxx) {    //TODO param needed?
+        float val = (float) vga_vloop.getValue();
+        comm.sendRequest(BackendCommunicator.IFAMP_VLOOP + val);
+        vga_vloop_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(val));
+    }
+
+    @FXML private CheckBox vga_mute;
+    @FXML
+    private void vgaMuteRequested() {
+        comm.sendRequest(BackendCommunicator.IFAMP_MUTE + vga_mute.isSelected());
+    }
+
+    @FXML private CheckBox vga_hangOnTx;
+    @FXML
+    private void vgaHangOnTxRequested() {
+        comm.sendRequest(BackendCommunicator.IFAMP_HANGONTRANSMIT + vga_hangOnTx.isSelected());
     }
 
     /*
@@ -256,7 +285,7 @@ public class Controller implements Initializable {
     }
 
     private void setUnitColor(Shape unit, String state) {
-        if ("INITIALIZED".equals(state)) {
+        if (state.contains("INITIALIZED")) {
             unit.setFill(Color.GREENYELLOW);
         } else {
             unit.setFill(Color.RED);

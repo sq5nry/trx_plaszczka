@@ -1,6 +1,8 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
 import org.apache.commons.lang3.BitField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
 import java.io.IOException;
@@ -14,6 +16,8 @@ import java.io.IOException;
  * a single register.
  */
 public class Pcf8574 extends GenericChip {
+    private static final Logger logger = LoggerFactory.getLogger(Pcf8574.class);
+    
     public Pcf8574(int address) {
         super(address);
     }
@@ -42,6 +46,9 @@ public class Pcf8574 extends GenericChip {
      * @throws IOException
      */
     public void writePort(int data) throws IOException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("writePort: {}", String.format("%02X", data));
+        }
         getDevice().write((byte) data);
     }
 

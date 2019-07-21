@@ -1,5 +1,7 @@
 package org.sq5nry.plaszczka.backend.hw.i2c.chips;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
 import java.io.IOException;
@@ -14,6 +16,8 @@ import java.io.IOException;
  * https://www.analog.com/en/products/ad5242.html
  */
 public class Ad5242 extends GenericChip {
+    private static final Logger logger = LoggerFactory.getLogger(Ad5242.class);
+
     public static final byte RDAC_MASK = (byte) 0x80;
     public static final byte MIDSCALE_RESET_MASK = 0x40;
     public static final byte SHUTDOWN_MASK = 0x20;
@@ -85,6 +89,7 @@ public class Ad5242 extends GenericChip {
 
         buffer[0] = instruction;
         buffer[1] = data;
+        logger.debug("update: instruction={}, data={}", String.format("%02X", instruction), String.format("%02X", data));
         getDevice().write(buffer);
     }
 }
