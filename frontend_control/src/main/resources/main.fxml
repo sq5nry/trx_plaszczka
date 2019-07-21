@@ -201,7 +201,7 @@
             </Polygon>
             <Label font="$x5" text="VGA" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <Rectangle fx:id="box_detRoofing" arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <ComboBox promptText="SSB" visibleRowCount="2" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <ComboBox onAction="#detectorModeChanged" promptText="SSB" visibleRowCount="2" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
               <items>
                 <FXCollections fx:factory="observableArrayList">
                   <String fx:value="SSB" />
@@ -212,7 +212,7 @@
             <Label font="$x5" text="Roofing Filter" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <Rectangle fx:id="box_detector" arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <Label font="$x5" text="Detector" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <ToggleButton mnemonicParsing="false" text="Enable" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <ToggleButton mnemonicParsing="false" onAction="#detectorStateChanged" text="Enable" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <ScrollPane id="ScrollPane" prefViewportHeight="209.0" prefViewportWidth="173.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
               <content>
                 <GridPane minHeight="-Infinity" prefHeight="209.0" prefWidth="150.9998779296875">
@@ -301,17 +301,17 @@
             </Pane>
             <GridPane GridPane.columnIndex="8" GridPane.rowIndex="2">
               <children>
-                <Slider fx:id="audio_l_vol" majorTickUnit="15.0" max="0.0" min="-95.0" minorTickCount="3" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Slider fx:id="audio_l_vol" majorTickUnit="15.0" max="0.0" min="-95.0" minorTickCount="3" showTickLabels="true" showTickMarks="true" value="-20.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
                   <GridPane.margin>
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
                   </GridPane.margin>
                 </Slider>
-                <Slider fx:id="audio_r_vol" majorTickUnit="15.0" max="0.0" min="-95.0" minorTickCount="3" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Slider fx:id="audio_r_vol" majorTickUnit="15.0" max="0.0" min="-95.0" minorTickCount="3" showTickLabels="true" showTickMarks="true" value="-20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                   <GridPane.margin>
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
                   </GridPane.margin>
                 </Slider>
-                <CheckBox mnemonicParsing="false" text="couple" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                <CheckBox fx:id="audio_coupler" mnemonicParsing="false" onAction="#audioCouplerRequested" selected="true" text="couple" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                   <GridPane.margin>
                     <Insets left="5.0" fx:id="x3" />
                   </GridPane.margin>
@@ -333,17 +333,17 @@
               <children>
                 <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0">
                   <children>
-                    <CheckBox mnemonicParsing="false" selected="false" text="speaker" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <CheckBox fx:id="audio_out_speaker" mnemonicParsing="false" onAction="#audioOutChanged" selected="false" text="speaker" GridPane.columnIndex="0" GridPane.rowIndex="0">
                       <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
                       </GridPane.margin>
                     </CheckBox>
-                    <CheckBox mnemonicParsing="false" text="headphones" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <CheckBox fx:id="audio_out_headphones" mnemonicParsing="false" onAction="#audioOutChanged" text="headphones" GridPane.columnIndex="0" GridPane.rowIndex="1">
                       <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
                       </GridPane.margin>
                     </CheckBox>
-                    <CheckBox mnemonicParsing="false" text="rec" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                    <CheckBox fx:id="audio_out_rec" mnemonicParsing="false" onAction="#audioOutChanged" text="rec" GridPane.columnIndex="0" GridPane.rowIndex="2">
                       <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
                       </GridPane.margin>
@@ -360,7 +360,7 @@
                 </GridPane>
                 <Label text="output" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
                 <Label text="input" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                <ChoiceBox GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <ChoiceBox fx:id="audio_input" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                   <items>
                     <FXCollections fx:factory="observableArrayList">
                       <String fx:value="I/Q stereo" />
@@ -495,7 +495,7 @@
                     </TextField>
                     <Label text="dB" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                     <Label text="Vloop" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                    <ToggleButton mnemonicParsing="false" text="open" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                    <ToggleButton mnemonicParsing="false" onAction="#vgaOpenLoopRequested" text="open" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
                   </children>
                   <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="74.0" minWidth="10.0" prefWidth="39.0" />

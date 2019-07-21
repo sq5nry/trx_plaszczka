@@ -18,7 +18,7 @@ import javafx.scene.shape.Shape;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -30,7 +30,6 @@ import java.util.ResourceBundle;
 
 import static org.apache.http.protocol.HTTP.USER_AGENT;
 
-
 public class Controller implements Initializable {
     private static final Logger logger = Logger.getLogger(Controller.class);
 
@@ -41,9 +40,12 @@ public class Controller implements Initializable {
     private static final String MIXER_BIAS = "/mixer/bias/";
     private static final String MIXER_ROOFING = "/mixer/roofingMode/";
     private static final String SELECTIVITY = "/selectivity/";
+    private static final String DETECTOR_ENA = "/detector/enabled/";
+    private static final String DETECTOR_MODE = "/detector/mode/";
     private static final String AUDIO_VOL = "/audio/volume/";
+    private static final String AUDIO_OUTPUT = "/audio/output/";
+    private static final String AUDIO_INPUT = "/audio/input/";
     private static final String INITIALIZE = "/mgmt/initialize/rx";
-
 
     @FXML private Label att_disp;
     @FXML private Slider att_reg;
@@ -70,6 +72,12 @@ public class Controller implements Initializable {
     @FXML private Polygon box_audio;
     @FXML private Label box_disp;
 
+    @FXML private CheckBox audio_out_speaker;
+    @FXML private CheckBox audio_out_headphones;
+    @FXML private CheckBox audio_out_rec;
+
+    @FXML private ChoiceBox audio_input;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         logger.debug("initialized: " + url + ", rb=" + resourceBundle);
@@ -79,16 +87,39 @@ public class Controller implements Initializable {
         mix_bias.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setMixerBias());
         audio_l_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume(audio_l_vol, Channel.L));
         audio_r_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume(audio_r_vol, Channel.R));
+        audio_input.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setAudioInput(newVal.toString()));
     }
 
+    boolean audioLRCoupled = true;
+    String lastChannel;
+    int lastLvol, lastRvol;
     private void setVolume(Slider slider, Channel channel) {
         int vol = (int) slider.getValue();
-        if (channel == Channel.L) { //TODO check coupler
-            audio_r_vol.setValue(vol);
+        if (audioLRCoupled) {
+            if (channel == Channel.L) { //TODO check coupler
+                audio_r_vol.setValue(vol);
+            } else {
+                audio_l_vol.setValue(vol);
+            }
+
+            if (lastRvol != -vol && lastLvol != -vol) {
+                sendRequest(BACKEND_ROOT_URL + AUDIO_VOL + "BOTH/" + (-vol));
+                lastChannel = "BOTH";
+                lastLvol = lastRvol = -vol;
+            }
+
         } else {
-            audio_l_vol.setValue(vol);
+            if (channel == Channel.L && (lastLvol != -vol)) {
+                sendRequest(BACKEND_ROOT_URL + AUDIO_VOL + "LEFT/" + (-vol));
+                lastChannel = "LEFT";
+                lastLvol = -vol;
+            }
+            if (channel == Channel.R && (lastRvol != -vol)) {
+                sendRequest(BACKEND_ROOT_URL + AUDIO_VOL + "RIGHT/" + (-vol));
+                lastChannel = "RIGHT";
+                lastRvol = -vol;
+            }
         }
-        sendRequest(BACKEND_ROOT_URL + AUDIO_VOL + "/BOTH/" + (-vol));
     }
 
     private enum Channel { L, R }
@@ -116,6 +147,13 @@ public class Controller implements Initializable {
     }
 
     @FXML
+    private void audioCouplerRequested(ActionEvent event) {
+        logger.debug("audioCouplerRequested: " + event);
+        audioLRCoupled = ((CheckBox) event.getSource()).isSelected();
+        logger.debug("audioLRCoupled: " + audioLRCoupled);
+    }
+
+    @FXML
     private void bpfBandChanged(ActionEvent event) {
         logger.debug("bpfBandChanged: " + event);
         String band = ((RadioButton) event.getSource()).getId().substring(4);
@@ -136,9 +174,43 @@ public class Controller implements Initializable {
         sendRequest(BACKEND_ROOT_URL + MIXER_ROOFING + roof);
     }
 
+    private void setAudioInput(String newVal) {
+        logger.debug("setAudioInput: " + newVal);
+        String r = "dupa";  //TODO
+        switch(newVal) {
+            case "Q mono": r = "QQ_MONO"; break;
+            case "I mono": r = "II_MONO"; break;
+            case "I/Q stereo": r = "IQ_STEREO"; break;
+            case "I/Q off": r = "IQ_OFF"; break;
+        }
+        sendRequest(BACKEND_ROOT_URL + AUDIO_INPUT + r);
+    }
+
+    @FXML
+    private void audioOutChanged(ActionEvent event) {
+        logger.debug("audioOutChanged: " + event);
+        StringBuffer buf = new StringBuffer();
+        if (audio_out_headphones.isSelected()) buf.append("_head");
+        if (audio_out_rec.isSelected()) buf.append("_rec");
+        if (audio_out_speaker.isSelected()) buf.append("_speaker");
+        sendRequest(BACKEND_ROOT_URL + AUDIO_OUTPUT + buf.toString());
+    }
+
+    @FXML
+    private void detectorStateChanged(ActionEvent event) {
+        logger.debug("detectorStateChanged: " + event);
+        sendRequest(BACKEND_ROOT_URL + DETECTOR_ENA + ((ToggleButton) event.getSource()).isSelected());
+    }
+
+    @FXML
+    private void detectorModeChanged(ActionEvent event) {
+        logger.debug("detectorModeChanged: " + event);
+        sendRequest(BACKEND_ROOT_URL + DETECTOR_MODE + ((ComboBox) event.getSource()).getValue());
+    }
+
     @FXML
     private void reinitialize(ActionEvent event) {
-        Map response = sendRequest(BACKEND_ROOT_URL + INITIALIZE);
+        Map response = queryBackend(BACKEND_ROOT_URL + INITIALIZE);
         for (Object name: response.keySet()) {
             String unitName = (String) name;
             String state = (String) response.get(name);
@@ -180,16 +252,29 @@ public class Controller implements Initializable {
         }
     }
 
-    public void shutdown() {
-        logger.debug("shutting down");
-        client.getConnectionManager().shutdown();
-    }
-
-    HttpClient client = null;
-    private Map sendRequest(String url) {
+    private void sendRequest(String url) {
         logger.debug("sendRequest: " + url);
 
-        client = new DefaultHttpClient();
+        //if (client == null) {   //TODO opt.
+        HttpClient client = HttpClientBuilder.create().build();
+        //}
+        HttpGet request = new HttpGet(url);
+
+        // add request header
+        request.addHeader("User-Agent", USER_AGENT);
+        HttpResponse response = null;
+        try {
+            response = client.execute(request);
+        } catch (IOException e) {
+            logger.warn("error sending request to backend", e);
+        }
+        logger.debug("response code: " + response.getStatusLine().getStatusCode());
+    }
+
+    private Map queryBackend(String url) {
+        logger.debug("sendRequest: " + url);
+
+        HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(url);
 
         // add request header

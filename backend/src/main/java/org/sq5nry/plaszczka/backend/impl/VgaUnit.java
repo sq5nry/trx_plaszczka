@@ -36,86 +36,99 @@ public class VgaUnit extends Unit implements IfAmp, Reinitializable {
         ((Ad5306) getChip(DAC_IC19)).setVRef(5.0f);
     }
 
+    /**
+     * @param speed ms/131dB
+     */
     @Override
-    //32
-    public void setDecaySpeedInDecayStateForHangMode(int speed) throws Exception {
-        GenericDac dac = (GenericDac) getChip(DAC_IC19);
-        dac.setData(speed, Ad5306.DacChannel.DAC_A.getValue());
+    public void setDecaySpeedInDecayStateForHangMode(float speed) throws Exception {
+        float data = VParam.VP.Vsph.getParam().convertToVoltage(speed);
+        logger.debug("setDecaySpeedInDecayStateForHangMode: speed={}V for input={}ms/131dB", data, speed);
+        ((GenericDac) getChip(DAC_IC19)).setVoltage(data, Ad5306.DacChannel.DAC_A.getValue());
+    }
+
+    /**
+     * @param speed ms/131dB
+     */
+    @Override
+    public void setDecaySpeedForAttackDecayMode(float speed) throws Exception {
+        float data = VParam.VP.Vspa.getParam().convertToVoltage(speed);
+        logger.debug("setDecaySpeedForAttackDecayMode: speed={}V for input={}ms/131dB", data, speed);
+        ((GenericDac) getChip(DAC_IC19)).setVoltage(data, Ad5306.DacChannel.DAC_B.getValue());
+    }
+
+    /**
+     * @param speed dB/s
+     */
+    @Override
+    public void setDecaySpeedInHangStateForHangMode(float speed) throws Exception {
+        float data = VParam.VP.Vleak.getParam().convertToVoltage(speed);
+        logger.debug("setDecaySpeedInHangStateForHangMode: speed={}V for input={}dB/s", data, speed);
+        ((GenericDac) getChip(DAC_IC19)).setVoltage(data, Ad5306.DacChannel.DAC_C.getValue());
+    }
+
+    /**
+     * @param val dB
+     */
+    @Override
+    public void setNoiseFloorCompensation(float val) throws Exception {
+        float data = VParam.VP.Vfloor.getParam().convertToVoltage(val);
+        logger.debug("setNoiseFloorCompensation: {}V for input={}dB", data, val);
+        ((GenericDac) getChip(DAC_IC19)).setVoltage(data, Ad5306.DacChannel.DAC_D.getValue());
     }
 
     @Override
-    //8
-    public void setDecaySpeedForAttackDecayMode(int speed) throws Exception {
-        GenericDac dac = (GenericDac) getChip(DAC_IC19);
-        dac.setData(speed, Ad5306.DacChannel.DAC_B.getValue());
+    public void setStrategyThreshold(float val) throws Exception {
+        float data = VParam.VP.Vath.getParam().convertToVoltage(val);
+        logger.debug("setStrategyThreshold: {}V for input={}dBm", data, val);
+        ((GenericDac) getChip(DAC_IC18)).setVoltage(data, Ad5306.DacChannel.DAC_A.getValue());
     }
 
     @Override
-    //4
-    public void setDecaySpeedInHangStateForHangMode(int speed) throws Exception {
-        GenericDac dac = (GenericDac) getChip(DAC_IC19);
-        dac.setData(speed, Ad5306.DacChannel.DAC_C.getValue());
+    public void setHangThreshold(float val) throws Exception {  //TODO 1 bit off for lower values
+        float data = VParam.VP.Vhth.getParam().convertToVoltage(val);
+        logger.debug("setHangThreshold: {}V for input={}dB", data, val);
+        ((GenericDac) getChip(DAC_IC18)).setVoltage(data, Ad5306.DacChannel.DAC_B.getValue());
     }
 
     @Override
-    // 0x0f 0x08 0x9037 w ???
-    //151?
-    public void setNoiseFloorCompensation(int val) throws Exception {
-        GenericDac dac = (GenericDac) getChip(DAC_IC19);
-        dac.setData(val, Ad5306.DacChannel.DAC_D.getValue());
+    public void setVLoop(float val) throws Exception {
+        float data = VParam.VP.Vloop.getParam().convertToVoltage(val);
+        logger.debug("setVLoop: {}V for input={}dB", data, val);
+        ((GenericDac) getChip(DAC_IC18)).setVoltage(data, Ad5306.DacChannel.DAC_C.getValue());
     }
 
     @Override
-    //112
-    public void setStrategyThreshold(int val) throws Exception {
-        GenericDac dac = (GenericDac) getChip(DAC_IC18);
-        dac.setData(val, Ad5306.DacChannel.DAC_A.getValue());
+    public void setMaximumGain(float gain) throws Exception {
+        float data = VParam.VP.Vgain.getParam().convertToVoltage(gain);
+        logger.debug("setMaximumGain: {}V for input={}dB", data, gain);
+        ((GenericDac) getChip(DAC_IC18)).setVoltage(data, Ad5306.DacChannel.DAC_D.getValue());
     }
 
     @Override
-    //20
-    public void setHangThreshold(int val) throws Exception {
-        GenericDac dac = (GenericDac) getChip(DAC_IC18);
-        dac.setData(val, Ad5306.DacChannel.DAC_B.getValue());
+    public void setMaximumHangTimeInHangMode(float val) throws Exception {
+        float data = VParam.VP.Vspd.getParam().convertToVoltage(val);
+        logger.debug("setMaximumHangTimeInHangMode: {}V for input={}ms", data, val);
+        data *= 256f/5f;   //TODO const or extend RDAC with GenericDac capability
+        ((Ad5242) getChip(RDAC)).setData((int) data, Ad5242.Rdac.RDAC2);
     }
 
     @Override
-    //12
-    public void setVLoop(int val) throws Exception {
-        GenericDac dac = (GenericDac) getChip(DAC_IC18);
-        dac.setData(val, Ad5306.DacChannel.DAC_C.getValue());
-    }
-
-    @Override
-    //0
-    public void setMaximumGain(int gain) throws Exception {
-        GenericDac dac = (GenericDac) getChip(DAC_IC18);
-        dac.setData(gain, Ad5306.DacChannel.DAC_C.getValue());
-    }
-
-    @Override
-    //15
-    public void setMaximumHangTimeInHangMode(int val) throws Exception {
-        Ad5242 rdac = (Ad5242) getChip(RDAC);
-        rdac.setData(val, Ad5242.Rdac.RDAC2);
-    }
-
-    @Override
-    //10
-    public void setAttackTime(int val) throws Exception {
-        Ad5242 rdac = (Ad5242) getChip(RDAC);
-        rdac.setData(val, Ad5242.Rdac.RDAC1);
+    public void setAttackTime(float val) throws Exception {
+        float data = VParam.VP.Attack.getParam().convertToVoltage(val); //TODO resistance, not voltage
+        logger.debug("setMaximumHangTimeInHangMode: {}kOhm for input={}ms", data, val);
+        data *= 256f/100f;   //TODO const or extend RDAC with ohmic cap.
+        ((Ad5242) getChip(RDAC)).setData((int) data, Ad5242.Rdac.RDAC1);
     }
 
     @Override
     public void setHangOnTransmit(boolean enabled) throws Exception {
-        Ad5242 rdac = (Ad5242) getChip(RDAC);
-        rdac.setOutPin(enabled, Ad5242.OutPin.O1);
+        logger.debug("setHangOnTransmit: {}", enabled);
+        ((Ad5242) getChip(RDAC)).setOutPin(enabled, Ad5242.OutPin.O1);
     }
 
     @Override
     public void setMute(boolean enabled) throws Exception {
-        Ad5242 rdac = (Ad5242) getChip(RDAC);
-        rdac.setOutPin(enabled, Ad5242.OutPin.O2);
+        logger.debug("setMute: {}", enabled);
+        ((Ad5242) getChip(RDAC)).setOutPin(enabled, Ad5242.OutPin.O2);
     }
 }
