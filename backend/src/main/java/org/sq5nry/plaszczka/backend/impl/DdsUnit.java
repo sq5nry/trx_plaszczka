@@ -1,6 +1,5 @@
 package org.sq5nry.plaszczka.backend.impl;
 
-import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.synthesiser.Dds;
 import org.sq5nry.plaszczka.backend.hw.chips.Ad9954;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
@@ -9,7 +8,7 @@ import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import java.io.IOException;
 import java.util.List;
 
-@Component
+//@Component
 public class DdsUnit extends Unit implements Dds {
     private Ad9954 dds;
 

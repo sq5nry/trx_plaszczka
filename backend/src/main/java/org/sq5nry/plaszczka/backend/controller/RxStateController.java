@@ -3,7 +3,6 @@ package org.sq5nry.plaszczka.backend.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +17,11 @@ public class RxStateController {
     private static final Logger logger = LoggerFactory.getLogger(RxStateController.class);
 
     @Autowired
-    private ApplicationContext ctx;
+    private Map<String, ? extends Unit> units;
 
     @RequestMapping(value = "/mgmt/state/rx", method = RequestMethod.GET, produces = "application/json")
     public Map<String, Unit.State> getState() throws Exception {
         logger.debug("state check requested");
-        Map<String, Unit> units = ctx.getBeansOfType(Unit.class);
         Map<String, Unit.State> states = new HashMap<>();
         for(String unitName: units.keySet()) {
             states.put(unitName, units.get(unitName).getState());
@@ -36,7 +34,7 @@ public class RxStateController {
         logger.debug("rx path initialize requested");
 
         Map<String, Unit.State> states = new HashMap<>();
-        for(Unit unit: ctx.getBeansOfType(Unit.class).values()) {
+        for(Unit unit: units.values()) {
             String name = unit.getClass().getSimpleName();
             try {
                 logger.debug("initializing chipset in {}", name);

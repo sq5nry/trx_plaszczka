@@ -23,6 +23,23 @@ public class Ad9954 {
     public Ad9954(long refClk) {
         this.refClk = refClk;
 
+
+        final GpioController gpio = GpioFactory.getInstance();
+        try {
+            r = gpio.provisionDigitalOutputPin(RESET_P, "reset", PinState.LOW);
+        } catch(Exception e) {
+            logger.warn("r", e);
+        }
+        // provision gpio pin as an output pin and turn on
+        try {
+            u = gpio.provisionDigitalOutputPin(UPDATE_P, "update", PinState.LOW);
+        } catch(Exception e) {
+            logger.warn("u", e);
+        }
+        // set shutdown state for this pin: keep as output pin, set to low state
+        r.setShutdownOptions(false, PinState.LOW);  //TODO what for?
+        u.setShutdownOptions(false, PinState.LOW);
+        
         logger.debug("initializing wiringPiSPISetup, channel={}", CHANNEL);
         int fdSpi = Spi.wiringPiSPISetup(CHANNEL, 5000000);
         if (fdSpi <= -1) {
@@ -41,14 +58,6 @@ public class Ad9954 {
 //            logger.debug("gpio initialized: {}", fdGpio);
 //        }
 
-        final GpioController gpio = GpioFactory.getInstance();
-        r = gpio.provisionDigitalOutputPin(RESET_P, "reset", PinState.LOW);
-        // provision gpio pin as an output pin and turn on
-        u = gpio.provisionDigitalOutputPin(UPDATE_P, "update", PinState.LOW);
-
-        // set shutdown state for this pin: keep as output pin, set to low state
-        r.setShutdownOptions(false, PinState.LOW);  //TODO what for?
-        u.setShutdownOptions(false, PinState.LOW);
     }
 
     public void setFrequency(int freq) {
