@@ -573,12 +573,12 @@
                 </GridPane>
                 <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2">
                   <children>
-                    <RadioButton mnemonicParsing="false" text="H" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.margin="$x3" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                    <RadioButton fx:id="mixing_h" mnemonicParsing="false" text="H" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.margin="$x3" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                       <toggleGroup>
                         <ToggleGroup fx:id="mixing" />
                       </toggleGroup>
                     </RadioButton>
-                    <RadioButton mnemonicParsing="false" text="L" toggleGroup="$mixing" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                    <RadioButton fx:id="mixing_l" mnemonicParsing="false" text="L" toggleGroup="$mixing" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                       <GridPane.margin>
                         <Insets right="5.0" />
                       </GridPane.margin>

@@ -57,9 +57,13 @@ public class Controller implements Initializable {
     @FXML TextField freq_mhz;
     @FXML TextField freq_khz;
     @FXML TextField freq_hz;
+    @FXML RadioButton mixing_h;
+    @FXML RadioButton mixing_l;
 
     public static final DecimalFormat DEC_FORMAT_3DIG = new DecimalFormat("000");
     public static final DecimalFormat DEC_FORMAT_2DIG = new DecimalFormat("#00");
+
+    public static final int LO_FREQ = 9000000;
 
     @FXML
     private void freqChanged(ActionEvent e) {
@@ -71,7 +75,15 @@ public class Controller implements Initializable {
         String Hz = DEC_FORMAT_3DIG.format(freq_slider_hz.getValue());
         freq_hz.textProperty().setValue(Hz);
 
-        comm.sendRequest(BackendCommunicator.FREQ_DISPLAY + MHz + kHz + Hz);
+        String freqString = MHz + kHz + Hz;
+        int freq = Integer.parseInt(freqString);
+        if (mixing_h.isSelected()) {
+            freq += LO_FREQ;
+        } else if (mixing_l.isSelected()) {
+            freq = Math.abs(freq - LO_FREQ);
+        }
+        comm.sendRequest(BackendCommunicator.LO_DDS + freq);
+        comm.sendRequest(BackendCommunicator.FREQ_DISPLAY + freqString);
     }
 
     /*
