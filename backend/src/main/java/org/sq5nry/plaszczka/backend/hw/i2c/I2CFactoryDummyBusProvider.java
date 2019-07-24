@@ -7,6 +7,9 @@ import org.apache.tomcat.util.buf.HexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -16,11 +19,6 @@ import java.util.concurrent.TimeUnit;
 public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
     private static final Logger logger = LoggerFactory.getLogger(I2CFactoryDummyBusProvider.class);
     private static final Random rand = new Random();
-
-    @Override
-    protected String getFilenameForBusnumber(int busNumber) {
-        return "/dev/null";
-    }
 
     public I2CBus getBus(final int busNumber, final long lockAquireTimeout, final TimeUnit lockAquireTimeoutUnit) {
         logger.debug("returning dummy i2c hw implementation");
@@ -89,6 +87,16 @@ public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
                     @Override
                     public int read(int address, byte[] buffer, int offset, int size) {
                         return rand.nextInt();
+                    }
+
+                    @Override
+                    public void ioctl(long l, int i) throws IOException {
+                        logger.debug("ioctl");
+                    }
+
+                    @Override
+                    public void ioctl(long l, ByteBuffer byteBuffer, IntBuffer intBuffer) throws IOException {
+                        logger.debug("ioctl");
                     }
 
                     @Override

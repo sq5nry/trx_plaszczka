@@ -11,53 +11,33 @@ import static com.pi4j.wiringpi.Spi.wiringPiSPIDataRW;
 public class Ad9954 {
     private static final Logger logger = LoggerFactory.getLogger(Ad9954.class);
 
-    //private SpiDevice dev;
-
     private static final int CHANNEL = 0;
     private static final double RESOLUTION  = 4294967296.0d;
-    private static final Pin RESET_P = BananaPiPin.GPIO_00;
-    private static final Pin UPDATE_P = BananaPiPin.GPIO_02;
+    private static final Pin RESET_P = RaspiPin.GPIO_00;
+    private static final Pin UPDATE_P = RaspiPin.GPIO_02;
     GpioPinDigitalOutput r, u;
     private long refClk;
 
-    public Ad9954(long refClk) {
+    public Ad9954(long refClk) throws ChipInitializationException {
         this.refClk = refClk;
 
-
+        logger.debug("initializing GPIO");
         final GpioController gpio = GpioFactory.getInstance();
-        try {
-            r = gpio.provisionDigitalOutputPin(RESET_P, "reset", PinState.LOW);
-        } catch(Exception e) {
-            logger.warn("r", e);
-        }
-        // provision gpio pin as an output pin and turn on
-        try {
-            u = gpio.provisionDigitalOutputPin(UPDATE_P, "update", PinState.LOW);
-        } catch(Exception e) {
-            logger.warn("u", e);
-        }
-        // set shutdown state for this pin: keep as output pin, set to low state
-        r.setShutdownOptions(false, PinState.LOW);  //TODO what for?
+        r = gpio.provisionDigitalOutputPin(RESET_P, "p", PinState.LOW);
+        r.setShutdownOptions(false, PinState.LOW);
+        u = gpio.provisionDigitalOutputPin(UPDATE_P, "p", PinState.LOW);
         u.setShutdownOptions(false, PinState.LOW);
-        
+        logger.debug("initialized: RESET pin: {}", r);
+        logger.debug("initialized: UPDATE pin: {}", u);
+
         logger.debug("initializing wiringPiSPISetup, channel={}", CHANNEL);
         int fdSpi = Spi.wiringPiSPISetup(CHANNEL, 5000000);
         if (fdSpi <= -1) {
-            logger.error("spi setup failed: {}", fdSpi);
-            return;
+            logger.error("SPI bus setup failed for channel {}, FD={}", CHANNEL, fdSpi);
+            throw new ChipInitializationException("SPI bus setup failed for channel " + CHANNEL + ", fd=" + fdSpi);
         } else {
-            logger.debug("spi initialized: {}", fdSpi);
+            logger.debug("SPI initialized for channel {}, FD={}", CHANNEL, fdSpi);
         }
-
-//        logger.debug("initializing wiringPiSetup");
-//        int fdGpio = Gpio.wiringPiSetup();
-//        if (fdGpio <= -1) {
-//            logger.error("gpio setup failed: {}", fdGpio);
-//            return;
-//        } else {
-//            logger.debug("gpio initialized: {}", fdGpio);
-//        }
-
     }
 
     public void setFrequency(int freq) {
