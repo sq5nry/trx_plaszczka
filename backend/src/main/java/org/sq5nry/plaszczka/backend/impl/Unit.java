@@ -63,8 +63,10 @@ public abstract class Unit {
         state = State.CREATED;
         try {
             for(GenericChip chip: chipset.values()) {
+                logger.debug("initializeChipset: setting I2C for chip={}", chip);
                 chip.setI2CBus(bus);
                 chip.initialize();
+                logger.debug("initializeChipset: initialization of chip={} complete", chip);
             }
             state = State.CHIPSET_INITIALIZED;
         } catch(IOException e) {
