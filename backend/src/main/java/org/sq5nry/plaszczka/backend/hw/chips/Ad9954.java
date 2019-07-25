@@ -72,15 +72,15 @@ public class Ad9954 {
         logger.debug("setFrequency: freq={}, ftw={}", freq, ftw);
         byte ftws[] = {(byte) ((ftw >> 24) & 0xFF), (byte) ((ftw >> 16) & 0xFF), (byte) ((ftw >> 8) & 0xFF), (byte) (ftw & 0xFF)};
 
-        writeRegister(REG_CFR1Info, DATA_CFR1); //TODO why?
-        writeRegister(REG_FREQ, ftws);
+        writeRegister(REG_CFR1Info.clone(), DATA_CFR1.clone()); //TODO why?
+        writeRegister(REG_FREQ.clone(), ftws);
         update();
     }
 
     //no PLL
     public void initialize() {
         reset();
-        writeRegister(REG_CFR1Info, DATA_CFR1);
+        writeRegister(REG_CFR1Info.clone(), DATA_CFR1.clone());
     }
 
     private void reset() {
@@ -97,7 +97,7 @@ public class Ad9954 {
 
     private static void writeRegister(byte registerInfo[], byte data[]) {
         if (logger.isDebugEnabled()) {
-            logger.debug("writeRegister: @{}={}", HexUtils.toHexString(data), HexUtils.toHexString(data));
+            logger.debug("writeRegister: @{}={}", HexUtils.toHexString(registerInfo), HexUtils.toHexString(data));
         }
         wiringPiSPIDataRW(SPI_CHANNEL, registerInfo, 1);
         wiringPiSPIDataRW(SPI_CHANNEL, data, data.length);
