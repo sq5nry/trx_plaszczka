@@ -22,7 +22,6 @@ public class DdsUnit extends Unit implements Dds {
     public DdsUnit(I2CBusProvider i2cBusProv) throws Exception, ChipInitializationException {
         super(i2cBusProv);
         dds = new Ad9954(500000000);
-        dds.initialize();
     }
 
     @Override
@@ -32,16 +31,18 @@ public class DdsUnit extends Unit implements Dds {
 
     @Override
     public void configure() throws IOException {
-        logger.debug("configure: ??????????????????");
+        logger.debug("configure: n/o");
     }
 
     @Override
     public void createChipset(List<GenericChip> chipset) {
-        logger.debug("createChipset: ??????????????????");
+        logger.debug("createChipset: {}", dds);
     }
 
     @Override
     public void initializeUnit() throws Exception {
-        logger.debug("initializeUnit: ??????????????????");
+        logger.debug("initializeUnit: entering");
+        dds.initialize();
+        logger.debug("initializeUnit: complete");
     }
 }
