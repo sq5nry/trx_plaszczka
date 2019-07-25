@@ -18,6 +18,8 @@ import java.io.IOException;
 public class Ad5242 extends GenericChip {
     private static final Logger logger = LoggerFactory.getLogger(Ad5242.class);
 
+    public static final int MAX = 255;
+    
     public static final byte RDAC_MASK = (byte) 0x80;
     public static final byte MIDSCALE_RESET_MASK = 0x40;
     public static final byte SHUTDOWN_MASK = 0x20;
@@ -56,7 +58,10 @@ public class Ad5242 extends GenericChip {
 
     public void setData(int data, Rdac rdac) throws IOException {
         if (data<0 || data>255) {
-            throw new IllegalArgumentException("RDAC data outside of range 0..255: " + data);
+            if (data>MAX) data = MAX;
+            if (data<0) data = 0;
+            logger.error("DAC data out of 0..MAX range, limiting!");    //TODO fix calculation roundings
+            //throw new IllegalArgumentException("RDAC data outside of range 0..255: " + data);
         }
         this.data = (byte) data;
         this.rdac = rdac;

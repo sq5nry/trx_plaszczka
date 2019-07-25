@@ -120,7 +120,7 @@ public class VgaUnit extends Unit implements IfAmp, Reinitializable {
     @Override
     public void setAttackTime(float val) throws Exception {
         float data = VParam.VP.Attack.getParam().convertToVoltage(val); //TODO resistance, not voltage
-        logger.debug("setMaximumHangTimeInHangMode: {}kOhm for input={}ms", data, val);
+        logger.debug("setAttackTime: {}kOhm for input={}ms", data, val);
         data *= 256f/100f;   //TODO const or extend RDAC with ohmic cap.
         ((Ad5242) getChip(RDAC)).setData((int) data, Ad5242.Rdac.RDAC1);
     }

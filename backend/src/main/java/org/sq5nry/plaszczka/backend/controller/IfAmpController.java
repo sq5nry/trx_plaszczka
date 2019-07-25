@@ -16,6 +16,7 @@ public class IfAmpController {
     @Autowired
     private VgaUnit vgaUnit;
 
+//FIXME DONE
     @RequestMapping(value = "/ifAmp/decaySpeedInDecayStateForHangMode/{val}", method = RequestMethod.GET)
     public String setDecaySpeedInDecayStateForHangMode(@PathVariable Float val) throws Exception {
         logger.debug("Vsph (DecaySpeedInDecayStateForHangMode) to {}", val);
@@ -23,20 +24,23 @@ public class IfAmpController {
         return "result=OK";
     }
 
+//FIXME DONE
     @RequestMapping(value = "/ifAmp/decaySpeedForAttackDecayMode/{val}", method = RequestMethod.GET)
     public String setDecaySpeedForAttackDecayMode(@PathVariable Float val) throws Exception {
-        logger.debug("Vspa (DecaySpeedInDecayStateForHangMode) to {}", val);
+        logger.debug("Vspa (DecaySpeedForAttackDecayMode) to {}", val);
         vgaUnit.setDecaySpeedForAttackDecayMode(val);
         return "result=OK";
     }
 
+//FIXME DONE
     @RequestMapping(value = "/ifAmp/decaySpeedInHangStateForHangMode/{val}", method = RequestMethod.GET)
     public String setDecaySpeedInHangStateForHangMode(@PathVariable Float val) throws Exception {
-        logger.debug("Vleak (DecaySpeedInDecayStateForHangMode) to {}", val);
+        logger.debug("Vleak (DecaySpeedInHangStateForHangMode) to {}", val);
         vgaUnit.setDecaySpeedInHangStateForHangMode(val);
         return "result=OK";
     }
 
+//FIXME DONE
     @RequestMapping(value = "/ifAmp/noiseFloorCompensation/{val}", method = RequestMethod.GET)
     public String setNoiseFloorCompensation(@PathVariable Float val) throws Exception {
         logger.debug("Vfloor (NoiseFloorCompensation) to {}", val);
@@ -44,6 +48,7 @@ public class IfAmpController {
         return "result=OK";
     }
 
+//FIXME DONE
     @RequestMapping(value = "/ifAmp/strategyThreshold/{val}", method = RequestMethod.GET)
     public String setStrategyThreshold(@PathVariable Float val) throws Exception {
         logger.debug("Vath (StrategyThreshold) to {}", val);
@@ -51,12 +56,14 @@ public class IfAmpController {
         return "result=OK";
     }
 
+//FIXME DONE
     @RequestMapping(value = "/ifAmp/hangThreshold/{val}", method = RequestMethod.GET)
     public String setHangThreshold(@PathVariable Float val) throws Exception {
         logger.debug("Vhth (HangThreshold) to {}", val);
         vgaUnit.setHangThreshold(val);
         return "result=OK";
     }
+
 
     @RequestMapping(value = "/ifAmp/VLoop/{val}", method = RequestMethod.GET)
     public String setVLoop(@PathVariable Float val) throws Exception {
@@ -65,6 +72,7 @@ public class IfAmpController {
         return "result=OK";
     }
 
+
     @RequestMapping(value = "/ifAmp/maximumGain/{val}", method = RequestMethod.GET)
     public String setMaximumGain(@PathVariable Float val) throws Exception {
         logger.debug("MaximumGain (Vgain) to {}", val);
@@ -72,6 +80,7 @@ public class IfAmpController {
         return "result=OK";
     }
 
+//FIXME DONE
     @RequestMapping(value = "/ifAmp/maximumHangTimeInHangMode/{val}", method = RequestMethod.GET)
     public String setMaximumHangTimeInHangMode(@PathVariable Float val) throws Exception {
         logger.debug("MaximumHangTimeInHangMode (Vspd) to {}", val);
@@ -79,6 +88,7 @@ public class IfAmpController {
         return "result=OK";
     }
 
+//FIXME DONE
     @RequestMapping(value = "/ifAmp/attackTime/{val}", method = RequestMethod.GET)
     public String setAttackTime(@PathVariable Float val) throws Exception {
         logger.debug("AttackTime (Attack) to {}", val);
@@ -86,12 +96,14 @@ public class IfAmpController {
         return "result=OK";
     }
 
+
     @RequestMapping(value = "/ifAmp/hangOnTransmit/{val}", method = RequestMethod.GET)
     public String setHangOnTransmit(@PathVariable Boolean val) throws Exception {
         logger.debug("setHangOnTransmit to {}", val);
         vgaUnit.setHangOnTransmit(val);
         return "result=OK";
     }
+
 
     @RequestMapping(value = "/ifAmp/mute/{val}", method = RequestMethod.GET)
     public String setMute(@PathVariable Boolean val) throws Exception {
