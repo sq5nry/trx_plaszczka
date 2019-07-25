@@ -39,14 +39,50 @@ public class Controller implements Initializable {
         audio_l_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume((int) audio_l_vol.getValue(), Channel.L));
         audio_r_vol.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVolume((int) audio_r_vol.getValue(), Channel.R));
         audio_input.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setAudioInput(newVal.toString()));
-        vga_ifGain.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setIfGain(newVal.toString()));
-        vga_vloop.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVLoop(newVal.toString()));
+
+        vga_ifGain.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setIfGain());
+        vga_vloop.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVLoop());
+        vga_Vleak.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVleak());
+        vga_Attack.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setAttack());
+        vga_Vspd.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVspd());
+        vga_Vsph.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVsph());
+        vga_Vspa.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVspa());
+
         freq_slider_mhz.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> freqChanged(null));
         freq_slider_khz.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> freqChanged(null));
         freq_slider_hz.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> freqChanged(null));
     }
 
+    @FXML private void setDefaultsRequested(ActionEvent event) {
+        setAttenuation();
+        bpf_20m.fire();
+        setMixerSquarer();
+        setMixerBias();
+        setDispFreq();
+        setMixRoofing();
 
+        //setSelectivity();
+        comm.sendRequest(BackendCommunicator.SELECTIVITY + "2400"); //workaround
+
+        setIfGain();
+        setVLoop();
+        vgaMuteRequested();
+        vgaHangOnTxRequested();
+        setVsph();
+        setVspa();
+        setVleak();
+        setAttack();
+        setVspd();
+        setVfloor();
+        setVath();
+        setVhth();
+        setDetectorMode();
+        comm.sendRequest(BackendCommunicator.DETECTOR_ENA + "1");   //workaround
+        setVolume(0, Channel.R);
+        setVolume(0, Channel.L);
+        setAudioInput("I/Q stereo");
+        setAudioOut();
+    }
 
     /*
      * Freq control
@@ -67,6 +103,10 @@ public class Controller implements Initializable {
 
     @FXML
     private void freqChanged(ActionEvent e) {
+        setDispFreq();
+    }
+
+    private void setDispFreq() {
         logger.debug("freqChanged");
         String MHz = DEC_FORMAT_2DIG.format(freq_slider_mhz.getValue());
         freq_mhz.textProperty().setValue(MHz);
@@ -103,17 +143,17 @@ public class Controller implements Initializable {
         if (isOpen) {
             vga_vloop_disp.textProperty().setValue("131");
         } else {
-            setIfGain("");  //TODO fix not setting previous value after deactivation
+            setIfGain();  //TODO fix not setting previous value after deactivation
         }
     }
 
-    private void setIfGain(String xxx) {    //TODO param needed?
+    private void setIfGain() {
         float gain = (float) vga_ifGain.getValue();
         comm.sendRequest(BackendCommunicator.IFAMP_MAXIMUMGAIN + gain);
         vga_ifGain_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(gain));
     }
 
-    private void setVLoop(String xxx) {    //TODO param needed?
+    private void setVLoop() {
         float val = (float) vga_vloop.getValue();
         comm.sendRequest(BackendCommunicator.IFAMP_VLOOP + val);
         vga_vloop_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(val));
@@ -131,6 +171,110 @@ public class Controller implements Initializable {
         comm.sendRequest(BackendCommunicator.IFAMP_HANGONTRANSMIT + vga_hangOnTx.isSelected());
     }
 
+    ///////////////////////////////////////////////////////
+    @FXML TextField vga_Vhth;
+    @FXML
+    private void vgaVhthChanged(ActionEvent event) {
+        setVhth();
+    }
+    private void setVhth() {
+        comm.sendRequest(BackendCommunicator.IFAMP_HANGTHRESHOLD + vga_Vhth.textProperty().getValue());
+    }
+    ///////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////
+    @FXML TextField vga_Vath;
+    @FXML
+    private void vgaVathChanged(ActionEvent event) {
+        setVath();
+
+    }
+    private void setVath() {
+        comm.sendRequest(BackendCommunicator.IFAMP_STRATEGYTHRESHOLD + vga_Vath.textProperty().getValue());
+    }
+    ///////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////
+    @FXML TextField vga_Vfloor;
+    @FXML
+    private void vgaVfloorChanged(ActionEvent event) {
+        setVfloor();
+    }
+    private void setVfloor() {
+        comm.sendRequest(BackendCommunicator.IFAMP_NOISEFLOORCOMPENSATION + vga_Vfloor.textProperty().getValue());
+    }
+    ///////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////
+    @FXML Slider vga_Vspa;
+    @FXML TextField vga_Vspa_disp;
+    @FXML
+    private void vgaVspaChanged(ActionEvent event) {
+        setVspa();
+    }
+    private void setVspa() {
+        String val = DEC_FORMAT_2DIG.format(vga_Vspa.getValue());
+        vga_Vspa_disp.textProperty().setValue(val);
+        comm.sendRequest(BackendCommunicator.IFAMP_DECAYSPEEDFORATTACKDECAYMODE + val);
+    }
+    ///////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////
+    @FXML Slider vga_Vsph;
+    @FXML TextField vga_Vsph_disp;
+    @FXML
+    private void vgaVsphChanged(ActionEvent event) {
+        setVsph();
+    }
+    private void setVsph() {
+        String val = DEC_FORMAT_2DIG.format(vga_Vsph.getValue());
+        vga_Vsph_disp.textProperty().setValue(val);
+        comm.sendRequest(BackendCommunicator.IFAMP_DECAYSPEEDINDECAYSTATEFORHANGMODE + val);
+    }
+    ///////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////
+    @FXML Slider vga_Vspd;
+    @FXML TextField vga_Vspd_disp;
+    @FXML
+    private void vgaVspdChanged(ActionEvent event) {
+        setVspd();
+    }
+    private void setVspd() {
+        String val = DEC_FORMAT_2DIG.format(vga_Vspd.getValue());
+        vga_Vspd_disp.textProperty().setValue(val);
+        comm.sendRequest(BackendCommunicator.IFAMP_MAXIMUMHANGTIMEINHANGMODE + val);
+    }
+    ///////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////
+    @FXML Slider vga_Attack;
+    @FXML TextField vga_Attack_disp;
+    @FXML
+    private void vgaAttackChanged(ActionEvent event) {
+        setAttack();
+    }
+    private void setAttack() {
+        String val = DEC_FORMAT_2DIG.format(vga_Attack.getValue());
+        vga_Attack_disp.textProperty().setValue(val);
+        comm.sendRequest(BackendCommunicator.IFAMP_ATTACKTIME + val);
+    }
+    ///////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////
+    @FXML Slider vga_Vleak;
+    @FXML TextField vga_Vleak_disp;
+    @FXML
+    private void vgaVleakChanged(ActionEvent event) {
+        setVleak();
+    }
+    private void setVleak() {
+        String val = DEC_FORMAT_2DIG.format(vga_Vleak.getValue());
+        vga_Vleak_disp.textProperty().setValue(val);
+        comm.sendRequest(BackendCommunicator.IFAMP_DECAYSPEEDINHANGSTATEFORHANGMODE + val);
+    }
+    ///////////////////////////////////////////////////////
+
     /*
      * Audio
      */
@@ -143,7 +287,7 @@ public class Controller implements Initializable {
 
     boolean audioLRCoupled = true;
     String lastChannel;
-    int lastLvol, lastRvol;
+    int lastLvol = 1, lastRvol = 1;
     private void setVolume(int vol, Channel channel) {
         if (audioLRCoupled) {
             if (channel == Channel.L) { //TODO check coupler
@@ -196,6 +340,10 @@ public class Controller implements Initializable {
     @FXML
     private void audioOutChanged(ActionEvent event) {
         logger.debug("audioOutChanged: " + event);
+        setAudioOut();
+    }
+
+    private void setAudioOut() {
         StringBuffer buf = new StringBuffer("_");
         if (audio_out_headphones.isSelected()) buf.append("head_");
         if (audio_out_rec.isSelected()) buf.append("rec_");
@@ -239,7 +387,12 @@ public class Controller implements Initializable {
     @FXML
     private void mixRoofingChanged(ActionEvent event) {
         logger.debug("mixRoofingChanged: " + event);
+        setMixRoofing();
+    }
+
+    private void setMixRoofing() {
         String roof = (String) mix_roof.getValue();
+        logger.debug("mixRoofingChanged: set to " + roof);
         comm.sendRequest(BackendCommunicator.MIXER_ROOFING + roof);
     }
 
@@ -257,6 +410,8 @@ public class Controller implements Initializable {
         prevAtt = att;
         att_disp.textProperty().setValue(att + "dB");
     }
+
+    @FXML RadioButton bpf_20m;
 
     /*
      * BFP
@@ -309,13 +464,18 @@ public class Controller implements Initializable {
     @FXML
     private void selectivityChanged(ActionEvent event) {
         logger.debug("selectivityChanged: " + event);
-        String bw = (String) selectivity.getValue();
-        comm.sendRequest(BackendCommunicator.SELECTIVITY + bw);
+        setSelectivity();
+    }
+
+    private void setSelectivity() {
+        comm.sendRequest(BackendCommunicator.SELECTIVITY + selectivity.getValue());
     }
 
     /*
      * Detector
      */
+    @FXML ComboBox det_mode;
+
     @FXML
     private void detectorStateChanged(ActionEvent event) {
         logger.debug("detectorStateChanged: " + event);
@@ -325,7 +485,11 @@ public class Controller implements Initializable {
     @FXML
     private void detectorModeChanged(ActionEvent event) {
         logger.debug("detectorModeChanged: " + event);
-        comm.sendRequest(BackendCommunicator.DETECTOR_MODE + ((ComboBox) event.getSource()).getValue());
+        setDetectorMode();
+    }
+
+    private void setDetectorMode() {
+        comm.sendRequest(BackendCommunicator.DETECTOR_MODE + det_mode.getValue());
     }
 
     /*

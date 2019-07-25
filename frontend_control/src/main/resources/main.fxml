@@ -18,6 +18,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -79,853 +80,837 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="857.0" prefWidth="1356.0" VBox.vgrow="ALWAYS">
       <children>
-        <GridPane alignment="CENTER" gridLinesVisible="true" prefHeight="840.0" prefWidth="1380.0" AnchorPane.bottomAnchor="4.5" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="5.5">
-          <children>
-            <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-              <children>
-                <Line endX="1141.0" endY="1.0" layoutX="-2.0" layoutY="83.0" startX="-57.0" startY="0.0" strokeWidth="3.4" />
-                <Rectangle fx:id="box_bpf" arcHeight="5.0" arcWidth="5.0" height="60.0" layoutX="27.0" layoutY="54.0" stroke="#996e00" strokeType="INSIDE" width="100.0">
-                  <fill>
-                    <Color blue="0.200" green="0.969" red="1.000" fx:id="x1" />
-                  </fill>
-                </Rectangle>
-                <Label layoutX="36.0" layoutY="76.0" text="Band Pass Filter">
-                  <font>
-                    <Font size="12.0" fx:id="x5" />
-                  </font>
-                </Label>
-                <Label layoutX="222.0" layoutY="14.0" text="Mixer" />
-              </children>
-              <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
-              </padding>
-            </Pane>
-            <Rectangle fx:id="box_att" arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" strokeType="INSIDE" width="100.0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-              <stroke>
-                <Color blue="0.000" green="0.431" red="0.600" fx:id="x4" />
-              </stroke>
-            </Rectangle>
-            <Label font="$x5" text="Attenuator" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <GridPane blendMode="SRC_OVER" GridPane.columnIndex="0" GridPane.margin="$x2" GridPane.rowIndex="2">
-              <children>
-                <Slider fx:id="att_reg" blockIncrement="10.0" majorTickUnit="4.0" max="30.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-                <Label fx:id="att_disp" text="0 dB" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
-                  <GridPane.margin>
-                    <Insets right="5.0" />
-                  </GridPane.margin>
-                </Label>
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="64.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="107.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <Circle fx:id="box_mixer" fill="#fff733" radius="43.0" strokeType="INSIDE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-              <stroke>
-                <Color blue="0.000" green="0.576" red="0.600" fx:id="x8" />
-              </stroke>
-            </Circle>
-            <Line endX="545.3389892578125" endY="-280.0951843261719" rotate="45.0" startX="462.49835205078125" startY="-280.22802734375" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Line endX="545.3389892578125" endY="-280.0951843261719" rotate="135.0" startX="462.49835205078125" startY="-280.22802734375" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <GridPane GridPane.columnIndex="2" GridPane.rowIndex="0">
-              <children>
-                <Slider fx:id="mix_squarer" minorTickCount="5" showTickLabels="true" showTickMarks="true" value="50.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                  <GridPane.margin>
-                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
-                  </GridPane.margin>
-                </Slider>
-                <Slider fx:id="mix_bias" majorTickUnit="1.0" max="5.0" minorTickCount="5" nodeOrientation="LEFT_TO_RIGHT" showTickLabels="true" showTickMarks="true" value="2.5" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                  <GridPane.margin>
-                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
-                  </GridPane.margin>
-                </Slider>
-                <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2">
-                  <children>
-                    <Label fx:id="mix_squarer_disp" text="50%" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                    <Label fx:id="mix_bias_disp" text="2.5V" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                    <Label text="squarer" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
-                    <Label text="bias" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <Rectangle fx:id="box_mixRoofing" arcHeight="5.0" arcWidth="5.0" fill="#fff733" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Label font="$x5" text="Roofing Filter" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <ComboBox fx:id="mix_roof" onAction="#mixRoofingChanged" promptText="SSB" visibleRowCount="2" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-              <items>
-                <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="SSB" />
-                  <String fx:value="CW" />
-                </FXCollections>
-              </items>
-            </ComboBox>
-            <Rectangle fx:id="box_selectivity" arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Label font="$x5" text="Selectivity Filter" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <ComboBox fx:id="selectivity" onAction="#selectivityChanged" promptText="2.4k" visibleRowCount="3" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-              <items>
-                <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="500" />
-                  <String fx:value="1800" />
-                  <String fx:value="2400" />
-                </FXCollections>
-              </items>
-            </ComboBox>
-            <Polygon fx:id="box_vga" fill="#fff500" rotate="90.0" stroke="#999300" strokeType="INSIDE" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-              <points>
-                <Double fx:value="-50.0" />
-                <Double fx:value="40.0" />
-                <Double fx:value="50.0" />
-                <Double fx:value="40.0" />
-                <Double fx:value="0.0" />
-                <Double fx:value="-60.0" />
-              </points>
-            </Polygon>
-            <Label font="$x5" text="VGA" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Rectangle fx:id="box_detRoofing" arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <ComboBox onAction="#detectorModeChanged" promptText="SSB" visibleRowCount="2" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-              <items>
-                <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="SSB" />
-                  <String fx:value="CW" />
-                </FXCollections>
-              </items>
-            </ComboBox>
-            <Label font="$x5" text="Roofing Filter" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Rectangle fx:id="box_detector" arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Label font="$x5" text="Detector" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <ToggleButton mnemonicParsing="false" onAction="#detectorStateChanged" text="Enable" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <ScrollPane id="ScrollPane" prefViewportHeight="209.0" prefViewportWidth="173.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-              <content>
-                <GridPane minHeight="-Infinity" prefHeight="209.0" prefWidth="150.9998779296875">
-                  <children>
-                    <RadioButton fx:id="bpf_160m" mnemonicParsing="false" onAction="#bpfBandChanged" prefWidth="56.0" text="160m" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <toggleGroup>
-                        <ToggleGroup fx:id="x9" />
-                      </toggleGroup>
-                    </RadioButton>
-                    <RadioButton fx:id="bpf_80m" mnemonicParsing="false" onAction="#bpfBandChanged" text="80m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                    <RadioButton fx:id="bpf_60m" mnemonicParsing="false" onAction="#bpfBandChanged" text="60m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                    <RadioButton fx:id="bpf_40m" mnemonicParsing="false" onAction="#bpfBandChanged" text="40m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                    <RadioButton fx:id="bpf_30m" mnemonicParsing="false" onAction="#bpfBandChanged" text="30m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                    <RadioButton fx:id="bpf_20m" mnemonicParsing="false" onAction="#bpfBandChanged" selected="true" text="20m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                    <RadioButton fx:id="bpf_17m" mnemonicParsing="false" onAction="#bpfBandChanged" text="17m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                    <RadioButton fx:id="bpf_15m" mnemonicParsing="false" onAction="#bpfBandChanged" text="15m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-                    <RadioButton fx:id="bpf_12m" mnemonicParsing="false" onAction="#bpfBandChanged" text="12m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-                    <RadioButton fx:id="bpf_10m" mnemonicParsing="false" onAction="#bpfBandChanged" text="10m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-                    <RadioButton fx:id="bpf_6m" mnemonicParsing="false" onAction="#bpfBandChanged" text="6m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-                    <RadioButton fx:id="bpf_4m" mnemonicParsing="false" onAction="#bpfBandChanged" text="4m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="11" />
-                    <Label text="1.8-2MHz" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                    <Label text="3.5-3.8MHz" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                    <Label text="5.357-5.362MHz" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                    <Label text="7-7.2MHz" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                    <Label text="10.1-10.15MHz" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                    <Label text="14-14.3MHz" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                    <Label text="18.068-18.168MHz" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                    <Label text="21.05-21.45MHz" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                    <Label text="24.88-24.94MHz" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                    <Label text="28-29.7MHz" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                    <Label text="50-52MHz" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                    <Label text="70MHz" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.0" minWidth="10.0" prefWidth="52.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="10.0" prefWidth="99.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints maxHeight="15.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="15.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="15.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="15.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-              </content>
-              <GridPane.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x29" />
-              </GridPane.margin>
-            </ScrollPane>
-            <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
-              <children>
-                <Line endX="-150.0" endY="42.0" layoutX="229.0" layoutY="-82.0" rotate="0.0" startX="-150.0" startY="138.0" stroke="#7433ff" strokeDashOffset="0.0" strokeLineCap="SQUARE" strokeWidth="3.1">
-                  <rotationAxis>
-                    <Point3D />
-                  </rotationAxis>
-                </Line>
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" layoutX="27.0" layoutY="54.0" stroke="$x4" strokeType="INSIDE" width="100.0" />
-                <Label font="$x5" layoutX="40.0" layoutY="76.0" text="Local Oscillator" />
-              </children>
-            </Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="8" GridPane.rowIndex="1">
-              <children>
-                <Polygon fx:id="box_audio" fill="$x1" layoutX="80.0" layoutY="94.0" rotate="90.0" stroke="BLACK" strokeType="INSIDE">
-                  <points>
-                    <Double fx:value="-50.0" />
-                    <Double fx:value="40.0" />
-                    <Double fx:value="50.0" />
-                    <Double fx:value="40.0" />
-                    <Double fx:value="0.0" />
-                    <Double fx:value="-60.0" />
-                  </points>
-                  <rotationAxis>
-                    <Point3D z="1.0" />
-                  </rotationAxis>
-                </Polygon>
-                <Label font="$x5" layoutX="47.0" layoutY="76.0" text="Audio Amp" />
-              </children>
-            </Pane>
-            <GridPane GridPane.columnIndex="8" GridPane.rowIndex="2">
-              <children>
-                <Slider fx:id="audio_l_vol" majorTickUnit="15.0" max="0.0" min="-95.0" minorTickCount="3" showTickLabels="true" showTickMarks="true" value="-20.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                  <GridPane.margin>
-                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
-                  </GridPane.margin>
-                </Slider>
-                <Slider fx:id="audio_r_vol" majorTickUnit="15.0" max="0.0" min="-95.0" minorTickCount="3" showTickLabels="true" showTickMarks="true" value="-20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                  <GridPane.margin>
-                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
-                  </GridPane.margin>
-                </Slider>
-                <CheckBox fx:id="audio_coupler" mnemonicParsing="false" onAction="#audioCouplerRequested" selected="true" text="couple" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                  <GridPane.margin>
-                    <Insets left="5.0" fx:id="x3" />
-                  </GridPane.margin>
-                </CheckBox>
-                <Label text="L" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
-                <Label text="R" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                        <CheckBox fx:id="audio_mute" layoutX="36.0" layoutY="114.0" mnemonicParsing="false" onAction="#audioMuteRequested" text="mute" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <GridPane.margin>
-                              <Insets left="5.0" />
-                           </GridPane.margin>
-                        </CheckBox>
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="10.0" prefWidth="17.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="136.0" minWidth="10.0" prefWidth="136.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <GridPane GridPane.columnIndex="8" GridPane.rowIndex="3">
-              <children>
-                <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0">
-                  <children>
-                    <CheckBox fx:id="audio_out_speaker" mnemonicParsing="false" onAction="#audioOutChanged" selected="false" text="speaker" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
-                      </GridPane.margin>
-                    </CheckBox>
-                    <CheckBox fx:id="audio_out_headphones" mnemonicParsing="false" onAction="#audioOutChanged" text="headphones" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                      <GridPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
-                      </GridPane.margin>
-                    </CheckBox>
-                    <CheckBox fx:id="audio_out_rec" mnemonicParsing="false" onAction="#audioOutChanged" text="rec" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                      <GridPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
-                      </GridPane.margin>
-                    </CheckBox>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <Label text="output" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
-                <Label text="input" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                <ChoiceBox fx:id="audio_input" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                  <items>
-                    <FXCollections fx:factory="observableArrayList">
-                      <String fx:value="I/Q stereo" />
-                      <String fx:value="I mono" />
-                      <String fx:value="Q mono" />
-                      <String fx:value="I/Q off" />
-                    </FXCollections>
-                  </items>
-                  <GridPane.margin>
-                    <Insets bottom="5.0" right="5.0" top="5.0" />
-                  </GridPane.margin>
-                </ChoiceBox>
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="45.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="6.0" prefWidth="108.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <GridPane GridPane.columnIndex="8" GridPane.rowIndex="4">
-              <children>
-                <RadioButton mnemonicParsing="false" text="Soft Mute slow" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                  <toggleGroup>
-                    <ToggleGroup fx:id="softMute" />
-                  </toggleGroup>
-                </RadioButton>
-                <RadioButton mnemonicParsing="false" selected="true" text="Soft Mute fast" toggleGroup="$softMute" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <RadioButton mnemonicParsing="false" text="Soft Mute off" toggleGroup="$softMute" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <RadioButton mnemonicParsing="false" selected="true" text="Loud off" GridPane.columnIndex="0" GridPane.rowIndex="3">
-                  <toggleGroup>
-                    <ToggleGroup fx:id="loud" />
-                  </toggleGroup>
-                </RadioButton>
-                <RadioButton mnemonicParsing="false" text="Loud 10dB" toggleGroup="$loud" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                <RadioButton mnemonicParsing="false" text="Loud 20dB" toggleGroup="$loud" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-              <GridPane.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
-              </GridPane.margin>
-            </GridPane>
-            <GridPane id="GridPane" prefHeight="100.0" prefWidth="158.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
-              <children>
-                <ToggleButton mnemonicParsing="false" text="Mode coupler" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                <Button mnemonicParsing="false" text="Set defaults" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                            <Button fx:id="reinit" mnemonicParsing="false" onAction="#reinitialize" text="(re)initialize" GridPane.halignment="CENTER" />
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-              </columnConstraints>
-              <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <GridPane GridPane.columnIndex="5" GridPane.rowIndex="0">
-              <children>
-                <ProgressBar prefWidth="200.0" progress="0.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                  <GridPane.margin>
-                    <Insets left="5.0" right="5.0" />
-                  </GridPane.margin>
-                           <padding>
-                              <Insets top="3.0" />
-                           </padding>
-                </ProgressBar>
-                <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="5">
-                  <children>
-                    <CheckBox fx:id="vga_mute" mnemonicParsing="false" onAction="#vgaMuteRequested" text="Mute" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets bottom="3.0" left="5.0" top="3.0" />
-                      </GridPane.margin>
-                                 <padding>
-                                    <Insets bottom="3.0" />
-                                 </padding>
-                    </CheckBox>
-                    <CheckBox fx:id="vga_hangOnTx" mnemonicParsing="false" onAction="#vgaHangOnTxRequested" text="Hang on transmit" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="0">
-                      <font>
-                        <Font size="9.0" />
-                      </font>
-                      <GridPane.margin>
-                        <Insets bottom="3.0" />
-                      </GridPane.margin>
-                    </CheckBox>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="66.0" minWidth="10.0" prefWidth="58.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="108.0" minWidth="10.0" prefWidth="100.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <Slider fx:id="vga_ifGain" majorTickUnit="13.11" max="109.6" min="-21.5" minorTickCount="3" showTickLabels="true" showTickMarks="true" value="109.6" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                  <GridPane.margin>
-                    <Insets left="5.0" right="5.0" top="5.0" fx:id="x11" />
-                  </GridPane.margin>
-                </Slider>
-                <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                  <children>
-                    <TextField fx:id="vga_ifGain_disp" alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="109.6" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" top="3.0" fx:id="x10" />
-                      </GridPane.margin>
-                    </TextField>
-                    <Label text="dB" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                    <Label text="IF gain" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="74.0" minWidth="10.0" prefWidth="50.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="78.0" minWidth="10.0" prefWidth="21.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.0" minWidth="10.0" prefWidth="87.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <Slider fx:id="vga_vloop" majorTickUnit="13.0" max="131.0" min="0.0" minorTickCount="2" showTickLabels="true" showTickMarks="true" value="6.2" GridPane.columnIndex="0" GridPane.margin="$x11" GridPane.rowIndex="3" />
-                <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="4">
-                  <children>
-                    <TextField fx:id="vga_vloop_disp" alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="6.2" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" top="3.0" fx:id="x10" />
-                      </GridPane.margin>
-                    </TextField>
-                    <Label text="dB" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                    <Label text="Vloop" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                    <ToggleButton mnemonicParsing="false" onAction="#vgaOpenLoopRequested" text="open" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="0">
-                                 <GridPane.margin>
-                                    <Insets right="3.0" />
-                                 </GridPane.margin>
-                                 <font>
-                                    <Font size="10.0" />
-                                 </font></ToggleButton>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="74.0" minWidth="10.0" prefWidth="49.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="78.0" minWidth="10.0" prefWidth="25.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.0" minWidth="10.0" prefWidth="38.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.0" minWidth="10.0" prefWidth="46.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="42.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="87.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="87.0" minHeight="8.0" prefHeight="26.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <GridPane GridPane.columnIndex="2" GridPane.rowIndex="3">
-              <children>
-                <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1">
-                  <children>
-                    <TextField fx:id="freq_mhz" alignment="CENTER_RIGHT" onAction="#freqChanged" prefHeight="19.0" prefWidth="28.0" text="14" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                      <GridPane.margin>
-                        <Insets left="20.0" />
-                      </GridPane.margin>
-                    </TextField>
-                    <TextField fx:id="freq_khz" alignment="CENTER" onAction="#freqChanged" prefWidth="200.0" text="024" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                    <TextField fx:id="freq_hz" alignment="CENTER" onAction="#freqChanged" prefWidth="200.0" text="670" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                      <GridPane.margin>
-                        <Insets right="15.0" />
-                      </GridPane.margin>
-                    </TextField>
-                    <Label text="MHz" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                    <Label text="kHz" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                    <Label text="Hz" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="10.0" />
-                      </GridPane.margin>
-                    </Label>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints maxHeight="19.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="19.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2">
-                  <children>
-                    <RadioButton fx:id="mixing_h" mnemonicParsing="false" text="H" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.margin="$x3" GridPane.rowIndex="0" GridPane.valignment="CENTER">
-                      <toggleGroup>
-                        <ToggleGroup fx:id="mixing" />
-                      </toggleGroup>
-                    </RadioButton>
-                    <RadioButton fx:id="mixing_l" mnemonicParsing="false" text="L" toggleGroup="$mixing" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
-                      <GridPane.margin>
-                        <Insets right="5.0" />
-                      </GridPane.margin>
-                    </RadioButton>
-                    <Label text="mixing" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="51.0" minWidth="10.0" prefWidth="47.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="66.0" minWidth="10.0" prefWidth="58.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="53.0" minWidth="10.0" prefWidth="53.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <GridPane prefHeight="41.0" prefWidth="157.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
-                  <children>
-                    <Label text="corr [Hz]" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                    <TextField alignment="CENTER_RIGHT" prefWidth="200.0" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                      </GridPane.margin>
-                    </TextField>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                        <Label fx:id="box_disp" style="-fx-background-color: yellow;" text="RX frequency" GridPane.halignment="CENTER" />
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                        <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="21.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <GridPane GridPane.columnIndex="5" GridPane.rowIndex="2">
-              <children>
-                <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0">
-                  <children>
-                    <TextField alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="675" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" top="3.0" fx:id="x10" />
-                      </GridPane.margin>
-                    </TextField>
-                    <Slider majorTickUnit="2160.0" max="21600.0" min="84.8" minorTickCount="2" showTickLabels="false" showTickMarks="true" value="675.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets top="5.0" />
-                      </GridPane.margin>
-                    </Slider>
-                    <Label text="ms/131dB" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
-                      <font>
-                        <Font size="8.0" fx:id="x6" />
-                      </font>
-                      <GridPane.margin>
-                        <Insets left="3.0" right="3.0" fx:id="x7" />
-                      </GridPane.margin>
-                    </Label>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="39.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="44.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="75.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="157.0" text="decay speed in Decay for Hang" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.margin="$x7" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS" />
-                <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="158.0" text="decay speed for Attack/Decay" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.margin="$x7" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
-                <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="158.0" text="decay speed in Hang state for Hang mode" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.margin="$x7" GridPane.rowIndex="5" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
-                <GridPane prefHeight="26.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                  <children>
-                    <TextField alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="2700" GridPane.columnIndex="0" GridPane.margin="$x10" GridPane.rowIndex="0" />
-                    <Slider majorTickUnit="2160.0" max="21600.0" min="85.0" minorTickCount="2" showTickMarks="true" value="2700.0" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                    <Label font="$x6" text="ms/131dB" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" right="3.0" fx:id="x71" />
-                      </GridPane.margin>
-                    </Label>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="45.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="44.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="69.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <GridPane prefHeight="26.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
-                  <children>
-                    <TextField alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="2.21" GridPane.columnIndex="0" GridPane.margin="$x10" GridPane.rowIndex="0" />
-                    <Slider majorTickUnit="14.0" max="140.7" min="0.551" minorTickCount="2" showTickMarks="true" value="2.21" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                    <Label font="$x6" text="dB/s" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" right="3.0" fx:id="x10" />
-                      </GridPane.margin>
-                    </Label>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="39.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="44.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="75.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="108.0" minHeight="0.0" prefHeight="27.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="127.0" minHeight="3.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="127.0" minHeight="3.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="127.0" minHeight="3.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="84.0" prefHeight="28.0" />
-              </rowConstraints>
-            </GridPane>
-            <GridPane prefHeight="168.0" prefWidth="157.0" GridPane.columnIndex="5" GridPane.rowIndex="4">
-              <children>
-                <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                  <children>
-                    <TextField alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="15.1" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                      </GridPane.margin>
-                    </TextField>
-                    <Label text="dB" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <Label prefHeight="56.0" prefWidth="100.0" text="noise floor compensation (0...25.5dB)" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" />
-                <Label prefHeight="56.0" prefWidth="105.0" text="Attack/Decay &amp; Hang strategy threshold (-131...0dBm)" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
-                  <font>
-                    <Font size="10.0" />
-                  </font>
-                </Label>
-                <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                  <children>
-                    <TextField alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="10.3" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" right="3.0" fx:id="x7" />
-                      </GridPane.margin>
-                    </TextField>
-                    <Label text="dB" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <Label prefHeight="56.0" prefWidth="100.0" text="Hang threshold (0.515...131dB)" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
-                <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                  <children>
-                    <TextField alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="-73.3" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="5.0" right="5.0" />
-                      </GridPane.margin>
-                    </TextField>
-                    <Label text="dBm" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="61.0" minWidth="10.0" prefWidth="33.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.0" minWidth="10.0" prefWidth="103.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <GridPane id="GridPane" GridPane.columnIndex="5" GridPane.rowIndex="3">
-              <children>
-                <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0">
-                  <children>
-                    <TextField alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="675" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" top="3.0" fx:id="x10" />
-                      </GridPane.margin>
-                    </TextField>
-                    <Slider majorTickUnit="2160.0" max="21600.0" min="84.8" minorTickCount="2" showTickMarks="true" value="675.0" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                    <Label font="$x6" text="ms/131dB" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" right="3.0" fx:id="x7" />
-                      </GridPane.margin>
-                    </Label>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="39.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="44.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="75.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="157.0" text="decay speed in Decay for Hang" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
-                  <GridPane.margin>
-                    <Insets left="3.0" right="3.0" fx:id="x7" />
-                  </GridPane.margin>
-                </Label>
-                <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2">
-                  <children>
-                    <TextField alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="85" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" top="3.0" fx:id="x10" />
-                      </GridPane.margin>
-                    </TextField>
-                    <Slider majorTickUnit="33.0" max="400.0" min="73.0" minorTickCount="2" showTickMarks="true" value="85.0" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                    <Label font="$x6" text="ms" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" right="3.0" fx:id="x7" />
-                      </GridPane.margin>
-                    </Label>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="39.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="44.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="75.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="157.0" text="attack time in Attack/Decay and Hang modes" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
-                  <GridPane.margin>
-                    <Insets left="3.0" right="3.0" fx:id="x7" />
-                  </GridPane.margin>
-                </Label>
-                <GridPane GridPane.columnIndex="0" GridPane.rowIndex="4">
-                  <children>
-                    <TextField alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="42.0" text="2000" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" top="3.0" fx:id="x10" />
-                      </GridPane.margin>
-                    </TextField>
-                    <Slider majorTickUnit="3100.0" max="122.0" min="122.0" minorTickCount="2" showTickMarks="true" value="2000.0" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                    <Label font="$x6" text="ms" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
-                      <GridPane.margin>
-                        <Insets left="3.0" right="3.0" fx:id="x7" />
-                      </GridPane.margin>
-                    </Label>
-                  </children>
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="47.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="36.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="75.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                </GridPane>
-                <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="152.0" text="max hang time in Hang mode" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
-                  <GridPane.margin>
-                    <Insets left="3.0" right="3.0" fx:id="x7" />
-                  </GridPane.margin>
-                </Label>
-              </children>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="49.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="42.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="34.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-            <ImageView fitHeight="104.31774349547982" fitWidth="156.9999542236328" pickOnBounds="true" preserveRatio="true" rotate="20.0" GridPane.columnIndex="8" GridPane.rowIndex="0">
-              <image>
-                <Image url="@img/seal.jpg" />
-              </image>
-              <rotationAxis>
-                <Point3D z="-1.0" />
-              </rotationAxis>
-            </ImageView>
-                  <GridPane GridPane.columnIndex="2" GridPane.rowIndex="4">
+            <SplitPane dividerPositions="0.5" layoutX="7.5" layoutY="5.5" orientation="VERTICAL" AnchorPane.bottomAnchor="4.5" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="5.5">
+               <items>
+              <GridPane alignment="CENTER" gridLinesVisible="true" prefHeight="840.0" prefWidth="1380.0">
+                <children>
+                  <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <children>
+                      <Line endX="1141.0" endY="1.0" layoutX="-2.0" layoutY="83.0" startX="-57.0" startY="0.0" strokeWidth="3.4" />
+                      <Rectangle fx:id="box_bpf" arcHeight="5.0" arcWidth="5.0" height="60.0" layoutX="27.0" layoutY="54.0" stroke="#996e00" strokeType="INSIDE" width="100.0">
+                        <fill>
+                          <Color blue="0.200" green="0.969" red="1.000" fx:id="x1" />
+                        </fill>
+                      </Rectangle>
+                      <Label layoutX="36.0" layoutY="76.0" text="Band Pass Filter">
+                        <font>
+                          <Font size="12.0" fx:id="x5" />
+                        </font>
+                      </Label>
+                      <Label layoutX="222.0" layoutY="14.0" text="Mixer" />
+                    </children>
+                    <padding>
+                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+                    </padding>
+                  </Pane>
+                  <Rectangle fx:id="box_att" arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" strokeType="INSIDE" width="100.0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                    <stroke>
+                      <Color blue="0.000" green="0.431" red="0.600" fx:id="x4" />
+                    </stroke>
+                  </Rectangle>
+                  <Label font="$x5" text="Attenuator" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <GridPane blendMode="SRC_OVER" GridPane.columnIndex="0" GridPane.margin="$x2" GridPane.rowIndex="2">
+                    <children>
+                      <Slider fx:id="att_reg" blockIncrement="10.0" majorTickUnit="4.0" max="30.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                      <Label fx:id="att_disp" text="0 dB" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                        <GridPane.margin>
+                          <Insets right="5.0" />
+                        </GridPane.margin>
+                      </Label>
+                    </children>
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="53.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="52.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="74.0" minWidth="10.0" prefWidth="56.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints maxHeight="123.0" minHeight="10.0" prefHeight="123.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="76.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="64.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="107.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
                     </rowConstraints>
-                     <children>
-                        <Slider fx:id="freq_slider_khz" majorTickUnit="100.0" max="999.0" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-                        <Slider fx:id="freq_slider_hz" layoutX="43.0" layoutY="10.0" majorTickUnit="100.0" max="999.0" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-                        <Slider fx:id="freq_slider_mhz" layoutX="96.0" layoutY="10.0" majorTickUnit="4.0" max="54.0" min="1.0" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.halignment="CENTER" />
-                        <Label text="MHz" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label text="kHz" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label text="Hz" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                     </children>
                   </GridPane>
-          </children>
-          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          </columnConstraints>
-          <rowConstraints>
-            <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
-          </rowConstraints>
-        </GridPane>
+                  <Circle fx:id="box_mixer" fill="#fff733" radius="43.0" strokeType="INSIDE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                    <stroke>
+                      <Color blue="0.000" green="0.576" red="0.600" fx:id="x8" />
+                    </stroke>
+                  </Circle>
+                  <Line endX="545.3389892578125" endY="-280.0951843261719" rotate="45.0" startX="462.49835205078125" startY="-280.22802734375" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Line endX="545.3389892578125" endY="-280.0951843261719" rotate="135.0" startX="462.49835205078125" startY="-280.22802734375" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <GridPane GridPane.columnIndex="2" GridPane.rowIndex="0">
+                    <children>
+                      <Slider fx:id="mix_squarer" minorTickCount="5" showTickLabels="true" showTickMarks="true" value="50.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <GridPane.margin>
+                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+                        </GridPane.margin>
+                      </Slider>
+                      <Slider fx:id="mix_bias" majorTickUnit="1.0" max="5.0" minorTickCount="5" nodeOrientation="LEFT_TO_RIGHT" showTickLabels="true" showTickMarks="true" value="2.5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <GridPane.margin>
+                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+                        </GridPane.margin>
+                      </Slider>
+                      <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <children>
+                          <Label fx:id="mix_squarer_disp" text="50%" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                          <Label fx:id="mix_bias_disp" text="2.5V" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                          <Label text="squarer" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
+                          <Label text="bias" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                    </children>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+                  <Rectangle fx:id="box_mixRoofing" arcHeight="5.0" arcWidth="5.0" fill="#fff733" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Label font="$x5" text="Roofing Filter" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <ComboBox fx:id="mix_roof" onAction="#mixRoofingChanged" promptText="SSB" visibleRowCount="2" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                    <items>
+                      <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="SSB" />
+                        <String fx:value="CW" />
+                      </FXCollections>
+                    </items>
+                    <value>
+                      <String fx:value="SSB" />
+                    </value>
+                  </ComboBox>
+                  <Rectangle fx:id="box_selectivity" arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Label font="$x5" text="Selectivity Filter" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <ComboBox fx:id="selectivity" onAction="#selectivityChanged" promptText="2.4k" visibleRowCount="3" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                    <items>
+                      <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="500" />
+                        <String fx:value="1800" />
+                        <String fx:value="2400" />
+                      </FXCollections>
+                    </items>
+                  </ComboBox>
+                  <Polygon fx:id="box_vga" fill="#fff500" rotate="90.0" stroke="#999300" strokeType="INSIDE" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                    <points>
+                      <Double fx:value="-50.0" />
+                      <Double fx:value="40.0" />
+                      <Double fx:value="50.0" />
+                      <Double fx:value="40.0" />
+                      <Double fx:value="0.0" />
+                      <Double fx:value="-60.0" />
+                    </points>
+                  </Polygon>
+                  <Label font="$x5" text="VGA" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Rectangle fx:id="box_detRoofing" arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <ComboBox fx:id="det_mode" onAction="#detectorModeChanged" promptText="SSB" visibleRowCount="2" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                    <items>
+                      <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="SSB" />
+                        <String fx:value="CW" />
+                      </FXCollections>
+                    </items>
+                    <value>
+                      <String fx:value="SSB" />
+                    </value>
+                  </ComboBox>
+                  <Label font="$x5" text="Roofing Filter" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Rectangle fx:id="box_detector" arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" stroke="$x4" strokeType="INSIDE" width="100.0" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Label font="$x5" text="Detector" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <ToggleButton mnemonicParsing="false" onAction="#detectorStateChanged" text="Enable" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                  <ScrollPane id="ScrollPane" prefViewportHeight="209.0" prefViewportWidth="173.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <content>
+                      <GridPane minHeight="-Infinity" prefHeight="209.0" prefWidth="150.9998779296875">
+                        <children>
+                          <RadioButton fx:id="bpf_160m" mnemonicParsing="false" onAction="#bpfBandChanged" prefWidth="56.0" text="160m" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <toggleGroup>
+                              <ToggleGroup fx:id="x9" />
+                            </toggleGroup>
+                          </RadioButton>
+                          <RadioButton fx:id="bpf_80m" mnemonicParsing="false" onAction="#bpfBandChanged" text="80m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                          <RadioButton fx:id="bpf_60m" mnemonicParsing="false" onAction="#bpfBandChanged" text="60m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                          <RadioButton fx:id="bpf_40m" mnemonicParsing="false" onAction="#bpfBandChanged" text="40m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                          <RadioButton fx:id="bpf_30m" mnemonicParsing="false" onAction="#bpfBandChanged" text="30m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                          <RadioButton fx:id="bpf_20m" mnemonicParsing="false" onAction="#bpfBandChanged" selected="true" text="20m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                          <RadioButton fx:id="bpf_17m" mnemonicParsing="false" onAction="#bpfBandChanged" text="17m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                          <RadioButton fx:id="bpf_15m" mnemonicParsing="false" onAction="#bpfBandChanged" text="15m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                          <RadioButton fx:id="bpf_12m" mnemonicParsing="false" onAction="#bpfBandChanged" text="12m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                          <RadioButton fx:id="bpf_10m" mnemonicParsing="false" onAction="#bpfBandChanged" text="10m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                          <RadioButton fx:id="bpf_6m" mnemonicParsing="false" onAction="#bpfBandChanged" text="6m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                          <RadioButton fx:id="bpf_4m" mnemonicParsing="false" onAction="#bpfBandChanged" text="4m" toggleGroup="$x9" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+                          <Label text="1.8-2MHz" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                          <Label text="3.5-3.8MHz" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                          <Label text="5.357-5.362MHz" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                          <Label text="7-7.2MHz" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                          <Label text="10.1-10.15MHz" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                          <Label text="14-14.3MHz" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                          <Label text="18.068-18.168MHz" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                          <Label text="21.05-21.45MHz" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                          <Label text="24.88-24.94MHz" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                          <Label text="28-29.7MHz" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                          <Label text="50-52MHz" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                          <Label text="70MHz" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.0" minWidth="10.0" prefWidth="52.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="10.0" prefWidth="99.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints maxHeight="15.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="15.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="15.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="15.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="16.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                    </content>
+                    <GridPane.margin>
+                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x29" />
+                    </GridPane.margin>
+                  </ScrollPane>
+                  <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                    <children>
+                      <Line endX="-150.0" endY="42.0" layoutX="229.0" layoutY="-82.0" rotate="0.0" startX="-150.0" startY="138.0" stroke="#7433ff" strokeDashOffset="0.0" strokeLineCap="SQUARE" strokeWidth="3.1">
+                        <rotationAxis>
+                          <Point3D />
+                        </rotationAxis>
+                      </Line>
+                      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="$x1" height="60.0" layoutX="27.0" layoutY="54.0" stroke="$x4" strokeType="INSIDE" width="100.0" />
+                      <Label font="$x5" layoutX="40.0" layoutY="76.0" text="Local Oscillator" />
+                    </children>
+                  </Pane>
+                  <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="8" GridPane.rowIndex="1">
+                    <children>
+                      <Polygon fx:id="box_audio" fill="$x1" layoutX="80.0" layoutY="94.0" rotate="90.0" stroke="BLACK" strokeType="INSIDE">
+                        <points>
+                          <Double fx:value="-50.0" />
+                          <Double fx:value="40.0" />
+                          <Double fx:value="50.0" />
+                          <Double fx:value="40.0" />
+                          <Double fx:value="0.0" />
+                          <Double fx:value="-60.0" />
+                        </points>
+                        <rotationAxis>
+                          <Point3D z="1.0" />
+                        </rotationAxis>
+                      </Polygon>
+                      <Label font="$x5" layoutX="47.0" layoutY="76.0" text="Audio Amp" />
+                    </children>
+                  </Pane>
+                  <GridPane GridPane.columnIndex="8" GridPane.rowIndex="2">
+                    <children>
+                      <Slider fx:id="audio_l_vol" majorTickUnit="15.0" max="0.0" min="-95.0" minorTickCount="3" showTickLabels="true" showTickMarks="true" value="-20.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <GridPane.margin>
+                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+                        </GridPane.margin>
+                      </Slider>
+                      <Slider fx:id="audio_r_vol" majorTickUnit="15.0" max="0.0" min="-95.0" minorTickCount="3" showTickLabels="true" showTickMarks="true" value="-20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <GridPane.margin>
+                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+                        </GridPane.margin>
+                      </Slider>
+                      <CheckBox fx:id="audio_coupler" mnemonicParsing="false" onAction="#audioCouplerRequested" selected="true" text="couple" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                        <GridPane.margin>
+                          <Insets left="5.0" fx:id="x3" />
+                        </GridPane.margin>
+                      </CheckBox>
+                      <Label text="L" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
+                      <Label text="R" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                              <CheckBox fx:id="audio_mute" layoutX="36.0" layoutY="114.0" mnemonicParsing="false" onAction="#audioMuteRequested" text="mute" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                    </children>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="10.0" prefWidth="17.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="136.0" minWidth="10.0" prefWidth="136.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+                  <GridPane GridPane.columnIndex="8" GridPane.rowIndex="3">
+                    <children>
+                      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <children>
+                          <CheckBox fx:id="audio_out_speaker" mnemonicParsing="false" onAction="#audioOutChanged" selected="false" text="speaker" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+                            </GridPane.margin>
+                          </CheckBox>
+                          <CheckBox fx:id="audio_out_headphones" mnemonicParsing="false" onAction="#audioOutChanged" selected="true" text="headphones" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+                            </GridPane.margin>
+                          </CheckBox>
+                          <CheckBox fx:id="audio_out_rec" mnemonicParsing="false" onAction="#audioOutChanged" text="rec" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                            <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+                            </GridPane.margin>
+                          </CheckBox>
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <Label text="output" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
+                      <Label text="input" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                      <ChoiceBox fx:id="audio_input" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                        <items>
+                          <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="I/Q stereo" />
+                            <String fx:value="I mono" />
+                            <String fx:value="Q mono" />
+                            <String fx:value="I/Q off" />
+                          </FXCollections>
+                        </items>
+                        <GridPane.margin>
+                          <Insets bottom="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                      </ChoiceBox>
+                    </children>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="45.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="6.0" prefWidth="108.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+                  <GridPane GridPane.columnIndex="8" GridPane.rowIndex="4">
+                    <children>
+                      <RadioButton mnemonicParsing="false" text="Soft Mute slow" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <toggleGroup>
+                          <ToggleGroup fx:id="softMute" />
+                        </toggleGroup>
+                      </RadioButton>
+                      <RadioButton mnemonicParsing="false" selected="true" text="Soft Mute fast" toggleGroup="$softMute" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                      <RadioButton mnemonicParsing="false" text="Soft Mute off" toggleGroup="$softMute" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                      <RadioButton mnemonicParsing="false" selected="true" text="Loud off" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                        <toggleGroup>
+                          <ToggleGroup fx:id="loud" />
+                        </toggleGroup>
+                      </RadioButton>
+                      <RadioButton mnemonicParsing="false" text="Loud 10dB" toggleGroup="$loud" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                      <RadioButton mnemonicParsing="false" text="Loud 20dB" toggleGroup="$loud" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                    </children>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <GridPane.margin>
+                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x2" />
+                    </GridPane.margin>
+                  </GridPane>
+                  <GridPane id="GridPane" prefHeight="100.0" prefWidth="158.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <children>
+                      <ToggleButton mnemonicParsing="false" text="Mode coupler" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                                  <Button fx:id="reinit" mnemonicParsing="false" onAction="#reinitialize" text="1. (re)initialize" GridPane.halignment="CENTER" />
+                      <Button mnemonicParsing="false" onAction="#setDefaultsRequested" text="2. set defaults" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                    </children>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+                  <GridPane GridPane.columnIndex="5" GridPane.rowIndex="0">
+                    <children>
+                      <ProgressBar prefWidth="200.0" progress="0.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <GridPane.margin>
+                          <Insets left="5.0" right="5.0" />
+                        </GridPane.margin>
+                                 <padding>
+                                    <Insets top="3.0" />
+                                 </padding>
+                      </ProgressBar>
+                      <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                        <children>
+                          <CheckBox fx:id="vga_mute" mnemonicParsing="false" onAction="#vgaMuteRequested" text="Mute" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets bottom="3.0" left="5.0" top="3.0" />
+                            </GridPane.margin>
+                                       <padding>
+                                          <Insets bottom="3.0" />
+                                       </padding>
+                          </CheckBox>
+                          <CheckBox fx:id="vga_hangOnTx" mnemonicParsing="false" onAction="#vgaHangOnTxRequested" text="Hang on transmit" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="0">
+                            <font>
+                              <Font size="9.0" />
+                            </font>
+                            <GridPane.margin>
+                              <Insets bottom="3.0" />
+                            </GridPane.margin>
+                          </CheckBox>
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="66.0" minWidth="10.0" prefWidth="58.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="108.0" minWidth="10.0" prefWidth="100.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <Slider fx:id="vga_ifGain" majorTickUnit="13.11" max="109.6" min="-21.5" minorTickCount="3" showTickLabels="true" showTickMarks="true" value="109.6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <GridPane.margin>
+                          <Insets left="5.0" right="5.0" top="5.0" fx:id="x11" />
+                        </GridPane.margin>
+                      </Slider>
+                      <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <children>
+                          <TextField fx:id="vga_ifGain_disp" alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="109.6" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                          <Label text="dB" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                          <Label text="IF gain" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="74.0" minWidth="10.0" prefWidth="50.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="78.0" minWidth="10.0" prefWidth="21.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.0" minWidth="10.0" prefWidth="87.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <Slider fx:id="vga_vloop" majorTickUnit="13.0" max="131.0" min="0.0" minorTickCount="2" showTickLabels="true" showTickMarks="true" value="6.2" GridPane.columnIndex="0" GridPane.margin="$x11" GridPane.rowIndex="3" />
+                      <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                        <children>
+                          <TextField fx:id="vga_vloop_disp" alignment="CENTER_RIGHT" prefWidth="39.9998779296875" text="6.2" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="3.0" top="3.0" fx:id="x10" />
+                            </GridPane.margin>
+                          </TextField>
+                          <Label text="dB" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                          <Label text="Vloop" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                          <ToggleButton mnemonicParsing="false" onAction="#vgaOpenLoopRequested" text="open" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="0">
+                                       <GridPane.margin>
+                                          <Insets right="3.0" />
+                                       </GridPane.margin>
+                                       <font>
+                                          <Font size="10.0" />
+                                       </font>
+                                    </ToggleButton>
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="74.0" minWidth="10.0" prefWidth="49.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="78.0" minWidth="10.0" prefWidth="25.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.0" minWidth="10.0" prefWidth="38.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.0" minWidth="10.0" prefWidth="46.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                    </children>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="42.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="87.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="87.0" minHeight="8.0" prefHeight="26.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+                  <GridPane GridPane.columnIndex="2" GridPane.rowIndex="3">
+                    <children>
+                      <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <children>
+                          <TextField fx:id="freq_mhz" alignment="CENTER_RIGHT" onAction="#freqChanged" prefHeight="19.0" prefWidth="28.0" text="14" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <GridPane.margin>
+                              <Insets left="20.0" />
+                            </GridPane.margin>
+                          </TextField>
+                          <TextField fx:id="freq_khz" alignment="CENTER" onAction="#freqChanged" prefWidth="200.0" text="024" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                          <TextField fx:id="freq_hz" alignment="CENTER" onAction="#freqChanged" prefWidth="200.0" text="670" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                            <GridPane.margin>
+                              <Insets right="15.0" />
+                            </GridPane.margin>
+                          </TextField>
+                          <Label text="MHz" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                          <Label text="kHz" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                          <Label text="Hz" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="10.0" />
+                            </GridPane.margin>
+                          </Label>
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints maxHeight="19.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="19.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <children>
+                          <RadioButton fx:id="mixing_h" mnemonicParsing="false" text="H" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.margin="$x3" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                            <toggleGroup>
+                              <ToggleGroup fx:id="mixing" />
+                            </toggleGroup>
+                          </RadioButton>
+                          <RadioButton fx:id="mixing_l" mnemonicParsing="false" selected="true" text="L" toggleGroup="$mixing" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                            <GridPane.margin>
+                              <Insets right="5.0" />
+                            </GridPane.margin>
+                          </RadioButton>
+                          <Label text="mixing" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="51.0" minWidth="10.0" prefWidth="47.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="66.0" minWidth="10.0" prefWidth="58.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="53.0" minWidth="10.0" prefWidth="53.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <GridPane prefHeight="41.0" prefWidth="157.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                        <children>
+                          <Label text="corr [Hz]" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                          <TextField alignment="CENTER_RIGHT" prefWidth="200.0" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="5.0" right="5.0" />
+                            </GridPane.margin>
+                          </TextField>
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                              <Label fx:id="box_disp" style="-fx-background-color: yellow;" text="RX frequency" GridPane.halignment="CENTER" />
+                    </children>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                              <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="21.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+                  <GridPane GridPane.columnIndex="5" GridPane.rowIndex="2">
+                    <children>
+                      <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <children>
+                          <TextField fx:id="vga_Vsph_disp" alignment="CENTER_RIGHT" editable="false" onAction="#vgaVsphChanged" prefWidth="39.9998779296875" text="675" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="3.0" top="3.0" fx:id="x10" />
+                            </GridPane.margin>
+                          </TextField>
+                          <Slider fx:id="vga_Vsph" majorTickUnit="2160.0" max="21600.0" min="84.8" minorTickCount="2" showTickLabels="false" showTickMarks="true" value="675.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets top="5.0" />
+                            </GridPane.margin>
+                          </Slider>
+                          <Label text="ms/131dB" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
+                            <font>
+                              <Font size="8.0" fx:id="x6" />
+                            </font>
+                          </Label>
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="49.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="39.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="70.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="157.0" text="decay speed in Decay for Hang" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS" />
+                      <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="158.0" text="decay speed for Attack/Decay" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                 <GridPane.margin>
+                        <Insets left="3.0" right="3.0" fx:id="x7" />
+                                 </GridPane.margin>
+                              </Label>
+                      <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="158.0" text="decay speed in Hang state for Hang mode" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.margin="$x7" GridPane.rowIndex="5" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+                      <GridPane prefHeight="26.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <children>
+                          <TextField fx:id="vga_Vspa_disp" alignment="CENTER_RIGHT" editable="false" onAction="#vgaVspaChanged" prefWidth="39.9998779296875" text="2700" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                       <GridPane.margin>
+                              <Insets left="3.0" top="3.0" fx:id="x10" />
+                                       </GridPane.margin>
+                                    </TextField>
+                          <Slider fx:id="vga_Vspa" majorTickUnit="2160.0" max="21600.0" min="85.0" minorTickCount="2" showTickMarks="true" value="2700.0" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                          <Label font="$x6" text="ms/131dB" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="3.0" right="3.0" fx:id="x71" />
+                            </GridPane.margin>
+                          </Label>
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="48.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="45.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="65.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <GridPane prefHeight="26.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                        <children>
+                          <TextField fx:id="vga_Vleak_disp" alignment="CENTER_RIGHT" editable="false" onAction="#vgaVleakChanged" prefWidth="39.9998779296875" text="2.21" GridPane.columnIndex="0" GridPane.margin="$x10" GridPane.rowIndex="0" />
+                          <Slider fx:id="vga_Vleak" majorTickUnit="14.0" max="140.7" min="0.551" minorTickCount="2" showTickMarks="true" value="2.21" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                          <Label font="$x6" text="dB/s" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="3.0" right="3.0" fx:id="x10" />
+                            </GridPane.margin>
+                          </Label>
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="39.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="44.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="75.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                    </children>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="108.0" minHeight="0.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="127.0" minHeight="3.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="127.0" minHeight="3.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="127.0" minHeight="3.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="84.0" prefHeight="28.0" />
+                    </rowConstraints>
+                  </GridPane>
+                  <GridPane prefHeight="168.0" prefWidth="157.0" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                    <children>
+                      <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <children>
+                          <TextField fx:id="vga_Vfloor" alignment="CENTER_RIGHT" onAction="#vgaVfloorChanged" prefWidth="39.9998779296875" text="15.1" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="5.0" right="5.0" />
+                            </GridPane.margin>
+                          </TextField>
+                          <Label text="dB" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <Label prefHeight="56.0" prefWidth="100.0" text="noise floor compensation (0...25.5dB)" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" />
+                      <Label prefHeight="56.0" prefWidth="105.0" text="Attack/Decay &amp; Hang strategy threshold (-131...0dBm)" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+                        <font>
+                          <Font size="10.0" />
+                        </font>
+                      </Label>
+                      <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <children>
+                          <TextField fx:id="vga_Vhth" alignment="CENTER_RIGHT" onAction="#vgaVhthChanged" prefWidth="39.9998779296875" text="10.3" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="3.0" right="3.0" fx:id="x7" />
+                            </GridPane.margin>
+                          </TextField>
+                          <Label text="dB" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <Label prefHeight="56.0" prefWidth="100.0" text="Hang threshold (0.515...131dB)" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
+                      <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <children>
+                          <TextField fx:id="vga_Vath" alignment="CENTER_RIGHT" onAction="#vgaVathChanged" prefWidth="39.9998779296875" text="-73.3" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="5.0" right="5.0" />
+                            </GridPane.margin>
+                          </TextField>
+                          <Label text="dBm" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                    </children>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="61.0" minWidth="10.0" prefWidth="33.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.0" minWidth="10.0" prefWidth="103.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+                  <GridPane id="GridPane" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                    <children>
+                      <GridPane GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <children>
+                          <TextField fx:id="vga_Attack_disp" alignment="CENTER_RIGHT" onAction="#vgaAttackChanged" prefWidth="39.9998779296875" text="85" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="3.0" top="3.0" fx:id="x10" />
+                            </GridPane.margin>
+                          </TextField>
+                          <Slider fx:id="vga_Attack" majorTickUnit="33.0" max="400.0" min="73.0" minorTickCount="2" showTickMarks="true" value="85.0" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                          <Label font="$x6" text="ms" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="3.0" right="3.0" fx:id="x7" />
+                            </GridPane.margin>
+                          </Label>
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="39.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="44.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="75.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="157.0" text="attack time in Attack/Decay and Hang modes" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
+                        <GridPane.margin>
+                          <Insets left="3.0" right="3.0" fx:id="x7" />
+                        </GridPane.margin>
+                      </Label>
+                      <GridPane GridPane.columnIndex="0" GridPane.rowIndex="4">
+                        <children>
+                          <TextField fx:id="vga_Vspd_disp" alignment="CENTER_RIGHT" onAction="#vgaVspdChanged" prefHeight="25.0" prefWidth="42.0" text="2000" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="3.0" top="3.0" fx:id="x10" />
+                            </GridPane.margin>
+                          </TextField>
+                          <Slider fx:id="vga_Vspd" majorTickUnit="3100.0" max="31000.0" min="122.0" minorTickCount="2" showTickMarks="true" value="2000.0" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                          <Label font="$x6" text="ms" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0">
+                            <GridPane.margin>
+                              <Insets left="3.0" right="3.0" fx:id="x7" />
+                            </GridPane.margin>
+                          </Label>
+                        </children>
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="51.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="32.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="75.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                      </GridPane>
+                      <Label font="$x6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="152.0" text="max hang time in Hang mode" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
+                        <GridPane.margin>
+                          <Insets left="3.0" right="3.0" fx:id="x7" />
+                        </GridPane.margin>
+                      </Label>
+                    </children>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="49.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="42.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="34.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+                  <ImageView fitHeight="104.31774349547982" fitWidth="156.9999542236328" pickOnBounds="true" preserveRatio="true" rotate="20.0" GridPane.columnIndex="8" GridPane.rowIndex="0">
+                    <image>
+                      <Image url="@img/seal.jpg" />
+                    </image>
+                    <rotationAxis>
+                      <Point3D z="-1.0" />
+                    </rotationAxis>
+                  </ImageView>
+                        <GridPane GridPane.columnIndex="2" GridPane.rowIndex="4">
+                          <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="53.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="52.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="74.0" minWidth="10.0" prefWidth="56.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="123.0" minHeight="10.0" prefHeight="123.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="76.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Slider fx:id="freq_slider_hz" layoutX="43.0" layoutY="10.0" majorTickUnit="100.0" max="999.0" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                              <Slider fx:id="freq_slider_mhz" layoutX="96.0" layoutY="10.0" majorTickUnit="4.0" max="54.0" min="1.0" orientation="VERTICAL" showTickLabels="true" showTickMarks="true" GridPane.halignment="CENTER" />
+                              <Label text="MHz" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                              <Label text="kHz" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                              <Label text="Hz" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                </children>
+                <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                </columnConstraints>
+                <rowConstraints>
+                  <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+              </GridPane>
+                  <Slider fx:id="freq_slider_khz" majorTickUnit="100.0" max="999.0" showTickLabels="true" showTickMarks="true" />
+               </items>
+            </SplitPane>
       </children>
     </AnchorPane>
   </children>
