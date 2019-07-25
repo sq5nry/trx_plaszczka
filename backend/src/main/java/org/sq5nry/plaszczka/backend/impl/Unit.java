@@ -42,7 +42,7 @@ public abstract class Unit {
         }
     }
 
-    private void createChipset() {
+    private void createChipset() throws Exception {
         List<GenericChip> chipList = new ArrayList<>();
         createChipset(chipList);
         logger.debug("got {} chips", chipList.size());
@@ -53,7 +53,7 @@ public abstract class Unit {
         }
     }
 
-    public abstract void createChipset(List<GenericChip> chipset);
+    public abstract void createChipset(List<GenericChip> chipset) throws Exception;
 
     public GenericChip getChip(int address) {
         return chipset.get(address);

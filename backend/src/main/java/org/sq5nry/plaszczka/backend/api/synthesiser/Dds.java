@@ -11,6 +11,4 @@ public interface Dds extends Reinitializable {
      * @throws IOException
      */
     void setFrequency(int freq) throws IOException;
-
-    void configure() throws IOException;
 }

@@ -19,7 +19,7 @@ public class Ad5242 extends GenericChip {
     private static final Logger logger = LoggerFactory.getLogger(Ad5242.class);
 
     public static final int MAX = 255;
-    
+
     public static final byte RDAC_MASK = (byte) 0x80;
     public static final byte MIDSCALE_RESET_MASK = 0x40;
     public static final byte SHUTDOWN_MASK = 0x20;

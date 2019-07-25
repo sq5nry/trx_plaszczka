@@ -102,4 +102,13 @@ public class Ad9954 {
         wiringPiSPIDataRW(SPI_CHANNEL, registerInfo, 1);
         wiringPiSPIDataRW(SPI_CHANNEL, data, data.length);
     }
+
+    @Override
+    public String toString() {
+        return "AD9954{" +
+                "refClk=" + refClk +
+                ", reset=" + reset +
+                ", update=" + update +
+                '}';
+    }
 }
