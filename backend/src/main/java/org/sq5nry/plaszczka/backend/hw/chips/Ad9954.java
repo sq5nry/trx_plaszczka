@@ -1,7 +1,6 @@
 package org.sq5nry.plaszczka.backend.hw.chips;
 
 import com.pi4j.io.gpio.*;
-import com.pi4j.io.spi.SpiDevice;
 import com.pi4j.wiringpi.Spi;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.slf4j.Logger;
@@ -57,7 +56,7 @@ public class Ad9954 {
         logger.debug("initialized: UPDATE pin: {}", update);
 
         logger.debug("initializing wiringPiSPISetup, channel={}", CHANNEL);
-        int fdSpi = Spi.wiringPiSPISetup(CHANNEL, SpiDevice.DEFAULT_SPI_SPEED);
+        int fdSpi = Spi.wiringPiSPISetup(CHANNEL, 5000000);
         if (fdSpi <= -1) {
             logger.error("SPI bus setup failed for channel {}, FD={}", CHANNEL, fdSpi);
             throw new ChipInitializationException("SPI bus setup failed for channel " + CHANNEL + ", fd=" + fdSpi);
@@ -71,15 +70,15 @@ public class Ad9954 {
         logger.debug("setFrequency: freq={}, ftw={}", freq, ftw);
         byte ftws[] = {(byte) ((ftw >> 24) & 0xFF), (byte) ((ftw >> 16) & 0xFF), (byte) ((ftw >> 8) & 0xFF), (byte) (ftw & 0xFF)};
 
-        writeRegister(CFR1Info, 4, CFR_1);
-        writeRegister(REGISTER_INFO, 4, ftws);
+        writeRegister(CFR1Info, CFR_1);
+        writeRegister(REGISTER_INFO, ftws);
         update();
     }
 
     //no PLL
     public void initialize() {
         reset();
-        writeRegister(INIT_REG, 4, INIT_DATA);
+        writeRegister(INIT_REG, INIT_DATA);
     }
 
     private void reset() {
@@ -95,11 +94,11 @@ public class Ad9954 {
         update.low();
     }
 
-    private void writeRegister(byte registerInfo[], int len, byte data[]) {
+    private void writeRegister(byte registerInfo[], byte data[]) {
         if (logger.isDebugEnabled()) {
             logger.debug("writeRegister: reg={}, data={}", HexUtils.toHexString(registerInfo), HexUtils.toHexString(data));
         }
         wiringPiSPIDataRW(CHANNEL, registerInfo, 1);
-        wiringPiSPIDataRW(CHANNEL, data, len);
+        wiringPiSPIDataRW(CHANNEL, data, data.length);
     }
 }
