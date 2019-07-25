@@ -21,8 +21,8 @@ public class DdsUnit extends Unit implements Dds {
     //TODO nie chce i2c
     public DdsUnit(I2CBusProvider i2cBusProv) throws Exception, ChipInitializationException {
         super(i2cBusProv);
-        dds = new Ad9954(500000000);
-        dds.initialize();
+
+
     }
 
     @Override
@@ -36,12 +36,14 @@ public class DdsUnit extends Unit implements Dds {
     }
 
     @Override
-    public void createChipset(List<GenericChip> chipset) {
-        logger.debug("createChipset: ??????????????????");
+    public void createChipset(List<GenericChip> chipset) throws ChipInitializationException {
+        logger.debug("createChipset: Ad9954");
+        dds = new Ad9954(500000000);
     }
 
     @Override
     public void initializeUnit() throws Exception {
-        logger.debug("initializeUnit: ??????????????????");
+        logger.debug("initializeUnit: {}", dds);
+        dds.initialize();
     }
 }
