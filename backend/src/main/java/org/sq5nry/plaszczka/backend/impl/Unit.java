@@ -22,16 +22,14 @@ public abstract class Unit {
 
     private I2CBus bus;
     private Map<Integer, GenericChip> chipset;
-    State state;
+    State state = State.CREATED;
 
-    public enum State { NULL, CREATED, CHIPSET_INITIALIZED, UNIT_INITIALIZED, FAILED }
+    public enum State { CREATED, CHIPSET_INITIALIZED, UNIT_INITIALIZED, FAILED }
 
     public Unit(I2CBusProvider i2cBusProv) throws Exception {
         bus = i2cBusProv.getBus();
 
-        state = State.NULL;
         createChipset();
-        state = State.CREATED;
         initializeChipset();
         if (state == State.CHIPSET_INITIALIZED) {
             try {
@@ -44,7 +42,7 @@ public abstract class Unit {
         }
     }
 
-    private void createChipset() throws Exception {
+    private void createChipset() {
         List<GenericChip> chipList = new ArrayList<>();
         createChipset(chipList);
         logger.debug("got {} chips", chipList.size());
@@ -55,7 +53,7 @@ public abstract class Unit {
         }
     }
 
-    public abstract void createChipset(List<GenericChip> chipset) throws Exception;
+    public abstract void createChipset(List<GenericChip> chipset);
 
     public GenericChip getChip(int address) {
         return chipset.get(address);
