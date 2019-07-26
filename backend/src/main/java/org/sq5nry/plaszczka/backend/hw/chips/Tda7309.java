@@ -49,13 +49,17 @@ public class Tda7309 extends GenericChip {
         super(address);
     }
 
-    //TODO chip fails to accept any data with LSB = 1, need to replace
+    //TODO chip fails to accept any data with LSB = 1, need to replace? suppress err for now
     private void writeTmp(byte val) throws IOException {
-        byte data = (byte) (val & 0xfe);
+        byte data = val; //(val & 0xfe)
         if (logger.isDebugEnabled()) {
             logger.debug("write: {}", String.format("%02X", data));
         }
-        getDevice().write(data);
+        try {
+            getDevice().write(data);
+        } catch (IOException e) {
+            //TODO workaround, ignore
+        }
     }
     /**
      * Set volume.
