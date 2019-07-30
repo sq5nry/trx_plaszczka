@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
+//TODO prohibit calls in FAILED state
 public class VgaUnit extends Unit implements IfAmp, Reinitializable {
     private static final Logger logger = LoggerFactory.getLogger(VgaUnit.class);
 

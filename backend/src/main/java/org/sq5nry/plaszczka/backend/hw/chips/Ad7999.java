@@ -1,5 +1,7 @@
 package org.sq5nry.plaszczka.backend.hw.chips;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 
 import java.io.IOException;
@@ -18,6 +20,8 @@ import java.io.IOException;
  * https://www.analog.com/en/products/ad7999.html
  */
 public class Ad7999 extends GenericChip {
+    private static final Logger logger = LoggerFactory.getLogger(Ad7999.class);
+
     private static final byte CONFIG_CH0 = 0x10;
     private static final byte CONFIG_REFSEL = 0x08;
     private static final byte CONFIG_FLTR = 0x04;
@@ -27,6 +31,18 @@ public class Ad7999 extends GenericChip {
     public Ad7999(int address) {
         super(address);
         conversion = new byte[2];
+    }
+
+    //TODO workaround for failing initialization. Write(0) gives IOException: Communication error on send but i2cset is ok
+    public GenericChip initialize() {
+        try {
+            super.initialize();
+        } catch (IOException e) {
+            logger.warn("initialization failed", e);
+        } finally {
+            forceInitialized();
+        }
+        return this;
     }
 
     public void configure() throws IOException {

@@ -27,6 +27,10 @@ public abstract class GenericChip {
         return this;
     }
 
+    public void forceInitialized() {
+        this.initialized = true;    //TODO remove
+    }
+
     public I2CDevice getDevice() {
         if (!initialized) {
             throw new IllegalStateException("not initialized");
