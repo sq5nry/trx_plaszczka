@@ -36,10 +36,9 @@ public class Ad7999 extends GenericChip {
     //TODO workaround for failing initialization. Write(0) gives IOException: Communication error on send but i2cset is ok
     public GenericChip initialize() {
         try {
-            super.initialize();
+            return super.initialize();
         } catch (IOException e) {
-            logger.warn("initialization failed", e);
-        } finally {
+            logger.warn("initialization failed, enforcing skip", e);
             forceInitialized();
         }
         return this;
@@ -51,6 +50,9 @@ public class Ad7999 extends GenericChip {
 
     public byte getConversionResult() throws IOException {
         getDevice().read(conversion, 0, 2);
+        if (logger.isDebugEnabled()) {
+            logger.debug("getConversionResult: {}{}", String.format("%02X", conversion[0]), String.format("%02X", conversion[1]));
+        }
         return (byte) (conversion[0]<<4 | conversion[1]>>4);
     }
 }
