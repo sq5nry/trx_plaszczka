@@ -144,6 +144,6 @@ public class VgaUnit extends Unit implements IfAmp, Reinitializable {
     public int getVAgc() throws Exception {
         logger.debug("getVAgc: getting data");
         byte vagc = ((Ad7999) getChip(ADC)).getConversionResult();
-        return vagc;
+        return vagc & 0xFF;
     }
 }
