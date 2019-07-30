@@ -111,4 +111,10 @@ public class IfAmpController {
         vgaUnit.setMute(val);
         return "result=OK";
     }
+
+    @RequestMapping(value = "/ifAmp/vagc", method = RequestMethod.GET)
+    public String getVagc() throws Exception {
+        logger.debug("getVagc");
+        return String.valueOf(vgaUnit.getVAgc());
+    }
 }

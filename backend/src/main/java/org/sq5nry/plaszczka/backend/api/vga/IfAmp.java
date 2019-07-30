@@ -165,4 +165,12 @@ public interface IfAmp {
      * @param enabled Signal Path Muted
      */
     void setMute(boolean enabled) throws Exception;
+
+    /**
+     * S-Meter
+     *
+     * @return 0-255
+     * @throws Exception
+     */
+    int getVAgc() throws Exception;
 }

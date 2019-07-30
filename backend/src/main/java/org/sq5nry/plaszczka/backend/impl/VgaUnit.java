@@ -9,6 +9,7 @@ import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -36,9 +37,10 @@ public class VgaUnit extends Unit implements IfAmp, Reinitializable {
     }
 
     @Override
-    public void initializeUnit() {
+    public void initializeUnit() throws IOException {
         ((Ad5306) getChip(DAC_IC18)).setVRef(3.894f);
         ((Ad5306) getChip(DAC_IC19)).setVRef(5.0f);
+        ((Ad7999) getChip(ADC)).configure();
     }
 
     /**
@@ -135,5 +137,12 @@ public class VgaUnit extends Unit implements IfAmp, Reinitializable {
     public void setMute(boolean enabled) throws Exception {
         logger.debug("setMute: {}", enabled);
         ((Ad5242) getChip(RDAC)).setOutPin(enabled, Ad5242.OutPin.O2);
+    }
+
+    @Override
+    public int getVAgc() throws Exception {
+        logger.debug("getVAgc: getting data");
+        byte vagc = ((Ad7999) getChip(ADC)).getConversionResult();
+        return vagc;
     }
 }

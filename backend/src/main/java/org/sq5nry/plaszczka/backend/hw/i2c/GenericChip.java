@@ -9,9 +9,11 @@ public abstract class GenericChip {
     private I2CBus i2CBus;
     private I2CDevice device;
     private int address;
+    private boolean initialized;
 
     public GenericChip(int address) {
         this.address = address;
+        this.initialized = false;
     }
 
     public GenericChip initialize() throws IOException {
@@ -21,10 +23,14 @@ public abstract class GenericChip {
         } else {
             device.write((byte) 0);
         }
+        this.initialized = true;
         return this;
     }
 
     public I2CDevice getDevice() {
+        if (!initialized) {
+            throw new IllegalStateException("not initialized");
+        }
         return device;
     }
 
@@ -38,6 +44,6 @@ public abstract class GenericChip {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "{address=0x" + Integer.toHexString(address) + '}';
+        return getClass().getSimpleName() + "{address=0x" + Integer.toHexString(address) + ", initialized=" + initialized + '}';
     }
 }
