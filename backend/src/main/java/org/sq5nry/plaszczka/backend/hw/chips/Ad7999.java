@@ -51,7 +51,7 @@ public class Ad7999 extends GenericChip {
     public byte getConversionResult() throws IOException {
         getDevice().read(conversion, 0, 2);
         if (logger.isDebugEnabled()) {
-            logger.debug("getConversionResult: {}{}", String.format("%02X", conversion[0]), String.format("%02X", conversion[1]));
+            logger.debug("getConversionResult: 0x{}.0x{}", String.format("%02X", conversion[0]), String.format("%02X", conversion[1]));
         }
         return (byte) (conversion[0]<<4 | conversion[1]>>4);
     }
