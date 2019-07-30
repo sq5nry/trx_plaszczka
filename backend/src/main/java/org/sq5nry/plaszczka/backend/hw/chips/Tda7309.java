@@ -49,7 +49,7 @@ public class Tda7309 extends GenericChip {
         super(address);
     }
 
-    //TODO chip fails to accept any data with LSB = 1, need to replace? suppress err for now
+    //TODO i2c reports error (but chip accepts ok) for any odd value written, need to replace? suppress err for now
     private void writeTmp(byte val) throws IOException {
         byte data = val; //(val & 0xfe)
         if (logger.isDebugEnabled()) {
@@ -100,7 +100,7 @@ public class Tda7309 extends GenericChip {
      */
     public void setMute(byte mute) throws IOException {
         this.mute = (byte) (mute & MUTE_MASK);
-        writeTmp((byte) (mute | CTRL_MUTE_LOUD));
+        setMuteLoud();
     }
 
     /**
@@ -110,6 +110,10 @@ public class Tda7309 extends GenericChip {
      */
     public void setLoudness(byte loud) throws IOException {
         this.loud = (byte) (loud & LOUD_MASK);
-        writeTmp((byte) (loud | CTRL_MUTE_LOUD));
+        setMuteLoud();
+    }
+
+    private void setMuteLoud() throws IOException {
+        writeTmp((byte) (this.mute | this.loud | CTRL_MUTE_LOUD));
     }
 }
