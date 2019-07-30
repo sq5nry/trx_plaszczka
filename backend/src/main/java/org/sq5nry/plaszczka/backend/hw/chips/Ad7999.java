@@ -53,6 +53,6 @@ public class Ad7999 extends GenericChip {
         if (logger.isDebugEnabled()) {
             logger.debug("getConversionResult: 0x{}.0x{}", String.format("%02X", conversion[0]), String.format("%02X", conversion[1]));
         }
-        return (byte) (conversion[0]<<4 | conversion[1]>>4);
+        return (byte) ((conversion[0] & 0x0F)<<4 | (conversion[1] & 0xF0)>>4);
     }
 }
