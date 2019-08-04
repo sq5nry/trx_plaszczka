@@ -17,15 +17,13 @@ public class WsStompClient {
     }
 
     public VAgcStreamController initialize() {
-        logger.debug("initializing");
+        logger.info("initializing");
         WebSocketClient client = new StandardWebSocketClient();
 
         WebSocketStompClient stompClient = new WebSocketStompClient(client);
         stompClient.setMessageConverter(new StringMessageConverter());  //TODO oth for json
 
-        StompSessionHandler sessionHandler = new VAgcStompSessionHandler();
-        logger.debug("connecting, url=" + url);
-        stompClient.connect(url, sessionHandler);
+        StompSessionHandler sessionHandler = new VAgcStompSessionHandler(stompClient, url);
 
         return (VAgcStreamController) sessionHandler;
     }

@@ -5,12 +5,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 public class Main extends Application {
+    private static final Logger logger = Logger.getLogger(Main.class);
+
     private Controller controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        logger.info("starting application");
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("main.fxml"));
         Parent root = loader.load();
         controller = loader.getController();
@@ -25,6 +29,7 @@ public class Main extends Application {
 
     @Override
     public void stop() throws Exception {
+        logger.info("stop: closeCommunicationChannels");
         controller.closeCommunicationChannels();
     }
 

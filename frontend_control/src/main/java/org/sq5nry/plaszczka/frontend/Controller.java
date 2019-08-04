@@ -1,5 +1,6 @@
 package org.sq5nry.plaszczka.frontend;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,11 +29,14 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable, MessageHandler.Whole<String> {
     private static final Logger logger = Logger.getLogger(Controller.class);
 
-    public static final String BACKEND_HOST = "127.0.0.1";
-    public static final String BACKEND_ROOT_URL = "http://" + BACKEND_HOST + ":8080";
-    public static final String BACKEND_STOMP_URL = "ws://" + BACKEND_HOST + ":8080/vagc-websocket";
-    public static final int VAGC_READ_PERIOD = 100;
+    public static final String BACKEND_HOST_LOCAL = "127.0.0.1";
+    public static final String BACKEND_HOST_REAL = "10.0.0.137";
 
+    private static final String BACKEND_HOST = BACKEND_HOST_LOCAL;
+    private static final String BACKEND_ROOT_URL = "http://" + BACKEND_HOST + ":8080";
+    private static final String BACKEND_STOMP_URL = "ws://" + BACKEND_HOST + ":8080/vagc-websocket";
+
+    private static final int VAGC_READ_PERIOD = 100;
     private BackendCommunicator comm;
     private VAgcStreamController ifMsg;
 
@@ -40,7 +44,9 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         comm = new BackendCommunicator(BACKEND_ROOT_URL);
         ifMsg = new WsStompClient(BACKEND_STOMP_URL).initialize();
-        ifMsg.addMessageHandler(this, VAGC_READ_PERIOD);
+        ifMsg.addMessageHandler(this);
+        ifMsg.setPeriod(VAGC_READ_PERIOD);
+        ifMsg.connect();
 
         logger.debug("initialized: " + url + ", rb=" + resourceBundle);
         att_reg.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setAttenuation());
@@ -290,7 +296,8 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
 
     @Override
     public void onMessage(String s) {
-        logger.debug("onMessage: " + s);
+        int sMeter = Integer.parseInt(s);  //TODO byte/int
+        s_meter.setProgress(sMeter/255.0d);
     }
 
 
@@ -432,7 +439,13 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     private void setAttenuation() {
         int att = (int) att_reg.getValue();
         att -= att % 2; //adjust to 2dB step
-        if (att != prevAtt) comm.sendRequest(BackendCommunicator.ATT + att);
+        if (att != prevAtt) {
+            int finalAtt = att;
+            Platform.runLater(() -> {
+                comm.sendRequest(BackendCommunicator.AUDIO_MUTELOUD + "FAST_SOFT_MUTE");
+                comm.sendRequest(BackendCommunicator.ATT + finalAtt);
+                comm.sendRequest(BackendCommunicator.AUDIO_MUTELOUD + "SOFT_MUTE_OFF");
+            });        }
         prevAtt = att;
         att_disp.textProperty().setValue(att + "dB");
     }

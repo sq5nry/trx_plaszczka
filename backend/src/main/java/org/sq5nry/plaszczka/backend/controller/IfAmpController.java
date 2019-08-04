@@ -28,6 +28,9 @@ import java.util.concurrent.ScheduledFuture;
 public class IfAmpController implements SchedulingConfigurer {
     private static final Logger logger = LoggerFactory.getLogger(IfAmpController.class);
 
+    public static final int STREAMER_CTRL_RESP_STARTED = -1;
+    public static final int STREAMER_CTRL_RESP_STOPPED = -2;
+
     @Autowired
     private VgaUnit vgaUnit;
 
@@ -134,17 +137,17 @@ public class IfAmpController implements SchedulingConfigurer {
 
     @MessageMapping("/vagc_stream_control")
     @SendTo("/topic/vagc")
-    public String controlVAgcStreamer(String message) {
-        logger.debug("getSS: message={}", message);
+    public Integer controlVAgcStreamer(String message) {
+        logger.debug("controlVAgcStreamer: message={}", message);
         if ("start".equals(message)) {
             start();
-            return "started";
+            return STREAMER_CTRL_RESP_STARTED;
         } else if ("stop".equals(message)) {
             stop();
-            return "stopped";
+            return STREAMER_CTRL_RESP_STOPPED;
         } else {
             period = Integer.valueOf(message);
-            return "period set";
+            return period;
         }
     }
 
@@ -170,8 +173,13 @@ public class IfAmpController implements SchedulingConfigurer {
         });
     }
 
-    private void stop() {
-        future.cancel(true);
+    public void stop() {
+        if (future != null) {
+            logger.debug("stopping VAgc streamer");
+            future.cancel(true);
+        } else {
+            logger.debug("no active VAgc streamer to stop");
+        }
     }
 
     private void despatchVAgc() throws Exception {
