@@ -34,6 +34,9 @@ public class IfAmpController implements SchedulingConfigurer {
     @Autowired
     private TaskScheduler scheduler;
 
+    @Autowired
+    private SimpMessagingTemplate template;
+
     private ScheduledFuture<?> future;
     private int period = Integer.MAX_VALUE;
 
@@ -52,7 +55,6 @@ public class IfAmpController implements SchedulingConfigurer {
         return "result=OK";
     }
 
-//FIXME DONE
     @RequestMapping(value = "/ifAmp/decaySpeedInHangStateForHangMode/{val}", method = RequestMethod.GET)
     public String setDecaySpeedInHangStateForHangMode(@PathVariable Float val) throws Exception {
         logger.debug("Vleak (DecaySpeedInHangStateForHangMode) to {}", val);
@@ -130,13 +132,6 @@ public class IfAmpController implements SchedulingConfigurer {
         return String.valueOf(vgaUnit.getVAgc());
     }
 
-    @Autowired
-    private SimpMessagingTemplate template;
-
-    public void despatchVAgc() throws Exception {
-        this.template.convertAndSend("/topic/vagc", String.valueOf(vgaUnit.getVAgc()));
-    }
-
     @MessageMapping("/vagc_stream_control")
     @SendTo("/topic/vagc")
     public String controlVAgcStreamer(String message) {
@@ -153,7 +148,7 @@ public class IfAmpController implements SchedulingConfigurer {
         }
     }
 
-    public void start() {
+    private void start() {
         future = scheduler.schedule(new Runnable() {
             @Override
             public void run() {
@@ -173,15 +168,18 @@ public class IfAmpController implements SchedulingConfigurer {
                 return nextExecutionTime.getTime();
             }
         });
-
     }
 
-    public void stop() {
+    private void stop() {
         future.cancel(true);
     }
 
+    private void despatchVAgc() throws Exception {
+        template.convertAndSend("/topic/vagc", String.valueOf(vgaUnit.getVAgc()));
+    }
+
     @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {  //TODO needed?
         logger.debug("configureTasks: {}", taskRegistrar);
     }
 }
