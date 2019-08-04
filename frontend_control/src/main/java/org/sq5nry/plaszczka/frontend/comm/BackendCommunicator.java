@@ -1,4 +1,4 @@
-package org.sq5nry.plaszczka.frontend;
+package org.sq5nry.plaszczka.frontend.comm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
@@ -48,6 +48,7 @@ public class BackendCommunicator {
     public static final String AUDIO_VOL = "/audio/volume/";
     public static final String AUDIO_OUTPUT = "/audio/output/";
     public static final String AUDIO_INPUT = "/audio/input/";
+    public static final String AUDIO_MUTELOUD = "/audio/muteLoudness/";
 
     public static final String INITIALIZE = "/mgmt/initialize/rx";
 

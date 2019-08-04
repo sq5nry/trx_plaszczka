@@ -3,20 +3,41 @@ package org.sq5nry.plaszczka.backend.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.Trigger;
+import org.springframework.scheduling.TriggerContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.sq5nry.plaszczka.backend.impl.VgaUnit;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.concurrent.ScheduledFuture;
+
 @RestController
-public class IfAmpController {
+@EnableScheduling
+public class IfAmpController implements SchedulingConfigurer {
     private static final Logger logger = LoggerFactory.getLogger(IfAmpController.class);
 
     @Autowired
     private VgaUnit vgaUnit;
 
-//FIXME DONE
+    @Autowired
+    private TaskScheduler scheduler;
+
+    private ScheduledFuture<?> future;
+    private int period = Integer.MAX_VALUE;
+
+
     @RequestMapping(value = "/ifAmp/decaySpeedInDecayStateForHangMode/{val}", method = RequestMethod.GET)
     public String setDecaySpeedInDecayStateForHangMode(@PathVariable Float val) throws Exception {
         logger.debug("Vsph (DecaySpeedInDecayStateForHangMode) to {}", val);
@@ -24,7 +45,6 @@ public class IfAmpController {
         return "result=OK";
     }
 
-//FIXME DONE
     @RequestMapping(value = "/ifAmp/decaySpeedForAttackDecayMode/{val}", method = RequestMethod.GET)
     public String setDecaySpeedForAttackDecayMode(@PathVariable Float val) throws Exception {
         logger.debug("Vspa (DecaySpeedForAttackDecayMode) to {}", val);
@@ -40,7 +60,6 @@ public class IfAmpController {
         return "result=OK";
     }
 
-//FIXME DONE
     @RequestMapping(value = "/ifAmp/noiseFloorCompensation/{val}", method = RequestMethod.GET)
     public String setNoiseFloorCompensation(@PathVariable Float val) throws Exception {
         logger.debug("Vfloor (NoiseFloorCompensation) to {}", val);
@@ -48,7 +67,6 @@ public class IfAmpController {
         return "result=OK";
     }
 
-//FIXME DONE
     @RequestMapping(value = "/ifAmp/strategyThreshold/{val}", method = RequestMethod.GET)
     public String setStrategyThreshold(@PathVariable Float val) throws Exception {
         logger.debug("Vath (StrategyThreshold) to {}", val);
@@ -56,7 +74,6 @@ public class IfAmpController {
         return "result=OK";
     }
 
-//FIXME DONE
     @RequestMapping(value = "/ifAmp/hangThreshold/{val}", method = RequestMethod.GET)
     public String setHangThreshold(@PathVariable Float val) throws Exception {
         logger.debug("Vhth (HangThreshold) to {}", val);
@@ -72,7 +89,6 @@ public class IfAmpController {
         return "result=OK";
     }
 
-
     @RequestMapping(value = "/ifAmp/maximumGain/{val}", method = RequestMethod.GET)
     public String setMaximumGain(@PathVariable Float val) throws Exception {
         logger.debug("MaximumGain (Vgain) to {}", val);
@@ -80,7 +96,6 @@ public class IfAmpController {
         return "result=OK";
     }
 
-//FIXME DONE
     @RequestMapping(value = "/ifAmp/maximumHangTimeInHangMode/{val}", method = RequestMethod.GET)
     public String setMaximumHangTimeInHangMode(@PathVariable Float val) throws Exception {
         logger.debug("MaximumHangTimeInHangMode (Vspd) to {}", val);
@@ -88,7 +103,6 @@ public class IfAmpController {
         return "result=OK";
     }
 
-//FIXME DONE
     @RequestMapping(value = "/ifAmp/attackTime/{val}", method = RequestMethod.GET)
     public String setAttackTime(@PathVariable Float val) throws Exception {
         logger.debug("AttackTime (Attack) to {}", val);
@@ -96,14 +110,12 @@ public class IfAmpController {
         return "result=OK";
     }
 
-
     @RequestMapping(value = "/ifAmp/hangOnTransmit/{val}", method = RequestMethod.GET)
     public String setHangOnTransmit(@PathVariable Boolean val) throws Exception {
         logger.debug("setHangOnTransmit to {}", val);
         vgaUnit.setHangOnTransmit(val);
         return "result=OK";
     }
-
 
     @RequestMapping(value = "/ifAmp/mute/{val}", method = RequestMethod.GET)
     public String setMute(@PathVariable Boolean val) throws Exception {
@@ -116,5 +128,60 @@ public class IfAmpController {
     public String getVagc() throws Exception {
         logger.debug("getVagc");
         return String.valueOf(vgaUnit.getVAgc());
+    }
+
+    @Autowired
+    private SimpMessagingTemplate template;
+
+    public void despatchVAgc() throws Exception {
+        this.template.convertAndSend("/topic/vagc", String.valueOf(vgaUnit.getVAgc()));
+    }
+
+    @MessageMapping("/vagc_stream_control")
+    @SendTo("/topic/vagc")
+    public String controlVAgcStreamer(String message) {
+        logger.debug("getSS: message={}", message);
+        if ("start".equals(message)) {
+            start();
+            return "started";
+        } else if ("stop".equals(message)) {
+            stop();
+            return "stopped";
+        } else {
+            period = Integer.valueOf(message);
+            return "period set";
+        }
+    }
+
+    public void start() {
+        future = scheduler.schedule(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    despatchVAgc();
+                } catch (Exception e) {
+                    logger.error("despatchVAgc failed, stopping the scheduler");
+                    stop();
+                }
+            }
+        }, new Trigger() {
+            @Override public Date nextExecutionTime(TriggerContext triggerContext) {
+                Date lastActualExecutionTime = triggerContext.lastActualExecutionTime();
+                Calendar nextExecutionTime =  new GregorianCalendar();
+                nextExecutionTime.setTime(lastActualExecutionTime != null ? lastActualExecutionTime : new Date());
+                nextExecutionTime.add(Calendar.MILLISECOND, period);
+                return nextExecutionTime.getTime();
+            }
+        });
+
+    }
+
+    public void stop() {
+        future.cancel(true);
+    }
+
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+        logger.debug("configureTasks: {}", taskRegistrar);
     }
 }

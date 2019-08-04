@@ -15,21 +15,32 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import org.apache.log4j.Logger;
+import org.sq5nry.plaszczka.frontend.comm.BackendCommunicator;
+import org.sq5nry.plaszczka.frontend.comm.VAgcStreamController;
+import org.sq5nry.plaszczka.frontend.comm.WsStompClient;
 
+import javax.websocket.MessageHandler;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable {
+public class Controller implements Initializable, MessageHandler.Whole<String> {
     private static final Logger logger = Logger.getLogger(Controller.class);
 
-    public static final String BACKEND_ROOT_URL = "http://10.0.0.137:8080";
+    public static final String BACKEND_HOST = "127.0.0.1";
+    public static final String BACKEND_ROOT_URL = "http://" + BACKEND_HOST + ":8080";
+    public static final String BACKEND_STOMP_URL = "ws://" + BACKEND_HOST + ":8080/vagc-websocket";
+    public static final int VAGC_READ_PERIOD = 100;
+
     private BackendCommunicator comm;
+    private VAgcStreamController ifMsg;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         comm = new BackendCommunicator(BACKEND_ROOT_URL);
+        ifMsg = new WsStompClient(BACKEND_STOMP_URL).initialize();
+        ifMsg.addMessageHandler(this, VAGC_READ_PERIOD);
 
         logger.debug("initialized: " + url + ", rb=" + resourceBundle);
         att_reg.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setAttenuation());
@@ -82,6 +93,7 @@ public class Controller implements Initializable {
         setVolume(0, Channel.L);
         setAudioInput("I/Q stereo");
         setAudioOut();
+        s_meter.setProgress(0.5d);
     }
 
     /*
@@ -129,6 +141,7 @@ public class Controller implements Initializable {
     /*
      * IF amp
      */
+    @FXML ProgressBar s_meter;
     @FXML Slider vga_ifGain;
     @FXML TextField vga_ifGain_disp;
 
@@ -275,6 +288,12 @@ public class Controller implements Initializable {
     }
     ///////////////////////////////////////////////////////
 
+    @Override
+    public void onMessage(String s) {
+        logger.debug("onMessage: " + s);
+    }
+
+
     /*
      * Audio
      */
@@ -284,6 +303,20 @@ public class Controller implements Initializable {
     @FXML private CheckBox audio_out_headphones;
     @FXML private CheckBox audio_out_rec;
     @FXML private ChoiceBox audio_input;
+
+    @FXML private void muteLoudChanged(ActionEvent e) {
+        String command;
+        switch (((RadioButton) e.getSource()).getId()) {
+            case "mute_slow": command = "SLOW_SOFT_MUTE"; break;
+            case "mute_fast": command = "FAST_SOFT_MUTE"; break;
+            case "mute_off": command = "SOFT_MUTE_OFF"; break;
+            case "loud_off": command = "LOUD_OFF"; break;
+            case "loud_10": command = "LOUD_ON_10DB"; break;
+            case "loud_20": command = "LOUD_ON_20DB"; break;
+            default: throw new IllegalArgumentException("unknown mute loud code:" + e);
+        }
+        comm.sendRequest(BackendCommunicator.AUDIO_MUTELOUD + command);
+    }
 
     boolean audioLRCoupled = true;
     String lastChannel;
@@ -314,6 +347,10 @@ public class Controller implements Initializable {
                 lastRvol = -vol;
             }
         }
+    }
+
+    public void closeCommunicationChannels() {
+        ifMsg.stop();
     }
 
     private enum Channel { L, R }
@@ -349,17 +386,6 @@ public class Controller implements Initializable {
         if (audio_out_rec.isSelected()) buf.append("rec_");
         if (audio_out_speaker.isSelected()) buf.append("speaker_");
         comm.sendRequest(BackendCommunicator.AUDIO_OUTPUT + buf.toString());
-    }
-
-    @FXML CheckBox audio_mute;
-    @FXML
-    private void audioMuteRequested(ActionEvent event) {
-        if (((CheckBox)event.getSource()).isSelected()) {
-            setVolume(-96, Channel.L);  //TODO
-        } else {
-            setVolume(lastLvol, Channel.L);
-            setVolume(lastRvol, Channel.R);
-        }
     }
 
     /*
@@ -532,6 +558,10 @@ public class Controller implements Initializable {
             }
         }
         logger.debug("response=" + response.values());
+
+        logger.debug("subscribing to s-meter");
+        ifMsg.start();
+
     }
 
     private void setUnitColor(Shape unit, String state) {

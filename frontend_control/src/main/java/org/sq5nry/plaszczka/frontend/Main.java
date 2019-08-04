@@ -7,9 +7,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    private Controller controller;
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("main.fxml"));
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("main.fxml"));
+        Parent root = loader.load();
+        controller = loader.getController();
 
         primaryStage.setTitle("TRX Płaszczka: controller");
         Scene scene = new Scene(root);
@@ -17,6 +21,11 @@ public class Main extends Application {
         primaryStage.show();
 
         //primaryStage.setFullScreen(true);
+    }
+
+    @Override
+    public void stop() throws Exception {
+        controller.closeCommunicationChannels();
     }
 
     public static void main(String[] args) {

@@ -3,12 +3,11 @@ package org.sq5nry.plaszczka.backend.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.display.FrequencyDisplay;
+import org.sq5nry.plaszczka.backend.hw.chips.Mcp23017;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.chips.Mcp23017;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -161,7 +160,7 @@ public class NixieDisplayUnit extends Unit implements FrequencyDisplay, Reinitia
     }
 
     //TODO put into heheszki
-    @Scheduled(fixedRate = 1000)
+    //@Scheduled(fixedRate = 1000)
     public void reportCurrentTime() throws IOException {
         Calendar cal = Calendar.getInstance();
         int hr = cal.get(Calendar.HOUR_OF_DAY);

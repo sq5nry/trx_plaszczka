@@ -327,11 +327,6 @@
                       </CheckBox>
                       <Label text="L" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
                       <Label text="R" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                              <CheckBox fx:id="audio_mute" layoutX="36.0" layoutY="114.0" mnemonicParsing="false" onAction="#audioMuteRequested" text="mute" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                                 <GridPane.margin>
-                                    <Insets left="5.0" />
-                                 </GridPane.margin>
-                              </CheckBox>
                     </children>
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="10.0" prefWidth="17.0" />
@@ -400,20 +395,20 @@
                   </GridPane>
                   <GridPane GridPane.columnIndex="8" GridPane.rowIndex="4">
                     <children>
-                      <RadioButton mnemonicParsing="false" text="Soft Mute slow" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                      <RadioButton fx:id="mute_slow" mnemonicParsing="false" onAction="#muteLoudChanged" text="Soft Mute slow" textFill="#4b76da" GridPane.columnIndex="0" GridPane.rowIndex="0">
                         <toggleGroup>
                           <ToggleGroup fx:id="softMute" />
                         </toggleGroup>
                       </RadioButton>
-                      <RadioButton mnemonicParsing="false" selected="true" text="Soft Mute fast" toggleGroup="$softMute" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                      <RadioButton mnemonicParsing="false" text="Soft Mute off" toggleGroup="$softMute" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                      <RadioButton mnemonicParsing="false" selected="true" text="Loud off" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                      <RadioButton fx:id="mute_fast" mnemonicParsing="false" onAction="#muteLoudChanged" selected="true" text="Soft Mute fast" textFill="#4b76da" toggleGroup="$softMute" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                      <RadioButton fx:id="mute_off" mnemonicParsing="false" onAction="#muteLoudChanged" selected="true" text="Soft Mute off" textFill="#4b76da" toggleGroup="$softMute" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                      <RadioButton fx:id="loud_off" mnemonicParsing="false" onAction="#muteLoudChanged" selected="true" text="Loud off" textFill="#ab4141" GridPane.columnIndex="0" GridPane.rowIndex="3">
                         <toggleGroup>
                           <ToggleGroup fx:id="loud" />
                         </toggleGroup>
                       </RadioButton>
-                      <RadioButton mnemonicParsing="false" text="Loud 10dB" toggleGroup="$loud" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                      <RadioButton mnemonicParsing="false" text="Loud 20dB" toggleGroup="$loud" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                      <RadioButton fx:id="loud_10" mnemonicParsing="false" onAction="#muteLoudChanged" text="Loud 10dB" textFill="#ab4141" toggleGroup="$loud" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                      <RadioButton fx:id="loud_20" mnemonicParsing="false" onAction="#muteLoudChanged" text="Loud 20dB" textFill="#ab4141" toggleGroup="$loud" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                     </children>
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -447,7 +442,7 @@
                   </GridPane>
                   <GridPane GridPane.columnIndex="5" GridPane.rowIndex="0">
                     <children>
-                      <ProgressBar prefWidth="200.0" progress="0.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                      <ProgressBar fx:id="s_meter" prefWidth="200.0" progress="0.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
                         <GridPane.margin>
                           <Insets left="5.0" right="5.0" />
                         </GridPane.margin>
@@ -553,10 +548,10 @@
                               <Insets left="20.0" />
                             </GridPane.margin>
                           </TextField>
-                          <TextField fx:id="freq_khz" alignment="CENTER" onAction="#freqChanged" prefWidth="200.0" text="024" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                          <TextField fx:id="freq_khz" alignment="CENTER" onAction="#freqChanged" prefHeight="25.0" prefWidth="35.0" text="024" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                           <TextField fx:id="freq_hz" alignment="CENTER" onAction="#freqChanged" prefWidth="200.0" text="670" GridPane.columnIndex="2" GridPane.rowIndex="1">
                             <GridPane.margin>
-                              <Insets right="15.0" />
+                              <Insets right="10.0" />
                             </GridPane.margin>
                           </TextField>
                           <Label text="MHz" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
@@ -680,9 +675,9 @@
                           </Label>
                         </children>
                         <columnConstraints>
-                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="48.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="52.0" />
                           <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="45.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="65.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="60.0" />
                         </columnConstraints>
                         <rowConstraints>
                           <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
@@ -782,8 +777,8 @@
                       </GridPane>
                     </children>
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="61.0" minWidth="10.0" prefWidth="33.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.0" minWidth="10.0" prefWidth="103.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="62.0" minWidth="10.0" prefWidth="57.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.0" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -908,7 +903,7 @@
                   <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
                 </rowConstraints>
               </GridPane>
-                  <Slider fx:id="freq_slider_khz" majorTickUnit="100.0" max="999.0" showTickLabels="true" showTickMarks="true" />
+                  <Slider fx:id="freq_slider_khz" majorTickUnit="100.0" max="999.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                </items>
             </SplitPane>
       </children>

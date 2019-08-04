@@ -76,7 +76,10 @@ public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
 
                     @Override
                     public int read(byte[] buffer, int offset, int size) {
-                        return rand.nextInt();
+                        for(int ct=0; ct<size; ct++) {
+                            buffer[offset + ct] = (byte) rand.nextInt();
+                        }
+                        return size;
                     }
 
                     @Override
