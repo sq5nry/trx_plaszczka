@@ -903,7 +903,7 @@
                   <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
                 </rowConstraints>
               </GridPane>
-                  <Slider fx:id="freq_slider_khz" majorTickUnit="100.0" max="999.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                  <Slider fx:id="freq_slider_khz" majorTickUnit="100.0" max="999.0" showTickLabels="true" showTickMarks="true" />
                </items>
             </SplitPane>
       </children>

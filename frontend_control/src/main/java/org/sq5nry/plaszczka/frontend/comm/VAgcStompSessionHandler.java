@@ -92,7 +92,7 @@ class VAgcStompSessionHandler implements StompSessionHandler, VAgcStreamControll
 
     @Override
     public void stop() {
-        if (session.isConnected()) {
+        if (session!= null && session.isConnected()) {  //TODO null check?
             logger.info("stop requested");
             session.send(APP_VAGC_STREAM_CONTROL, APP_CMD_STOP);
             session.disconnect();
