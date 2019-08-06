@@ -31,10 +31,12 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
 
     public static final String BACKEND_HOST_LOCAL = "127.0.0.1";
     public static final String BACKEND_HOST_REAL = "10.0.0.137";
+    public static final String BACKEND_HOST_MOST_REAL = "sq9nry.no-ip.org";
+    public static final String BACKEND_PORT = "8090";
 
-    private static final String BACKEND_HOST = BACKEND_HOST_REAL;
-    private static final String BACKEND_ROOT_URL = "http://" + BACKEND_HOST + ":8080";
-    private static final String BACKEND_STOMP_URL = "ws://" + BACKEND_HOST + ":8080/vagc-websocket";
+    private static final String BACKEND_HOST = BACKEND_HOST_MOST_REAL;
+    private static final String BACKEND_ROOT_URL = "http://" + BACKEND_HOST + ":" + BACKEND_PORT;
+    private static final String BACKEND_STOMP_URL = "ws://" + BACKEND_HOST + ":" + BACKEND_PORT + "/vagc-websocket";
 
     private static final int VAGC_READ_PERIOD = 100;
     private BackendCommunicator comm;
