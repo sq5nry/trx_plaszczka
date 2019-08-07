@@ -1,0 +1,45 @@
+rpi4
+========
+
+sudo raspi-config
+# enable SPI, I2C, etc...
+
+#dist (optional if starting not from a scratch or other distro)
+sudo apt autoremove
+sudo apt-get update
+sudo apt-get -y dist-upgrade
+
+
+# wiringpi
+cd /tmp
+wget https://project-downloads.drogon.net/wiringpi-latest.deb
+sudo dpkg -i wiringpi-latest.deb
+# test
+gpio readall
+
+
+#java
+# add repo to /etc/apt/sources.list:  "deb http://ftp.de.debian.org/debian stretch-backports main"
+sudo apt-get update
+sudo apt-get install openjdk-8-jdk-headless
+# configure
+sudo update-alternatives --config javac
+sudo update-alternatives --config java
+export JAVA_HOME=.... (path to java 8), add to .bashrc (optionally)
+
+
+#tools
+# mvn
+sudo apt-get install maven
+# pi4j
+curl -sSL https://pi4j.com/install | sudo bash
+
+# vlc
+
+
+# plaszczka backend
+git clone https://github.com/sq5nry/trx_plaszczka.git
+cd backend
+# configure: check resources/i2c.properties
+
+sudo mvn spring-boot:run
