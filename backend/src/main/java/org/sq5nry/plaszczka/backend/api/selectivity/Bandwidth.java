@@ -1,7 +1,7 @@
 package org.sq5nry.plaszczka.backend.api.selectivity;
 
 public enum Bandwidth {
-    CW_500Hz(500), SSB_1k8(1800), SSB_2k4(2400);
+    DISABLED(0), CW_500Hz(500), SSB_1k8(1800), SSB_2k4(2400);
 
     int freq;
     Bandwidth(int freq) {
