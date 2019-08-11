@@ -16,7 +16,7 @@ public class SelectivityController {
     @Autowired
     SelectivityUnit selectivityUnit;
 
-    @GetMapping(value = "/selectivity/{freq}")
+    @GetMapping(value = "/selectivity/bw/{freq}")
     public String setRoofingFilter(@PathVariable int freq) throws Exception {
         logger.debug("selectivity requested, bw={}", freq);
         selectivityUnit.setFilter(Bandwidth.fromBandwidth(freq));
