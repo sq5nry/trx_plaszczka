@@ -22,7 +22,7 @@ public class SelectivityUnit extends Unit implements Selectivity, Reinitializabl
 
     private enum FeatureBits {
         BW_500(Bandwidth.CW_500Hz, (byte)0x80), BW_1K8(Bandwidth.SSB_1k8, (byte)0x10), BW_2K4(Bandwidth.SSB_2k4, (byte)0x20),
-        BW_NONE(null, (byte)0x00);
+        BW_ALLBAND(null, (byte)0x40), BW_NONE(null, (byte)0x00);
 
         Bandwidth relatedBw;
         byte p;
@@ -73,6 +73,13 @@ public class SelectivityUnit extends Unit implements Selectivity, Reinitializabl
         logger.debug("setting bandwidth filter: {}", bw);
         Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         expander.writePort(bw.getP());
+    }
+
+    @Override
+    public void bypass() throws Exception {
+        logger.debug("setting bandwidth filter: all-pass");
+        Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
+        expander.writePort(FeatureBits.BW_ALLBAND.getP());
     }
 
     public Bandwidth getFilter() {

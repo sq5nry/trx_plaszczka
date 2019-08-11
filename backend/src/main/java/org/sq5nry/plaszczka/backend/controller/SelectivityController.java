@@ -22,4 +22,11 @@ public class SelectivityController {
         selectivityUnit.setFilter(Bandwidth.fromBandwidth(freq));
         return "result=" + selectivityUnit.getFilter();
     }
+
+    @GetMapping(value = "/selectivity/bypass")
+    public String setBypass() throws Exception {
+        logger.debug("bypass requested");
+        selectivityUnit.bypass();
+        return "result=ok";
+    }
 }
