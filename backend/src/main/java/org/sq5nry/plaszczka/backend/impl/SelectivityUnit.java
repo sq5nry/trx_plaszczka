@@ -22,7 +22,7 @@ public class SelectivityUnit extends Unit implements Selectivity, Reinitializabl
 
     private enum FeatureBits {
         BW_500(Bandwidth.CW_500Hz, (byte)0x80), BW_1K8(Bandwidth.SSB_1k8, (byte)0x10), BW_2K4(Bandwidth.SSB_2k4, (byte)0x20),
-        BW_ALLBAND(null, (byte)0x40), BW_NONE(null, (byte)0x00);
+        BW_ALLBAND(Bandwidth.ALL_BAND, (byte)0x40), BW_NONE(Bandwidth.DISABLED, (byte)0x00);
 
         Bandwidth relatedBw;
         byte p;
