@@ -89,7 +89,7 @@ public class Ad5306 extends GenericDac {
             • Output voltage set to 0 V
         Both input and DAC registers are filled with 0s and remain so until a valid write sequence is made to the device.
     */
-    private byte control = CTRL_N_PD;
+    private byte control = CTRL_N_PD | CTRL_N_CLR;
     private byte[] buffer;
 
 
