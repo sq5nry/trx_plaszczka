@@ -60,21 +60,21 @@ public class NixieDisplayUnit extends Unit implements FrequencyDisplay, Reinitia
 
     @Override
     public void setFrequency(int frequency) throws IOException {
-        logger.debug("setting frequency to {}Hz", frequency);
+        logger.info("setting frequency to {}Hz", frequency);
         this.frequency = frequency;
         update(ALL);
     }
 
     @Override
     public void setMarker(int markerPosition) throws IOException {
-        logger.debug("setting marker at position {}", markerPosition);
+        logger.info("setting marker at position {}", markerPosition);
         this.markerPosition = (byte) (markerPosition & 0x0F);
         update(MARKER_ONLY);
     }
 
     @Override
     public void setBlankLeadingZeroes(boolean blankLeadingZeroes) {
-        logger.debug("setting blank leading zeroes mode to {}", blankLeadingZeroes);
+        logger.info("setting blank leading zeroes mode to {}", blankLeadingZeroes);
         this.blankLeadingZeroes = blankLeadingZeroes;
     }
 

@@ -77,7 +77,7 @@ public class BpfUnit extends Unit implements BandPassFilter {
 
     @Override
     public void setBand(Band band) throws IOException {
-        logger.debug("setting band to {}", band);
+        logger.info("setting band to {}", band);
         this.band = band;
         update();
     }
@@ -87,7 +87,7 @@ public class BpfUnit extends Unit implements BandPassFilter {
         if (db < 0 || db > 30) {
             throw new IllegalArgumentException("Attenuation out of range 0..30dB");
         }
-        logger.debug("setting attenuation to {}dB", db);
+        logger.info("setting attenuation to {}dB", db);
         this.attenuation = (byte) (db >> 1);
         update();
     }

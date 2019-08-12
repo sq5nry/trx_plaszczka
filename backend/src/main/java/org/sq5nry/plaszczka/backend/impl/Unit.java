@@ -36,7 +36,7 @@ public abstract class Unit {
                 initializeUnit();
                 state = State.UNIT_INITIALIZED;
             } catch(Exception e) {
-                logger.debug("unit initialization failed", e);
+                logger.warn("unit initialization failed", e);
                 state = FAILED;
             }
         }
@@ -45,10 +45,10 @@ public abstract class Unit {
     private void createChipset() throws Exception {
         List<GenericChip> chipList = new ArrayList<>();
         createChipset(chipList);
-        logger.debug("got {} chips", chipList.size());
+        logger.info("got {} chips", chipList.size());
         chipset = new HashMap<>();
         for(GenericChip chip: chipList) {
-            logger.debug("adding to chipset {}", chip);
+            logger.info("adding to chipset {}", chip);
             chipset.put(chip.getAddress(), chip);
         }
     }
@@ -63,17 +63,17 @@ public abstract class Unit {
         state = State.CREATED;
         try {
             for(GenericChip chip: chipset.values()) {
-                logger.debug("initializeChipset: setting I2C for chip={}", chip);
+                logger.info("initializeChipset: setting I2C for chip={}", chip);
                 chip.setI2CBus(bus);
                 chip.initialize();
-                logger.debug("initializeChipset: initialization of chip={} complete", chip);
+                logger.info("initializeChipset: initialization of chip={} complete", chip);
             }
             state = State.CHIPSET_INITIALIZED;
         } catch(IOException e) {
             logger.warn("unit chipset initialization failed", e);
             state = State.FAILED;
         }
-        logger.debug("chipset created & initialized");
+        logger.info("chipset created & initialized");
     }
 
     public void initializeUnit() throws Exception {

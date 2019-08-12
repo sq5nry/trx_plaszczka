@@ -89,42 +89,42 @@ public class IfAmpController implements SchedulingConfigurer {
 
     @RequestMapping(value = "/ifAmp/VLoop/{val}", method = RequestMethod.GET)
     public String setVLoop(@PathVariable Float val) throws Exception {
-        logger.debug("Vloop (VLoop) to {}", val);
+        logger.info("Vloop (VLoop) to {}", val);
         vgaUnit.setVLoop(val);
         return "result=OK";
     }
 
     @RequestMapping(value = "/ifAmp/maximumGain/{val}", method = RequestMethod.GET)
     public String setMaximumGain(@PathVariable Float val) throws Exception {
-        logger.debug("MaximumGain (Vgain) to {}", val);
+        logger.info("MaximumGain (Vgain) to {}", val);
         vgaUnit.setMaximumGain(val);
         return "result=OK";
     }
 
     @RequestMapping(value = "/ifAmp/maximumHangTimeInHangMode/{val}", method = RequestMethod.GET)
     public String setMaximumHangTimeInHangMode(@PathVariable Float val) throws Exception {
-        logger.debug("MaximumHangTimeInHangMode (Vspd) to {}", val);
+        logger.info("MaximumHangTimeInHangMode (Vspd) to {}", val);
         vgaUnit.setMaximumHangTimeInHangMode(val);
         return "result=OK";
     }
 
     @RequestMapping(value = "/ifAmp/attackTime/{val}", method = RequestMethod.GET)
     public String setAttackTime(@PathVariable Float val) throws Exception {
-        logger.debug("AttackTime (Attack) to {}", val);
+        logger.info("AttackTime (Attack) to {}", val);
         vgaUnit.setAttackTime(val);
         return "result=OK";
     }
 
     @RequestMapping(value = "/ifAmp/hangOnTransmit/{val}", method = RequestMethod.GET)
     public String setHangOnTransmit(@PathVariable Boolean val) throws Exception {
-        logger.debug("setHangOnTransmit to {}", val);
+        logger.info("setHangOnTransmit to {}", val);
         vgaUnit.setHangOnTransmit(val);
         return "result=OK";
     }
 
     @RequestMapping(value = "/ifAmp/mute/{val}", method = RequestMethod.GET)
     public String setMute(@PathVariable Boolean val) throws Exception {
-        logger.debug("setMute to {}", val);
+        logger.info("setMute to {}", val);
         vgaUnit.setMute(val);
         return "result=OK";
     }
@@ -138,7 +138,7 @@ public class IfAmpController implements SchedulingConfigurer {
     @MessageMapping("/vagc_stream_control")
     @SendTo("/topic/vagc")
     public Integer controlVAgcStreamer(String message) {
-        logger.debug("controlVAgcStreamer: message={}", message);
+        logger.info("controlVAgcStreamer: message={}", message);
         if ("start".equals(message)) {
             start();
             return STREAMER_CTRL_RESP_STARTED;
@@ -175,10 +175,10 @@ public class IfAmpController implements SchedulingConfigurer {
 
     public void stop() {
         if (future != null) {
-            logger.debug("stopping VAgc streamer");
+            logger.info("stopping VAgc streamer");
             future.cancel(true);
         } else {
-            logger.debug("no active VAgc streamer to stop");
+            logger.info("no active VAgc streamer to stop");
         }
     }
 
@@ -188,6 +188,6 @@ public class IfAmpController implements SchedulingConfigurer {
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {  //TODO needed?
-        logger.debug("configureTasks: {}", taskRegistrar);
+        logger.info("configureTasks: {}", taskRegistrar);
     }
 }

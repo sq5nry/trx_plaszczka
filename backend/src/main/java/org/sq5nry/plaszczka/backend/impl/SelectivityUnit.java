@@ -60,14 +60,14 @@ public class SelectivityUnit extends Unit implements Selectivity, Reinitializabl
     public void initializeUnit() throws Exception {
         super.initializeUnit();
         FeatureBits defBw = FeatureBits.BW_NONE;
-        logger.debug("initializing unit with defaults: {}", defBw);
+        logger.info("initializing unit with defaults: {}", defBw);
         Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         expander.writePort(defBw.getP());
     }
 
     @Override
     public void setFilter(Bandwidth bandwidth) throws Exception {
-        logger.debug("setting {} selectivity filter", bandwidth);
+        logger.info("setting {} selectivity filter", bandwidth);
         this.bw = bandwidth;
         FeatureBits bw = FeatureBits.getByBandwidth(bandwidth);
         logger.debug("setting bandwidth filter: {}", bw);
@@ -77,7 +77,7 @@ public class SelectivityUnit extends Unit implements Selectivity, Reinitializabl
 
     @Override
     public void bypass() throws Exception {
-        logger.debug("setting bandwidth filter: all-pass");
+        logger.info("setting bandwidth filter: all-pass");
         Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         expander.writePort(FeatureBits.BW_ALLBAND.getP());
     }

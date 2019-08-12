@@ -62,7 +62,7 @@ public class QSDUnit extends Unit implements Detector {
     @Override
     public void initializeUnit() throws Exception {
         super.initializeUnit();
-        logger.debug("initializing unit with defaults");
+        logger.info("initializing unit with defaults");
         mode = Mode.SSB;
         qsdEnabled = false;
         update();
@@ -70,7 +70,7 @@ public class QSDUnit extends Unit implements Detector {
 
     @Override
     public void setRoofingFilter(Mode mode) throws Exception {
-        logger.debug("setting input roofing filter for {}", mode);
+        logger.info("setting input roofing filter for {}", mode);
         this.mode = mode;
         update();
     }
@@ -81,7 +81,7 @@ public class QSDUnit extends Unit implements Detector {
 
     @Override
     public void setEnabled(boolean enabled) throws Exception {
-        logger.debug("detector enabled={}", enabled);
+        logger.info("detector enabled={}", enabled);
         qsdEnabled = enabled;
         update();
     }
