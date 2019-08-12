@@ -104,6 +104,7 @@ public class Ad5306 extends GenericDac {
     }
 
     public void setVRef(float vRef) {
+        logger.debug("setting reference voltage: {}V", vRef);
         this.vRef = vRef;
     }
 
@@ -120,8 +121,9 @@ public class Ad5306 extends GenericDac {
             logger.error("DAC data out of 0..MAX range, limiting!");    //TODO fix calculation roundings
             //throw new IllegalArgumentException("DAC data out of 0..MAX range");
         }
-        buffer[0] = (byte) ((data & 0x000F) << 4);
-        buffer[1] = (byte) ((control << 4) | ((data & 0x000F) >> 4));
+        buffer[0] = (byte) ((control << 4) | ((data & 0x00F0) >> 4));   //MSB
+        buffer[1] = (byte) ((data & 0x000F) << 4);                      //LSB
+        logger.debug("setData: {} {}", String.format("%02X", buffer[0]), String.format("%02X", buffer[1]));
         getDevice().write(DacPointer.fromInt(channel).byteValue(), buffer);
     }
 
