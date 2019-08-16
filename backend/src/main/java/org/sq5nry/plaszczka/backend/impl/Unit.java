@@ -1,12 +1,15 @@
 package org.sq5nry.plaszczka.backend.impl;
 
+import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.i2c.I2CBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
+import org.sq5nry.plaszczka.backend.hw.gpio.GpioControllerProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +24,20 @@ public abstract class Unit {
     private static final Logger logger = LoggerFactory.getLogger(Unit.class);
 
     private I2CBus bus;
+    private GpioController gpioController;
     private Map<Integer, GenericChip> chipset;
     State state = State.CREATED;
 
     public enum State { CREATED, CHIPSET_INITIALIZED, UNIT_INITIALIZED, FAILED }
 
     public Unit(I2CBusProvider i2cBusProv) throws Exception {
+        this(i2cBusProv, null);
+    }
+
+    public Unit(I2CBusProvider i2cBusProv, GpioControllerProvider gpioProv) throws Exception {
+        logger.info("=============== creating {}", getName());
         bus = i2cBusProv.getBus();
+        if (gpioProv != null) gpioController = gpioProv.getGpioController();
 
         createChipset();
         initializeChipset();
@@ -40,9 +50,11 @@ public abstract class Unit {
                 state = FAILED;
             }
         }
+        logger.info("=============== created {}", getName());
     }
 
     private void createChipset() throws Exception {
+        logger.info("createChipset: entering");
         List<GenericChip> chipList = new ArrayList<>();
         createChipset(chipList);
         logger.info("got {} chips", chipList.size());
@@ -59,17 +71,37 @@ public abstract class Unit {
         return chipset.get(address);
     }
 
+    /**
+     * Get SPI chip (no address)
+     * TODO: assumed one chip on SPI bus
+     * @return
+     */
+    public GenericChip getChip() {
+        return chipset.values().iterator().next();  //TODO could be 2 chips on SPI
+    }
+
     public void initializeChipset() {
+        logger.info("initializeChipset: entering");
         state = State.CREATED;
         try {
             for(GenericChip chip: chipset.values()) {
-                logger.info("initializeChipset: setting I2C for chip={}", chip);
-                chip.setI2CBus(bus);
+                if (chip instanceof GenericI2cChip) {
+                    logger.info("initializeChipset: setting I2C for chip={}", chip);
+                    ((GenericI2cChip) chip).setI2CBus(bus);
+                } else {
+                    logger.info("initializeChipset: not setting specific SPI bus, using the general one {}", chip);
+                }
+
+                if (chip.needsGpio()) {
+                    logger.info("initializeChipset: adding GPIO controller for a chip");
+                    chip.setGpioController(gpioController);
+                }
+
                 chip.initialize();
                 logger.info("initializeChipset: initialization of chip={} complete", chip);
             }
             state = State.CHIPSET_INITIALIZED;
-        } catch(IOException e) {
+        } catch(ChipInitializationException e) {
             logger.warn("unit chipset initialization failed", e);
             state = State.FAILED;
         }
@@ -84,4 +116,6 @@ public abstract class Unit {
     public State getState() {
         return state;
     }
+
+    public abstract String getName();
 }

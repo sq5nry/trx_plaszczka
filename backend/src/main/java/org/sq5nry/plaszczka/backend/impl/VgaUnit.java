@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.vga.IfAmp;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.*;
 
@@ -145,5 +145,10 @@ public class VgaUnit extends Unit implements IfAmp, Reinitializable {
         byte vagc = ((Ad7999) getChip(ADC)).getConversionResult();
         logger.debug("getVAgc: 0x{}", String.format("%02X", vagc));
         return vagc & 0xFF;
+    }
+
+    @Override
+    public String getName() {
+        return "IF Subsystem: Variable Gain Board";
     }
 }

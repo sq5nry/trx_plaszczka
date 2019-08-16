@@ -5,8 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.synthesiser.Dds;
 import org.sq5nry.plaszczka.backend.hw.chips.Ad9954;
-import org.sq5nry.plaszczka.backend.hw.chips.ChipInitializationException;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.gpio.GpioControllerProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 
 import java.io.IOException;
@@ -19,26 +20,32 @@ public class DdsUnit extends Unit implements Dds {
     private Ad9954 dds;
 
     //TODO nie chce i2c
-    public DdsUnit(I2CBusProvider i2cBusProv) throws Exception, ChipInitializationException {
-        super(i2cBusProv);
+    public DdsUnit(I2CBusProvider i2cBusProv, GpioControllerProvider gpioCtlProvider) throws Exception, ChipInitializationException {
+        super(i2cBusProv, gpioCtlProvider);
     }
 
     @Override
     public void setFrequency(int freq) throws IOException {
-        dds.setFrequency(freq);
+        ((Ad9954) getChip()).setFrequency(freq);    //TODO optimizze
     }
 
     @Override
     public void createChipset(List<GenericChip> chipset) throws Exception {
         logger.debug("createChipset: entering");
-        dds = new Ad9954(500000000);
+        chipset.add(new Ad9954(500000000));
         logger.debug("createChipset: DDS={}", dds);
     }
 
     @Override
     public void initializeUnit() throws Exception {
         logger.debug("initializeUnit: entering");
-        dds.initialize();
+        super.initializeUnit();
+        //dds.initialize();
         logger.debug("initializeUnit: complete");
+    }
+
+    @Override
+    public String getName() {
+        return "Local Oscillator Subsystem";
     }
 }

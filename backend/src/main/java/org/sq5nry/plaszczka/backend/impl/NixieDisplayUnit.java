@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.display.FrequencyDisplay;
 import org.sq5nry.plaszczka.backend.hw.chips.Mcp23017;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 
 import java.io.IOException;
@@ -167,5 +167,10 @@ public class NixieDisplayUnit extends Unit implements FrequencyDisplay, Reinitia
         int min = cal.get(Calendar.MINUTE);
         int sec = cal.get(Calendar.SECOND);
         setArbitraryDigits(new byte[]{(byte) (hr/10), (byte) (hr%10), (byte) (min/10), (byte) (min%10), 0xa, (byte) (sec/10), (byte) (sec%10)});
+    }
+
+    @Override
+    public String getName() {
+        return "Frequency Nixie Display";
     }
 }

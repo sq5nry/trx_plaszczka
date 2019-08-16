@@ -2,7 +2,7 @@ package org.sq5nry.plaszczka.backend.hw.chips;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import java.io.IOException;
  *
  * https://www.analog.com/en/products/ad5242.html
  */
-public class Ad5242 extends GenericChip {
+public class Ad5242 extends GenericI2cChip {
     private static final Logger logger = LoggerFactory.getLogger(Ad5242.class);
 
     public static final int MAX = 255;

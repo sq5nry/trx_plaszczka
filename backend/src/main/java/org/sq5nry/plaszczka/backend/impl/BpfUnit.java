@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.inputfilter.Band;
 import org.sq5nry.plaszczka.backend.api.inputfilter.BandPassFilter;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8575;
 
@@ -108,5 +108,10 @@ public class BpfUnit extends Unit implements BandPassFilter {
 
     public int getAttenuation() {
         return attenuation << 1;
+    }
+
+    @Override
+    public String getName() {
+        return "Antenna Band Pass Filters & Attenuator";
     }
 }

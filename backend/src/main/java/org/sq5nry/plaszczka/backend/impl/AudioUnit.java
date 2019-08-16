@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.audio.*;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.chips.Tda7309;
@@ -134,5 +134,10 @@ public class AudioUnit extends Unit implements AfAmplifier, Reinitializable {
 
     public OutputAmplifier getOutputAmp() {
         return outputAmp;
+    }
+
+    @Override
+    public String getName() {
+        return "Audio Subsystem";
     }
 }

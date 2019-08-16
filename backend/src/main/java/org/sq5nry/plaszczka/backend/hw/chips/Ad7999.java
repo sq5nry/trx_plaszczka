@@ -2,7 +2,9 @@ package org.sq5nry.plaszczka.backend.hw.chips;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
 
 import java.io.IOException;
 
@@ -19,7 +21,7 @@ import java.io.IOException;
  *
  * https://www.analog.com/en/products/ad7999.html
  */
-public class Ad7999 extends GenericChip {
+public class Ad7999 extends GenericI2cChip {
     private static final Logger logger = LoggerFactory.getLogger(Ad7999.class);
 
     private static final byte CONFIG_CH0 = 0x10;
@@ -37,7 +39,7 @@ public class Ad7999 extends GenericChip {
     public GenericChip initialize() {
         try {
             return super.initialize();
-        } catch (IOException e) {
+        } catch (ChipInitializationException e) {
             logger.warn("initialization failed, enforcing skip", e);
             forceInitialized();
         }

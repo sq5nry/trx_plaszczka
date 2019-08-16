@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.Mode;
 import org.sq5nry.plaszczka.backend.api.mixer.HModeMixer;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Ad5321;
 import org.sq5nry.plaszczka.backend.hw.chips.GenericDac;
@@ -93,5 +93,10 @@ public class FrontEndMixerUnit extends Unit implements HModeMixer, Reinitializab
 
     public Mode getRoofingFilter() {
         return mode;
+    }
+
+    @Override
+    public String getName() {
+        return "Frontend Board: H-Mode Mixer & Roofing Filters";
     }
 }

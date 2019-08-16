@@ -3,7 +3,7 @@ package org.sq5nry.plaszczka.backend.hw.chips;
 import org.apache.commons.lang3.BitField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import java.io.IOException;
  * indicator devices such as LEDs. System master can read from the input port or write to the output port through
  * a single register.
  */
-public class Pcf8574 extends GenericChip {
+public class Pcf8574 extends GenericI2cChip {
     private static final Logger logger = LoggerFactory.getLogger(Pcf8574.class);
 
     public Pcf8574(int address) {

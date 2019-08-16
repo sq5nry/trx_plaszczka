@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.selectivity.Bandwidth;
 import org.sq5nry.plaszczka.backend.api.selectivity.Selectivity;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 
@@ -84,5 +84,10 @@ public class SelectivityUnit extends Unit implements Selectivity, Reinitializabl
 
     public Bandwidth getFilter() {
         return bw;
+    }
+
+    @Override
+    public String getName() {
+        return "IF Subsystem: Selectivity Board";
     }
 }

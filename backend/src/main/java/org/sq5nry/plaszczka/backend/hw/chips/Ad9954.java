@@ -1,13 +1,15 @@
 package org.sq5nry.plaszczka.backend.hw.chips;
 
-import com.pi4j.io.gpio.*;
-import com.pi4j.wiringpi.Spi;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.pi4j.wiringpi.Gpio.delay;
-import static com.pi4j.wiringpi.Spi.wiringPiSPIDataRW;
+import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.GenericSpiChip;
 
 /**
  * The AD9954 is a direct digital synthesizer (DDS) that uses advanced technology, coupled with an internal high speed,
@@ -24,11 +26,8 @@ import static com.pi4j.wiringpi.Spi.wiringPiSPIDataRW;
  *
  * Basic implementation with no PLL, just frequency setting.
  */
-public class Ad9954 {
+public class Ad9954 extends GenericSpiChip {
     private static final Logger logger = LoggerFactory.getLogger(Ad9954.class);
-
-    public static final int SPI_SPEED = 5000000;
-    private static final int SPI_CHANNEL = 0;
 
     private static final byte REG_CFR1Info[] = {0x00};
     private static final byte REG_FREQ[] = {0x04};
@@ -43,28 +42,21 @@ public class Ad9954 {
     private GpioPinDigitalOutput reset, update;
 
     public Ad9954(long refClk) throws ChipInitializationException {
+        super(-1);  //assigned by SPI conf
         this.refClk = refClk;
+    }
 
-        logger.debug("initializing GPIO");
-        final GpioController gpio = GpioFactory.getInstance();
-        logger.debug("GPIO initialized");
+    @Override
+    public GenericChip initialize() {
+        initGpio();
+        reset();
+        writeRegister(REG_CFR1Info.clone(), DATA_CFR1.clone());
+        return this;
+    }
 
-        reset = gpio.provisionDigitalOutputPin(RESET_P, "reset", PinState.LOW);
-        reset.setShutdownOptions(false, PinState.LOW);
-        logger.debug("initialized: RESET pin: {}", reset);
-
-        update = gpio.provisionDigitalOutputPin(UPDATE_P, "update", PinState.LOW);
-        update.setShutdownOptions(false, PinState.LOW);
-        logger.debug("initialized: UPDATE pin: {}", update);
-
-        logger.debug("initializing wiringPiSPISetup, channel={}", SPI_CHANNEL);
-        int fdSpi = Spi.wiringPiSPISetup(SPI_CHANNEL, SPI_SPEED);
-        if (fdSpi <= -1) {
-            logger.error("SPI bus setup failed for channel {}, FD={}", SPI_CHANNEL, fdSpi);
-            throw new ChipInitializationException("SPI bus setup failed for channel " + SPI_CHANNEL + ", fd=" + fdSpi);
-        } else {
-            logger.debug("SPI initialized for channel {}, FD={}", SPI_CHANNEL, fdSpi);
-        }
+    @Override
+    public boolean needsGpio() {
+        return true;
     }
 
     public void setFrequency(int freq) {
@@ -77,16 +69,22 @@ public class Ad9954 {
         update();
     }
 
-    //no PLL
-    public void initialize() {
-        reset();
-        writeRegister(REG_CFR1Info.clone(), DATA_CFR1.clone());
+    private void initGpio() {
+        logger.debug("initializing GPIO");
+
+        reset = getGpioController().provisionDigitalOutputPin(RESET_P, "reset", PinState.LOW);
+        reset.setShutdownOptions(false, PinState.LOW);
+        logger.debug("initialized: RESET pin: {}", reset);
+
+        update = getGpioController().provisionDigitalOutputPin(UPDATE_P, "update", PinState.LOW);
+        update.setShutdownOptions(false, PinState.LOW);
+        logger.debug("initialized: UPDATE pin: {}", update);
     }
 
     private void reset() {
         logger.debug("device reset");
         reset.high();
-        delay(1);
+        gpioDelay(1);
         reset.low();
     }
 
@@ -95,12 +93,12 @@ public class Ad9954 {
         update.low();
     }
 
-    private static void writeRegister(byte registerInfo[], byte data[]) {
+    private void writeRegister(byte registerInfo[], byte data[]) {
         if (logger.isDebugEnabled()) {
             logger.debug("writeRegister: @{}={}", HexUtils.toHexString(registerInfo), HexUtils.toHexString(data));
         }
-        wiringPiSPIDataRW(SPI_CHANNEL, registerInfo, 1);
-        wiringPiSPIDataRW(SPI_CHANNEL, data, data.length);
+        writeSpi(registerInfo, 1);
+        writeSpi(data, data.length);
     }
 
     @Override

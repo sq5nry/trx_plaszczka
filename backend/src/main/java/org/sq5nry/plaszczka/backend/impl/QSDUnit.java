@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.Mode;
 import org.sq5nry.plaszczka.backend.api.detector.Detector;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8575;
@@ -94,5 +94,10 @@ public class QSDUnit extends Unit implements Detector {
         Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         byte qsdEn = (!qsdEnabled) ? QSD_DISABLED_BIT : 0x0;
         expander.writePort(FeatureBits.getByMode(mode).getP() | qsdEn);
+    }
+
+    @Override
+    public String getName() {
+        return "Noise Filters & Quadrature Sampling Detector";
     }
 }

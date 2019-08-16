@@ -1,6 +1,6 @@
 package org.sq5nry.plaszczka.backend.hw.chips;
 
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
 
 import java.io.IOException;
 
@@ -27,7 +27,7 @@ import java.io.IOException;
  *
  * https://www.microchip.com/wwwproducts/en/MCP23017
  */
-public class Mcp23017 extends GenericChip  {
+public class Mcp23017 extends GenericI2cChip {
     public static final byte IODIR_A = 0x00;
     public static final byte IODIR_B = 0x01;
     public static final byte IODIR_ALL_OUTPUTS = 0x00;
