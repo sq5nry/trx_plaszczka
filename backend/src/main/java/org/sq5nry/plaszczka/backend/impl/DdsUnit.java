@@ -38,13 +38,6 @@ public class DdsUnit extends Unit implements Dds {
         logger.debug("createChipset: DDS={}", dds);
     }
 
-//    @Override
-//    public void initializeUnit() throws Exception {
-//        logger.debug("initializeUnit: entering");
-//        super.initializeUnit();
-//        logger.debug("initializeUnit: complete");
-//    }
-
     @Override
     public String getName() {
         return "Local Oscillator Subsystem";

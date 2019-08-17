@@ -1,19 +1,16 @@
 package org.sq5nry.plaszczka.backend;
 
-import com.pi4j.io.i2c.I2CFactory;
-import com.pi4j.io.i2c.impl.I2CProviderImpl;
-import com.pi4j.wiringpi.Spi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
-import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
-import org.sq5nry.plaszczka.backend.hw.spi.SpiConfiguration;
+import org.sq5nry.plaszczka.backend.hw.common.BusInitializationException;
+import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
+import org.sq5nry.plaszczka.backend.hw.spi.SpiInitializer;
 
 import javax.annotation.PostConstruct;
 
@@ -25,48 +22,23 @@ import javax.annotation.PostConstruct;
 public class Launcher {
     private static final Logger logger = LoggerFactory.getLogger(Launcher.class);
 
+    @Autowired
+    private I2CBusProvider i2cProv;
+
+    @Autowired
+    private SpiInitializer spiProv;
+
+
     public static void main(String[] args) {
         logger.info("starting application...");
         SpringApplication.run(Launcher.class, args);
     }
 
-    @Value("${i2c.provider.class}")
-    private String i2cProviderClass;
-
-    @Autowired
-    private SpiConfiguration spiConfig;
-
-    @Value("${gpio.provider.class}")
-    private String gpioProviderClass;
-
     @PostConstruct
-    private void init() throws Exception {
+    private void init() throws BusInitializationException {
         logger.info("initializing I/O subsystems...");
-        initI2c();
-        initSpi();
+        i2cProv.initialize();
+        spiProv.initialize();
         logger.info("I/O subsystems initialized");
-    }
-
-    private void initSpi() throws ChipInitializationException {
-        logger.info("initializing SPI, channel={}, speed={}", spiConfig.getSpiChannel(), spiConfig.getSpiSpeed());
-        if (spiConfig.isSpiSimulated()) {
-            logger.info("initializing dummy SPI, no operation");
-        } else {
-            int fdSpi = Spi.wiringPiSPISetup(spiConfig.getSpiChannel(), spiConfig.getSpiSpeed());
-            if (fdSpi <= -1) {
-                logger.error("SPI bus setup failed for channel {}, FD={}", spiConfig.getSpiChannel(), fdSpi);
-                throw new ChipInitializationException("SPI bus setup failed for channel " + spiConfig.getSpiChannel() + ", fd=" + fdSpi);
-            } else {
-                logger.debug("SPI initialized for channel {}, FD={}", spiConfig.getSpiChannel(), fdSpi);
-            }
-        }
-    }
-
-    private void initI2c() throws Exception {
-        logger.info("initializing I2C");
-        logger.debug("setting i2c factory: {}", i2cProviderClass);
-        Class clazz = Class.forName(i2cProviderClass);
-        I2CProviderImpl provider = (I2CProviderImpl) clazz.newInstance();
-        I2CFactory.setFactory(provider);
     }
 }
