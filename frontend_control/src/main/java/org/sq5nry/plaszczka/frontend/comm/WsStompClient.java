@@ -24,7 +24,6 @@ public class WsStompClient {
         stompClient.setMessageConverter(new StringMessageConverter());  //TODO oth for json
 
         StompSessionHandler sessionHandler = new VAgcStompSessionHandler(stompClient, url);
-
         return (VAgcStreamController) sessionHandler;
     }
 }

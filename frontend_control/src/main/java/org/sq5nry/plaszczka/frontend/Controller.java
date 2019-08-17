@@ -67,7 +67,6 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         vga_Vsph.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVsph());
         vga_Vspa.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> setVspa());
 
-        freq_slider_mhz.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> freqChanged(null));
         freq_slider_khz.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> freqChanged(null));
         freq_slider_hz.valueProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> freqChanged(null));
     }
@@ -81,7 +80,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         setMixRoofing();
 
         //setSelectivity();
-        comm.sendRequest(BackendCommunicator.SELECTIVITY + "2400"); //workaround
+        comm.sendRequest(BackendCommunicator.SELECTIVITY_BW + "2400"); //workaround
 
         setIfGain();
         setVLoop();
@@ -107,10 +106,8 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     /*
      * Freq control
      */
-    @FXML Slider freq_slider_mhz;
     @FXML Slider freq_slider_khz;
     @FXML Slider freq_slider_hz;
-    @FXML TextField freq_mhz;
     @FXML TextField freq_khz;
     @FXML TextField freq_hz;
     @FXML RadioButton mixing_h;
@@ -126,10 +123,10 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         setDispFreq();
     }
 
+    String MHz = "14";
+
     private void setDispFreq() {
         logger.debug("freqChanged");
-        String MHz = DEC_FORMAT_2DIG.format(freq_slider_mhz.getValue());
-        freq_mhz.textProperty().setValue(MHz);
         String kHz = DEC_FORMAT_3DIG.format(freq_slider_khz.getValue());
         freq_khz.textProperty().setValue(kHz);
         String Hz = DEC_FORMAT_3DIG.format(freq_slider_hz.getValue());
@@ -144,6 +141,11 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         }
         comm.sendRequest(BackendCommunicator.LO_DDS + freq);
         comm.sendRequest(BackendCommunicator.FREQ_DISPLAY + freqString);
+    }
+
+    @FXML
+    private void bfoChanged(ActionEvent e) {
+        logger.debug("bfoChanged");
     }
 
     /*
@@ -444,8 +446,13 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         if (att != prevAtt) {
             int finalAtt = att;
             Platform.runLater(() -> {
-                comm.sendRequest(BackendCommunicator.AUDIO_MUTELOUD + "FAST_SOFT_MUTE");
+                comm.sendRequest(BackendCommunicator.AUDIO_MUTELOUD + "SLOW_SOFT_MUTE");
                 comm.sendRequest(BackendCommunicator.ATT + finalAtt);
+                try {
+                    Thread.currentThread().sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 comm.sendRequest(BackendCommunicator.AUDIO_MUTELOUD + "SOFT_MUTE_OFF");
             });        }
         prevAtt = att;
@@ -463,33 +470,25 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         String band = ((RadioButton) event.getSource()).getId().substring(4);
         comm.sendRequest(BackendCommunicator.BAND + band);
         if (band.equals("20m")) {
-            freq_slider_mhz.setValue(14);
-            freq_slider_mhz.setDisable(true);
-
+            MHz = "14";
             freq_slider_khz.setMajorTickUnit(35);
             freq_slider_khz.setMinorTickCount(5);
             freq_slider_khz.setMin(0);
             freq_slider_khz.setMax(350);
         } else if (band.equals("30m")) {
-            freq_slider_mhz.setValue(10);
-            freq_slider_mhz.setDisable(true);
-
+            MHz = "10";
             freq_slider_khz.setMajorTickUnit(5);
             freq_slider_khz.setMinorTickCount(5);
             freq_slider_khz.setMin(100);
             freq_slider_khz.setMax(150);
         } else if (band.equals("40m")) {
-            freq_slider_mhz.setValue(7);
-            freq_slider_mhz.setDisable(true);
-
+            MHz = "7";
             freq_slider_khz.setMajorTickUnit(20);
             freq_slider_khz.setMinorTickCount(5);
             freq_slider_khz.setMin(0);
             freq_slider_khz.setMax(200);
         } else if (band.equals("80m")) {
-            freq_slider_mhz.setValue(3);
-            freq_slider_mhz.setDisable(true);
-
+            MHz = "3";
             freq_slider_khz.setMajorTickUnit(30);
             freq_slider_khz.setMinorTickCount(5);
             freq_slider_khz.setMin(500);
@@ -509,7 +508,14 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     }
 
     private void setSelectivity() {
-        comm.sendRequest(BackendCommunicator.SELECTIVITY + selectivity.getValue());
+        String value = (String) selectivity.getValue();
+        if ("None".equals(value)) {
+            comm.sendRequest(BackendCommunicator.SELECTIVITY_BW + "0");
+        } else if ("Bypass".equals(value)) {
+            comm.sendRequest(BackendCommunicator.SELECTIVITY_BYPASS);
+        } else {
+            comm.sendRequest(BackendCommunicator.SELECTIVITY_BW + value);
+        }
     }
 
     /*

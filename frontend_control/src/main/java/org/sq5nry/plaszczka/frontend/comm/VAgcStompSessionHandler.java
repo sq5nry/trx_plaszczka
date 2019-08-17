@@ -54,7 +54,7 @@ class VAgcStompSessionHandler implements StompSessionHandler, VAgcStreamControll
     }
 
     public void handleTransportError(StompSession stompSession, Throwable throwable) {
-        logger.warn("handleTransportError: " + stompSession, throwable);
+        logger.warn("handleTransportError: " + stompSession + ", " + throwable.getLocalizedMessage());
     }
 
     @Override
@@ -65,7 +65,7 @@ class VAgcStompSessionHandler implements StompSessionHandler, VAgcStreamControll
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
          if (logger.isDebugEnabled()) {
-             logger.debug("handleFrame: rx=" + payload);
+             logger.trace("handleFrame: rx=" + payload);
          }
          if (handler != null) {
              handler.onMessage(payload);    //TODO prevent string msg from bckend

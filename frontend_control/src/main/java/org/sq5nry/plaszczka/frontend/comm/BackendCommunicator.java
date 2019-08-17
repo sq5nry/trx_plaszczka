@@ -3,6 +3,7 @@ package org.sq5nry.plaszczka.frontend.comm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
@@ -40,7 +41,8 @@ public class BackendCommunicator {
     public static final String IFAMP_HANGONTRANSMIT = "/ifAmp/hangOnTransmit/";
     public static final String IFAMP_MUTE = "/ifAmp/mute/";
 
-    public static final String SELECTIVITY = "/selectivity/";
+    public static final String SELECTIVITY_BW = "/selectivity/bw/";
+    public static final String SELECTIVITY_BYPASS = "/selectivity/bypass";
 
     public static final String DETECTOR_ENA = "/detector/enabled/";
     public static final String DETECTOR_MODE = "/detector/mode/";
@@ -58,21 +60,25 @@ public class BackendCommunicator {
         this.rootUrl = rootUrl;
     }
 
-    public void sendRequest(String path) {
+    public void sendRequest(String path) throws IllegalStateException {
         logger.debug("sendRequest: " + path);
 
-        //if (client == null) {   //TODO opt.
-        HttpClient client = HttpClientBuilder.create().build();
-        //}
-        HttpGet request = new HttpGet(rootUrl + path);
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(1_000)   //timeout in milliseconds until a connection is established. A timeout value of zero is interpreted as an infinite timeout.
+                .setSocketTimeout(2_000)    //socket timeout (SO_TIMEOUT) in milliseconds, which is the timeout for waiting for data or, put differently, a maximum period inactivity between two consecutive data packets).
+                .setConnectionRequestTimeout(2_000) //timeout in milliseconds used when requesting a connection from the connection manager. A timeout value of zero is interpreted as an infinite timeout.
+                .build();
 
-        // add request header
+        HttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+
+        HttpGet request = new HttpGet(rootUrl + path);
         request.addHeader("User-Agent", USER_AGENT);
         HttpResponse response = null;
         try {
             response = client.execute(request);
         } catch (IOException e) {
             logger.warn("error sending request to backend", e);
+            throw new IllegalStateException(e);
         }
         logger.debug("response code: " + response.getStatusLine().getStatusCode());
     }
