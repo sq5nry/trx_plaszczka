@@ -15,20 +15,20 @@ import static com.pi4j.wiringpi.Spi.wiringPiSPIDataRW;
 public abstract class GenericSpiChip extends GenericChip {
     private static final Logger logger = LoggerFactory.getLogger(GenericSpiChip.class);
 
-    @Value("${spi.real}")
-    private boolean isSpiReal;
+    @Value("${spi.simulated}")
+    private boolean isSpiSimulated;
 
     public GenericSpiChip(int address) {
         super(address);
-        logger.debug("isSpiReal: {}", isSpiReal);
+        logger.debug("isSpiSimulated: {}", isSpiSimulated);
     }
 
     protected int writeSpi(byte[] data, int length) {
-        if (isSpiReal) {
-            return wiringPiSPIDataRW(getAddress(), data, length);
-        } else {
+        if (isSpiSimulated) {
             logger.debug("dummy SPI received write request: {}", HexUtils.toHexString(data));
             return length;
+        } else {
+            return wiringPiSPIDataRW(getAddress(), data, length);
         }
     }
 }

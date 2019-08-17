@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.synthesiser.Dds;
 import org.sq5nry.plaszczka.backend.hw.chips.Ad9954;
-import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.gpio.GpioControllerProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
@@ -20,7 +19,7 @@ public class DdsUnit extends Unit implements Dds {
     private Ad9954 dds;
 
     //TODO nie chce i2c
-    public DdsUnit(I2CBusProvider i2cBusProv, GpioControllerProvider gpioCtlProvider) throws Exception, ChipInitializationException {
+    public DdsUnit(I2CBusProvider i2cBusProv, GpioControllerProvider gpioCtlProvider) throws Exception {
         super(i2cBusProv, gpioCtlProvider);
     }
 
@@ -40,7 +39,6 @@ public class DdsUnit extends Unit implements Dds {
     public void initializeUnit() throws Exception {
         logger.debug("initializeUnit: entering");
         super.initializeUnit();
-        //dds.initialize();
         logger.debug("initializeUnit: complete");
     }
 
