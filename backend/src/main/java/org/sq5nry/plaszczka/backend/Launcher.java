@@ -52,7 +52,7 @@ public class Launcher {
     }
 
     private void initSpi() throws ChipInitializationException {
-        logger.info("initializing wiringPiSPISetup, channel={}", spiChannel);
+        logger.info("initializing SPI, channel={}, speed={}", spiChannel, spiSpeed);
         if (isSpiSimulated) {
             logger.info("initializing dummy SPI, no operation");
         } else {
