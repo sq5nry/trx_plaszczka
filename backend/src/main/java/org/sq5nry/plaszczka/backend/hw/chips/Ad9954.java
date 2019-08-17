@@ -53,8 +53,9 @@ public class Ad9954 extends GenericSpiChip {
         if (initialized) {
             throw new IllegalStateException("already initialized");
         }
-        Launcher.initSpi(0, 5000000, false);
         initGpio();
+        Launcher.initSpi(0, 5000000, false);
+
         reset();
         writeRegister(REG_CFR1Info.clone(), DATA_CFR1.clone());
 
