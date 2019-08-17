@@ -42,7 +42,7 @@ public class Ad9954 extends GenericSpiChip {
 
     private GpioPinDigitalOutput reset, update;
 
-    public Ad9954(SpiConfiguration spiConfig, long refClk) throws ChipInitializationException {
+    public Ad9954(SpiConfiguration spiConfig, long refClk) {
         super(spiConfig);
         this.refClk = refClk;
     }
@@ -50,14 +50,14 @@ public class Ad9954 extends GenericSpiChip {
     @Override
     public GenericChip initialize() throws ChipInitializationException {
         if (initialized) {
-            throw new IllegalStateException("already initialized");
+            logger.info("re-initialization: resetting only DDS registers, not reinitializing buses");
+            resetAndInitializeRegisters();
+        } else {
+            initGpio();
+            resetAndInitializeRegisters();
+            initialized = true;
         }
 
-        initGpio();
-        reset();
-        writeRegister(REG_CFR1Info.clone(), DATA_CFR1.clone());
-
-        initialized = true;
         return this;
     }
 
@@ -107,6 +107,11 @@ public class Ad9954 extends GenericSpiChip {
         }
         writeSpi(registerInfo, 1);
         writeSpi(data, data.length);
+    }
+
+    private void resetAndInitializeRegisters() {
+        reset();
+        writeRegister(REG_CFR1Info.clone(), DATA_CFR1.clone());
     }
 
     @Override
