@@ -39,8 +39,8 @@ public class Ad7999 extends GenericI2cChip {
 
     public byte getConversionResult() throws IOException {
         getDevice().read(conversion, 0, 2);
-        if (logger.isDebugEnabled()) {
-            logger.debug("getConversionResult: 0x{}.0x{}", String.format("%02X", conversion[0]), String.format("%02X", conversion[1]));
+        if (logger.isTraceEnabled()) {
+            logger.trace("getConversionResult: 0x{}.0x{}", String.format("%02X", conversion[0]), String.format("%02X", conversion[1]));
         }
         return (byte) ((conversion[0] & 0x0F)<<4 | (conversion[1] & 0xF0)>>4);
     }
