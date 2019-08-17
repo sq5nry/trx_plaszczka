@@ -12,6 +12,7 @@ public abstract class GenericSpiChip extends GenericChip {
     private boolean isSpiSimulated;
 
     public GenericSpiChip(SpiConfiguration spiConfig) {
+        super(spiConfig.getSpiChannel());
         isSpiSimulated = spiConfig.isSpiSimulated();
     }
 
@@ -20,7 +21,7 @@ public abstract class GenericSpiChip extends GenericChip {
             logger.debug("dummy SPI received write request: {}", HexUtils.toHexString(data));
             return length;
         } else {
-            return wiringPiSPIDataRW(0, data, length);
+            return wiringPiSPIDataRW(getAddress(), data, length);
         }
     }
 }

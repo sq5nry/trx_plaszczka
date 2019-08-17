@@ -5,6 +5,7 @@ import com.pi4j.io.i2c.impl.I2CProviderImpl;
 import com.pi4j.wiringpi.Spi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
+import org.sq5nry.plaszczka.backend.hw.spi.SpiConfiguration;
 
 import javax.annotation.PostConstruct;
 
@@ -31,14 +33,8 @@ public class Launcher {
     @Value("${i2c.provider.class}")
     private String i2cProviderClass;
 
-    @Value("${spi.simulated}")
-    private boolean isSpiSimulated;
-
-    @Value("${spi.channel.number}")
-    private int spiChannel;
-
-    @Value("${spi.speed}")
-    private int spiSpeed;
+    @Autowired
+    private SpiConfiguration spiConfig;
 
     @Value("${gpio.provider.class}")
     private String gpioProviderClass;
@@ -47,21 +43,21 @@ public class Launcher {
     private void init() throws Exception {
         logger.info("initializing I/O subsystems...");
         initI2c();
-        //initSpi(spiChannel, spiSpeed, isSpiSimulated);
+        initSpi();
         logger.info("I/O subsystems initialized");
     }
 
-    public static void initSpi(int spiChannel, int spiSpeed, boolean isSpiSimulated) throws ChipInitializationException {
-        logger.info("initializing SPI, channel={}, speed={}", spiChannel, spiSpeed);
-        if (isSpiSimulated) {
+    private void initSpi() throws ChipInitializationException {
+        logger.info("initializing SPI, channel={}, speed={}", spiConfig.getSpiChannel(), spiConfig.getSpiSpeed());
+        if (spiConfig.isSpiSimulated()) {
             logger.info("initializing dummy SPI, no operation");
         } else {
-            int fdSpi = Spi.wiringPiSPISetup(spiChannel, spiSpeed);
+            int fdSpi = Spi.wiringPiSPISetup(spiConfig.getSpiChannel(), spiConfig.getSpiSpeed());
             if (fdSpi <= -1) {
-                logger.error("SPI bus setup failed for channel {}, FD={}", spiChannel, fdSpi);
-                throw new ChipInitializationException("SPI bus setup failed for channel " + spiChannel + ", fd=" + fdSpi);
+                logger.error("SPI bus setup failed for channel {}, FD={}", spiConfig.getSpiChannel(), fdSpi);
+                throw new ChipInitializationException("SPI bus setup failed for channel " + spiConfig.getSpiChannel() + ", fd=" + fdSpi);
             } else {
-                logger.debug("SPI initialized for channel {}, FD={}", spiChannel, fdSpi);
+                logger.debug("SPI initialized for channel {}, FD={}", spiConfig.getSpiChannel(), fdSpi);
             }
         }
     }
