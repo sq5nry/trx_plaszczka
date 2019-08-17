@@ -2,8 +2,6 @@ package org.sq5nry.plaszczka.backend.hw.chips;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
-import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
 
 import java.io.IOException;
@@ -33,17 +31,6 @@ public class Ad7999 extends GenericI2cChip {
     public Ad7999(int address) {
         super(address);
         conversion = new byte[2];
-    }
-
-    //TODO workaround for failing initialization. Write(0) gives IOException: Communication error on send but i2cset is ok
-    public GenericChip initialize() {
-        try {
-            return super.initialize();
-        } catch (ChipInitializationException e) {
-            logger.warn("initialization failed, enforcing skip", e);
-            forceInitialized();
-        }
-        return this;
     }
 
     public void configure() throws IOException {

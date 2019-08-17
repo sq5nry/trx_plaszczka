@@ -20,10 +20,6 @@ public abstract class GenericChip {
 
     public abstract GenericChip initialize() throws ChipInitializationException;
 
-    public void forceInitialized() {
-        this.initialized = true;    //TODO remove
-    }
-
     public int getAddress() {
         return address;
     }

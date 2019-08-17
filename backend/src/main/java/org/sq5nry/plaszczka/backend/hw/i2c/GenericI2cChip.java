@@ -30,6 +30,9 @@ public class GenericI2cChip extends GenericChip {
             device = i2CBus.getDevice(address);
             if ((address >= 0x30 && address <= 0x37) || (address >= 0x50 && address <= 0x5F)) {
                 device.read();
+            } else if (address == 0x29) {
+                //specific for AD7999, it won't accept a byte write
+                device.read(new byte[2], 0, 2);
             } else {
                 device.write((byte) 0);
             }
