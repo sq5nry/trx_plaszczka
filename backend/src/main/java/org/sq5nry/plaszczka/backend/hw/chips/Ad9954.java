@@ -7,6 +7,7 @@ import com.pi4j.io.gpio.RaspiPin;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sq5nry.plaszczka.backend.Launcher;
 import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.spi.GenericSpiChip;
@@ -48,11 +49,11 @@ public class Ad9954 extends GenericSpiChip {
     }
 
     @Override
-    public GenericChip initialize() {
+    public GenericChip initialize() throws ChipInitializationException {
         if (initialized) {
             throw new IllegalStateException("already initialized");
         }
-
+        Launcher.initSpi(0, 5000000, false);
         initGpio();
         reset();
         writeRegister(REG_CFR1Info.clone(), DATA_CFR1.clone());

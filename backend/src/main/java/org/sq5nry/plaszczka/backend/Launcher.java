@@ -47,11 +47,11 @@ public class Launcher {
     private void init() throws Exception {
         logger.info("initializing I/O subsystems...");
         initI2c();
-        initSpi();
+        //initSpi(spiChannel, spiSpeed, isSpiSimulated);
         logger.info("I/O subsystems initialized");
     }
 
-    private void initSpi() throws ChipInitializationException {
+    public static void initSpi(int spiChannel, int spiSpeed, boolean isSpiSimulated) throws ChipInitializationException {
         logger.info("initializing SPI, channel={}, speed={}", spiChannel, spiSpeed);
         if (isSpiSimulated) {
             logger.info("initializing dummy SPI, no operation");
