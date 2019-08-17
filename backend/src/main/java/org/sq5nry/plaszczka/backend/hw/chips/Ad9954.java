@@ -89,13 +89,14 @@ public class Ad9954 extends GenericSpiChip {
     }
 
     private void update() {
+        logger.debug("FQ update");
         update.high();
         update.low();
     }
 
     private void writeRegister(byte registerInfo[], byte data[]) {
         if (logger.isDebugEnabled()) {
-            logger.debug("writeRegister: @{}={}", HexUtils.toHexString(registerInfo), HexUtils.toHexString(data));
+            logger.debug("writeRegister: @0x{}=0x{}", HexUtils.toHexString(registerInfo), HexUtils.toHexString(data));
         }
         writeSpi(registerInfo, 1);
         writeSpi(data, data.length);

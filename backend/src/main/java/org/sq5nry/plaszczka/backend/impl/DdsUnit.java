@@ -25,13 +25,13 @@ public class DdsUnit extends Unit implements Dds {
 
     @Override
     public void setFrequency(int freq) throws IOException {
-        ((Ad9954) getChip()).setFrequency(freq);    //TODO optimizze
+        dds.setFrequency(freq);
     }
 
     @Override
     public void createChipset(List<GenericChip> chipset) throws Exception {
         logger.debug("createChipset: entering");
-        chipset.add(new Ad9954(500000000));
+        chipset.add(dds = new Ad9954(500000000));
         logger.debug("createChipset: DDS={}", dds);
     }
 
@@ -39,6 +39,7 @@ public class DdsUnit extends Unit implements Dds {
     public void initializeUnit() throws Exception {
         logger.debug("initializeUnit: entering");
         super.initializeUnit();
+        dds.initialize();
         logger.debug("initializeUnit: complete");
     }
 
