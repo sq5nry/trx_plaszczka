@@ -20,7 +20,7 @@ public abstract class GenericSpiChip extends GenericChip {
             logger.debug("dummy SPI received write request: {}", HexUtils.toHexString(data));
             return length;
         } else {
-            return wiringPiSPIDataRW(getAddress(), data, length);
+            return wiringPiSPIDataRW(0, data, length);
         }
     }
 }
