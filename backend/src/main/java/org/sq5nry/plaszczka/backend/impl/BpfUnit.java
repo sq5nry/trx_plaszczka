@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-//@PropertySource("classpath:trx_config.properties")
 public class BpfUnit extends Unit implements BandPassFilter {
     private static final Logger logger = LoggerFactory.getLogger(BpfUnit.class);
 

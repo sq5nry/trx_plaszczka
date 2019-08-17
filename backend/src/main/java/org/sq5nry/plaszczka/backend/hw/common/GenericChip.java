@@ -6,12 +6,18 @@ import org.slf4j.LoggerFactory;
 
 public abstract class GenericChip {
     private static final Logger logger = LoggerFactory.getLogger(GenericChip.class);
+    private static final int NO_EXPLICIT_ADDRESS = -1;
 
     protected int address;  //TODO -1 for N/A
     protected boolean initialized;
 
     private GpioController controller;
     private boolean isGpioReal;
+
+    public GenericChip() {
+        this(NO_EXPLICIT_ADDRESS);
+        this.initialized = false;
+    }
 
     public GenericChip(int address) {
         this.address = address;

@@ -9,6 +9,7 @@ import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
 import org.sq5nry.plaszczka.backend.hw.gpio.GpioControllerProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
+import org.sq5nry.plaszczka.backend.hw.spi.SpiConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +25,8 @@ public abstract class Unit {
     private static final Logger logger = LoggerFactory.getLogger(Unit.class);
 
     private I2CBus bus;
+
+    private SpiConfiguration spiConfig;
     private GpioController gpioController;
     private Map<Integer, GenericChip> chipset;
     State state = State.CREATED;
@@ -31,11 +34,12 @@ public abstract class Unit {
     public enum State { CREATED, CHIPSET_INITIALIZED, UNIT_INITIALIZED, FAILED }
 
     public Unit(I2CBusProvider i2cBusProv) throws Exception {
-        this(i2cBusProv, null);
+        this(i2cBusProv, null, null);
     }
 
-    public Unit(I2CBusProvider i2cBusProv, GpioControllerProvider gpioProv) throws Exception {
+    public Unit(I2CBusProvider i2cBusProv, SpiConfiguration spiConfig, GpioControllerProvider gpioProv) throws Exception {
         logger.info("=============== creating {}", getName());
+        this.spiConfig = spiConfig;
         bus = i2cBusProv.getBus();
         if (gpioProv != null) gpioController = gpioProv.getGpioController();
 
@@ -111,6 +115,10 @@ public abstract class Unit {
     public void initializeUnit() throws Exception {
         logger.debug("default unit initialization: no-op");
         state = State.UNIT_INITIALIZED;
+    }
+
+    protected SpiConfiguration getSpiConfig() {
+        return spiConfig;
     }
 
     public State getState() {

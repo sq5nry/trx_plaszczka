@@ -20,7 +20,7 @@ public class I2CBusProvider {
     private int busNr;
 
     public I2CBus getBus() throws IOException, I2CFactory.UnsupportedBusNumberException {
-        logger.debug("i2c hw {}", busNr);
+        logger.debug("getBus: {}", busNr);
         return I2CFactory.getInstance(busNr);
     }
 }
