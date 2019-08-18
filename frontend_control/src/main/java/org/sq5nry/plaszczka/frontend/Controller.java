@@ -30,11 +30,11 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     private static final Logger logger = Logger.getLogger(Controller.class);
 
     public static final String BACKEND_HOST_LOCAL = "127.0.0.1";
-    public static final String BACKEND_HOST_REAL = "10.0.0.137";
+    public static final String BACKEND_HOST_REAL = "10.0.0.139";
     public static final String BACKEND_HOST_MOST_REAL = "sq9nry.no-ip.org";
     public static final String BACKEND_PORT = "8090";
 
-    private static final String BACKEND_HOST = BACKEND_HOST_MOST_REAL;
+    private static final String BACKEND_HOST = BACKEND_HOST_REAL;
     private static final String BACKEND_ROOT_URL = "http://" + BACKEND_HOST + ":" + BACKEND_PORT;
     private static final String BACKEND_STOMP_URL = "ws://" + BACKEND_HOST + ":" + BACKEND_PORT + "/vagc-websocket";
 
@@ -108,6 +108,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
      */
     @FXML Slider freq_slider_khz;
     @FXML Slider freq_slider_hz;
+    @FXML TextField freq_mhz;
     @FXML TextField freq_khz;
     @FXML TextField freq_hz;
     @FXML RadioButton mixing_h;
@@ -127,6 +128,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
 
     private void setDispFreq() {
         logger.debug("freqChanged");
+        freq_mhz.textProperty().setValue(MHz);
         String kHz = DEC_FORMAT_3DIG.format(freq_slider_khz.getValue());
         freq_khz.textProperty().setValue(kHz);
         String Hz = DEC_FORMAT_3DIG.format(freq_slider_hz.getValue());
