@@ -63,8 +63,8 @@ public class QSDUnit extends Unit implements Detector {
     public void initializeUnit() throws Exception {
         super.initializeUnit();
         logger.info("initializing unit with defaults");
-        mode = Mode.SSB;
-        qsdEnabled = false;
+        setRoofingFilter(Mode.SSB);
+        setEnabled(false);
         update();
     }
 
