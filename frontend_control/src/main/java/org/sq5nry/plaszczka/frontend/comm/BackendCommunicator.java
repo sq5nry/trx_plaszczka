@@ -60,7 +60,7 @@ public class BackendCommunicator {
         this.rootUrl = rootUrl;
     }
 
-    public void sendRequest(String path) throws IllegalStateException {
+    public int sendRequest(String path) throws IllegalStateException {
         logger.debug("sendRequest: " + path);
 
         RequestConfig requestConfig = RequestConfig.custom()
@@ -77,10 +77,11 @@ public class BackendCommunicator {
         try {
             response = client.execute(request);
         } catch (IOException e) {
-            logger.warn("error sending request to backend", e);
-            throw new IllegalStateException(e);
+            logger.warn("error sending request to backend=" + e.getLocalizedMessage());
+            return -1;
         }
         logger.debug("response code: " + response.getStatusLine().getStatusCode());
+        return response.getStatusLine().getStatusCode();
     }
 
     public Map queryState() {

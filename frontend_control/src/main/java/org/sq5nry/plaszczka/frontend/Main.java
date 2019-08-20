@@ -22,15 +22,19 @@ public class Main extends Application {
         primaryStage.setTitle("TRX Płaszczka: controller");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        primaryStage.sizeToScene();
         primaryStage.show();
 
-        //primaryStage.setFullScreen(true);
+        primaryStage.setMinWidth(primaryStage.getWidth()/2);
+        primaryStage.setMinHeight(primaryStage.getHeight()/2);
     }
 
     @Override
     public void stop() throws Exception {
         logger.info("stop: closeCommunicationChannels");
-        controller.closeCommunicationChannels();
+        if (controller != null) {
+            controller.closeCommunicationChannels();
+        }
     }
 
     public static void main(String[] args) {
