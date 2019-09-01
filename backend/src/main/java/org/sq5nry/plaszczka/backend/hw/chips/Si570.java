@@ -112,6 +112,7 @@ public class Si570 extends GenericI2CChip {
         logger.debug("setFrequency: fDCO={}MHz, newRfreq=0x{}", fdco, HexUtils.toHexString(newRfData));
 
         getDevice().write(REG_FREEZE_DCO, (byte) 0x10);    //TODO readfirst
+        getDevice().write(REG_HS_N1, (byte) 0xa4); //TODO calc
         getDevice().write(REG_RF_05, newRfData[7]);
         getDevice().write(REG_RF_04, newRfData[6]);
         getDevice().write(REG_RF_03, newRfData[5]);
