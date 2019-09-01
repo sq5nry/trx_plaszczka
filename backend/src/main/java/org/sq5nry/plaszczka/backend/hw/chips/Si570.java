@@ -41,6 +41,12 @@ public class Si570 extends GenericI2CChip {
     private static final float FDCO_MIN_GHZ = 4850;
     private static final float FDCO_MAX_GHZ = 5670;
 
+    public static final int HSDIV_4 = 0x0;
+    public static final int HSDIV_5 = 0x1;
+    public static final int HSDIV_6 = 0x2;
+    public static final int HSDIV_7 = 0x3;
+    public static final int HSDIV_9 = 0x5;
+    public static final int HSDIV_11 = 0x7;
 
     private int dcoHighSpeedDivider;
     private int clkoutOutputDivider;
@@ -64,13 +70,13 @@ public class Si570 extends GenericI2CChip {
         try {
             int hsN1 = getDevice().read(REG_HS_N1);
             switch (hsN1 >> 5) {
-                case 0x0: dcoHighSpeedDivider = 4; break;
-                case 0x1: dcoHighSpeedDivider = 5; break;
-                case 0x2: dcoHighSpeedDivider = 6; break;
-                case 0x3: dcoHighSpeedDivider = 7; break;
-                case 0x4: case 0x6: throw new ChipInitializationException("DCO High Speed Divider value not used: " + hsN1);
-                case 0x5: dcoHighSpeedDivider = 9; break;
-                case 0x7: dcoHighSpeedDivider = 11; break;
+                case HSDIV_4: dcoHighSpeedDivider = 4; break;
+                case HSDIV_5: dcoHighSpeedDivider = 5; break;
+                case HSDIV_6: dcoHighSpeedDivider = 6; break;
+                case HSDIV_7: dcoHighSpeedDivider = 7; break;
+                case HSDIV_9: dcoHighSpeedDivider = 9; break;
+                case HSDIV_11: dcoHighSpeedDivider = 11; break;
+                default: throw new ChipInitializationException("DCO High Speed Divider value not used: " + hsN1);
             }
             logger.info("DCO High Speed Divider={}", dcoHighSpeedDivider);
 
@@ -81,19 +87,19 @@ public class Si570 extends GenericI2CChip {
             }
             logger.info("CLK OUT Output Divider={}", clkoutOutputDivider);
 
-            long rfreqRaw = Longs.fromByteArray(new byte[]{0,0,0,
+            long rfreqRaw = Longs.fromByteArray(new byte[]{0, 0, 0,
                     (byte) (n1Rf & 0x3F),
                     (byte) getDevice().read(REG_RF_02),
                     (byte) getDevice().read(REG_RF_03),
                     (byte) getDevice().read(REG_RF_04),
                     (byte) getDevice().read(REG_RF_05)});
-            logger.info("raw RFREQ={}", rfreqRaw);
 
             rfreq = (double) rfreqRaw / FRACT_LEN;
-            logger.info("RFREQ={}MHz", rfreq);
+            logger.info("RFREQ={}", rfreq);
 
             fxtal = F0 * dcoHighSpeedDivider * clkoutOutputDivider / rfreq;
-            logger.info("actual nominal crystal frequency fXtal={}MHz", fxtal);
+            logger.info("actual crystal frequency={}MHz", fxtal);
+            logger.info("DCO running at {}MHz", fxtal * rfreq);
         } catch (IOException e) {
             throw new ChipInitializationException("failed to read registers for initialization", e);
         }
@@ -105,7 +111,7 @@ public class Si570 extends GenericI2CChip {
      * @param freq Hz
      */
     public void setFrequency(int freq) throws IOException {
-        clkoutOutputDivider = 16;   //TODO calc
+        clkoutOutputDivider = 15;   //TODO calc
 
         logger.debug("setFrequency: {}Hz", freq);
         double fdco = (freq / 1000000) * dcoHighSpeedDivider * clkoutOutputDivider;
@@ -119,7 +125,7 @@ public class Si570 extends GenericI2CChip {
 
         write(REG_FREEZE_DCO, (byte) 0x10);
 
-        write(REG_HS_N1, (byte) 0xA4);    //TODO calc
+        write(REG_HS_N1, (byte) ((HSDIV_9 << 5) | (clkoutOutputDivider >> 2)));
         write(REG_N1_RF_01, (byte) ((clkoutOutputDivider << 6) | (newRfData[3] & 0x3F)));
         write(REG_RF_02, newRfData[4]);
         write(REG_RF_03, newRfData[5]);
