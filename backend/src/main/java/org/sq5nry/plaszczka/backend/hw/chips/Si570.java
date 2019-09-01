@@ -53,7 +53,13 @@ public class Si570 extends GenericI2CChip {
 
     @Override
     public GenericChip initialize() throws ChipInitializationException {
+        //check presence on the bus
         super.initialize();
+
+        //reset initial chip registers
+        reset();
+
+        //read initial oscillator conditions
         logger.debug("initializing Si570");
         try {
             int hsN1 = getDevice().read(REG_HS_N1);
@@ -111,18 +117,37 @@ public class Si570 extends GenericI2CChip {
         byte[] newRfData = Longs.toByteArray(newRfreq);
         logger.debug("setFrequency: fDCO={}MHz, newRfreq=0x{}", fdco, HexUtils.toHexString(newRfData));
 
-        getDevice().write(REG_FREEZE_DCO, (byte) 0x10);    //TODO readfirst
-        getDevice().write(REG_HS_N1, (byte) 0xa4); //TODO calc
-        getDevice().write(REG_RF_05, newRfData[7]);
-        getDevice().write(REG_RF_04, newRfData[6]);
-        getDevice().write(REG_RF_03, newRfData[5]);
-        getDevice().write(REG_RF_02, newRfData[4]);
-        byte b = (byte) ((clkoutOutputDivider << 6) | (newRfData[3] & 0x3F));
-        logger.debug("setFrequency: REG_N1_RF_01={}", String. format("%02X", b));
-        getDevice().write(REG_N1_RF_01, b);
+        write(REG_FREEZE_DCO, (byte) 0x10);
 
-        getDevice().write(REG_FREEZE_DCO, (byte) 0x00);    //TODO readfirst
-        getDevice().write(REG_RES_FRE_MEMCTL, (byte) 0x40);    //TODO readfirst
+        write(REG_HS_N1, (byte) 0xA4);    //TODO calc
+        write(REG_RF_05, newRfData[7]);
+        write(REG_RF_04, newRfData[6]);
+        write(REG_RF_03, newRfData[5]);
+        write(REG_RF_02, newRfData[4]);
+        write(REG_N1_RF_01, (byte) ((clkoutOutputDivider << 6) | (newRfData[3] & 0x3F)));
+
+        write(REG_FREEZE_DCO, (byte) 0x00);
+        write(REG_RES_FRE_MEMCTL, (byte) 0x40);    //TODO readfirst
         logger.debug("setFrequency: completed");
+    }
+
+    private void write(int reg, byte data) throws IOException {
+        logger.debug("write: reg={}, data=0x{}", reg, String. format("%02X", data));
+        getDevice().write(reg, data);
+    }
+
+    public void reset() throws ChipInitializationException {
+        logger.info("resetting...");
+        int reg;
+        try {
+            getDevice().write(REG_RES_FRE_MEMCTL, (byte) 0x01);
+            reg = getDevice().read(REG_RES_FRE_MEMCTL);
+        } catch (IOException e) {
+            throw new ChipInitializationException("reset failed", e);
+        }
+
+        if (1 == (reg & 1)) {
+            throw new ChipInitializationException("reset timeout");
+        }
     }
 }

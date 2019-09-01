@@ -97,6 +97,8 @@ public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
                                 return 0x71;
                             } else if (regAddr == 12) {
                                 return 0xC5;
+                            } else if (regAddr == 135) {
+                                return 0;
                             }
                         }
 
