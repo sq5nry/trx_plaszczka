@@ -120,11 +120,11 @@ public class Si570 extends GenericI2CChip {
         write(REG_FREEZE_DCO, (byte) 0x10);
 
         write(REG_HS_N1, (byte) 0xA4);    //TODO calc
-        write(REG_RF_05, newRfData[7]);
-        write(REG_RF_04, newRfData[6]);
-        write(REG_RF_03, newRfData[5]);
-        write(REG_RF_02, newRfData[4]);
         write(REG_N1_RF_01, (byte) ((clkoutOutputDivider << 6) | (newRfData[3] & 0x3F)));
+        write(REG_RF_02, newRfData[4]);
+        write(REG_RF_03, newRfData[5]);
+        write(REG_RF_04, newRfData[6]);
+        write(REG_RF_05, newRfData[7]);
 
         write(REG_FREEZE_DCO, (byte) 0x00);
         write(REG_RES_FRE_MEMCTL, (byte) 0x40);    //TODO readfirst
@@ -132,7 +132,7 @@ public class Si570 extends GenericI2CChip {
     }
 
     private void write(int reg, byte data) throws IOException {
-        logger.debug("write: reg={}, data=0x{}", reg, String. format("%02X", data));
+        logger.debug("write: reg={}, data=0x{}", reg, String.format("%02X", data));
         getDevice().write(reg, data);
     }
 
