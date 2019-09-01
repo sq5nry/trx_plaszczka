@@ -1,13 +1,115 @@
 package org.sq5nry.plaszczka.backend.hw.chips;
 
+import com.google.common.primitives.Longs;
+import org.apache.tomcat.util.buf.HexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
+import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2CChip;
 
-public class Si570 extends GenericI2cChip {
+import java.io.IOException;
+
+/**
+ * The Si570 XO/Si571 VCXO utilizes Silicon Laboratories’ advanced DSPLL®
+ * circuitry to provide a low-jitter clock at any frequency. The Si570/Si571 are user-programmable
+ * to any output frequency from 10 to 945 MHz and select frequencies
+ * to 1400 MHz with <1 ppb resolution. The device is programmed via an I2C serial
+ * interface. Unlike traditional XO/VCXOs where a different crystal is required for
+ * each output frequency, the Si57x uses one fixed-frequency crystal and a DSPLL
+ * clock synthesis IC to provide any-frequency operation. This IC-based approach
+ * allows the crystal resonator to provide exceptional frequency stability and
+ * reliability. In addition, DSPLL clock synthesis provides superior supply noise
+ * rejection, simplifying the task of generating low-jitter clocks in noisy environments
+ * typically found in communication systems.
+ */
+public class Si570 extends GenericI2CChip {
     private static final Logger logger = LoggerFactory.getLogger(Si570.class);
+
+    private static final int REG_HS_N1 = 7;
+    private static final int REG_N1_RF_01 = 8;
+    private static final int REG_RF_02 = 9;
+    private static final int REG_RF_03 = 10;
+    private static final int REG_RF_04 = 11;
+    private static final int REG_RF_05 = 12;
+    private static final int REG_RES_FRE_MEMCTL = 135;
+    private static final int REG_FREEZE_DCO = 137;
+
+    private static final double F0 = 156.250d;
+    private static final long FRACT_LEN = 1 << 28;
+
+    private int dcoHighSpeedDivider;
+    private int clkoutOutputDivider;
+    private double rfreq;
+    private double fxtal;
 
     public Si570(int address) {
         super(address);
+    }
+
+    @Override
+    public GenericChip initialize() throws ChipInitializationException {
+        super.initialize();
+        logger.debug("initializing Si570");
+        try {
+            int hsN1 = getDevice().read(REG_HS_N1);
+            switch (hsN1 >> 5) {
+                case 0x0: dcoHighSpeedDivider = 4; break;
+                case 0x1: dcoHighSpeedDivider = 5; break;
+                case 0x2: dcoHighSpeedDivider = 6; break;
+                case 0x3: dcoHighSpeedDivider = 7; break;
+                case 0x4: case 0x6: throw new ChipInitializationException("DCO High Speed Divider value not used: " + hsN1);
+                case 0x5: dcoHighSpeedDivider = 9; break;
+                case 0x7: dcoHighSpeedDivider = 11; break;
+            }
+            logger.info("DCO High Speed Divider={}", dcoHighSpeedDivider);
+
+            byte n1Rf = (byte) getDevice().read(REG_N1_RF_01);
+            clkoutOutputDivider = ((hsN1 & 0x1F) << 2) + (n1Rf >> 6);
+            logger.info("CLK OUT Output Divider={}", clkoutOutputDivider);
+
+            long rfreqRaw = Longs.fromByteArray(new byte[]{0,0,0,
+                    (byte) (n1Rf & 0x3F),
+                    (byte) getDevice().read(REG_RF_02),
+                    (byte) getDevice().read(REG_RF_03),
+                    (byte) getDevice().read(REG_RF_04),
+                    (byte) getDevice().read(REG_RF_05)});
+            logger.info("raw RFREQ={}", rfreqRaw);
+
+            rfreq = (double) rfreqRaw / FRACT_LEN;
+            logger.info("RFREQ={}MHz", rfreq);
+
+            fxtal = F0 * dcoHighSpeedDivider * clkoutOutputDivider / rfreq;
+            logger.info("actual nominal crystal frequency fXtal={}MHz", fxtal);
+        } catch (IOException e) {
+            throw new ChipInitializationException("failed to read registers for initialization", e);
+        }
+        return this;
+    }
+
+    /**
+     * Set frequency in Hz
+     * @param freq Hz
+     */
+    public void setFrequency(int freq) throws IOException {
+        logger.debug("setFrequency: {}Hz", freq);
+        double fdco = (freq / 1000000) * dcoHighSpeedDivider * clkoutOutputDivider;
+        long newRfreq = (long) ((fdco / fxtal) * FRACT_LEN);
+
+        byte[] newRfData = Longs.toByteArray(newRfreq);
+        logger.debug("setFrequency: newRfreq={}", HexUtils.toHexString(newRfData));
+
+        getDevice().write(REG_FREEZE_DCO, (byte) 0x14);    //TODO readfirst
+        getDevice().write(REG_RF_05, newRfData[7]);
+        getDevice().write(REG_RF_04, newRfData[6]);
+        getDevice().write(REG_RF_03, newRfData[5]);
+        getDevice().write(REG_RF_02, newRfData[4]);
+        byte b = (byte) ((clkoutOutputDivider << 6) | (newRfData[3] & 0x3F));
+        logger.debug("setFrequency: REG_N1_RF_01={}", String. format("%02X", b));
+        getDevice().write(REG_N1_RF_01, b);
+
+        getDevice().write(REG_FREEZE_DCO, (byte) 0x04);    //TODO readfirst
+        getDevice().write(REG_RES_FRE_MEMCTL, (byte) 0x40);    //TODO readfirst
+        logger.debug("setFrequency: completed");
     }
 }

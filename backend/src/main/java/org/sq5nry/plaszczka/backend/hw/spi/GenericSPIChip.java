@@ -7,11 +7,11 @@ import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 
 import static com.pi4j.wiringpi.Spi.wiringPiSPIDataRW;
 
-public abstract class GenericSpiChip extends GenericChip {
-    private static final Logger logger = LoggerFactory.getLogger(GenericSpiChip.class);
+public abstract class GenericSPIChip extends GenericChip {
+    private static final Logger logger = LoggerFactory.getLogger(GenericSPIChip.class);
     private boolean isSpiSimulated;
 
-    public GenericSpiChip(SpiConfiguration spiConfig) {
+    public GenericSPIChip(SPIConfiguration spiConfig) {
         super(spiConfig.getSpiChannel());
         isSpiSimulated = spiConfig.isSpiSimulated();
     }

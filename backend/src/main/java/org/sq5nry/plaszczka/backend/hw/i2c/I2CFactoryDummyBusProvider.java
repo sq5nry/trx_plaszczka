@@ -83,7 +83,23 @@ public class I2CFactoryDummyBusProvider extends I2CProviderImpl {
                     }
 
                     @Override
-                    public int read(int address) {
+                    public int read(int regAddr) {
+                        if (address == 0x55) {  //TODO config. Simulate Si570.
+                            if (regAddr == 7) {
+                                return 0xAD;
+                            } else if (regAddr == 8) {
+                                return 0x42;
+                            } else if (regAddr == 9) {
+                                return 0xA7;
+                            } else if (regAddr == 10) {
+                                return 0xE5;
+                            } else if (regAddr == 11) {
+                                return 0x71;
+                            } else if (regAddr == 12) {
+                                return 0xC5;
+                            }
+                        }
+
                         return rand.nextInt();
                     }
 

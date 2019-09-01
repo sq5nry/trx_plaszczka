@@ -136,7 +136,7 @@ public class VgaUnit extends Unit implements IfAmp, Reinitializable {
 
     @Override
     public void setMute(boolean enabled) throws Exception {
-        logger.info("setMute: {}", enabled);
+        logger.debug("setMute: {}", enabled);
         ((Ad5242) getChip(RDAC)).setOutPin(enabled, Ad5242.OutPin.O2);
     }
 

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SpiConfiguration {
+public class SPIConfiguration {
     @Value("${spi.simulated}")
     private boolean isSpiSimulated;
 

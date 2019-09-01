@@ -2,7 +2,7 @@ package org.sq5nry.plaszczka.backend.hw.chips;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2CChip;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
  * applications. Selectable external loudness and soft mute functions are provided.
  * Control is accomplished by serial I2C bus microprocessor interface.
  */
-public class Tda7309 extends GenericI2cChip {
+public class Tda7309 extends GenericI2CChip {
     private static final Logger logger = LoggerFactory.getLogger(Tda7309.class);
 
     private static final byte CTRL_VOLUME = 0x00;

@@ -6,10 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2CChip;
 import org.sq5nry.plaszczka.backend.hw.gpio.GpioControllerProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.spi.SpiConfiguration;
+import org.sq5nry.plaszczka.backend.hw.spi.SPIConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public abstract class Unit {
 
     private I2CBus bus;
 
-    private SpiConfiguration spiConfig;
+    private SPIConfiguration spiConfig;
     private GpioController gpioController;
     private Map<Integer, GenericChip> chipset;
     State state = State.CREATED;
@@ -37,7 +37,7 @@ public abstract class Unit {
         this(i2cBusProv, null, null);
     }
 
-    public Unit(I2CBusProvider i2cBusProv, SpiConfiguration spiConfig, GpioControllerProvider gpioProv) throws Exception {
+    public Unit(I2CBusProvider i2cBusProv, SPIConfiguration spiConfig, GpioControllerProvider gpioProv) throws Exception {
         logger.info("=============== creating {}", getName());
         this.spiConfig = spiConfig;
         bus = i2cBusProv.getBus();
@@ -89,9 +89,9 @@ public abstract class Unit {
         state = State.CREATED;
         try {
             for(GenericChip chip: chipset.values()) {
-                if (chip instanceof GenericI2cChip) {
+                if (chip instanceof GenericI2CChip) {
                     logger.info("initializeChipset: setting I2C for chip={}", chip);
-                    ((GenericI2cChip) chip).setI2CBus(bus);
+                    ((GenericI2CChip) chip).setI2CBus(bus);
                 } else {
                     logger.info("initializeChipset: not setting specific SPI bus, using the general one {}", chip);
                 }
@@ -117,7 +117,7 @@ public abstract class Unit {
         state = State.UNIT_INITIALIZED;
     }
 
-    protected SpiConfiguration getSpiConfig() {
+    protected SPIConfiguration getSpiConfig() {
         return spiConfig;
     }
 

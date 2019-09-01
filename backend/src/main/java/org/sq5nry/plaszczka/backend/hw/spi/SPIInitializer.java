@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.hw.common.BusInitializationException;
 
 @Component
-public class SpiInitializer {
-    private static final Logger logger = LoggerFactory.getLogger(SpiInitializer.class);
+public class SPIInitializer {
+    private static final Logger logger = LoggerFactory.getLogger(SPIInitializer.class);
 
     @Autowired
-    private SpiConfiguration spiConfig;
+    private SPIConfiguration spiConfig;
 
     public void initialize() throws BusInitializationException {
         logger.info("initializing SPI, channel={}, speed={}", spiConfig.getSpiChannel(), spiConfig.getSpiSpeed());

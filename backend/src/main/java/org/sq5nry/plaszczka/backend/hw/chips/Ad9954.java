@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
-import org.sq5nry.plaszczka.backend.hw.spi.GenericSpiChip;
-import org.sq5nry.plaszczka.backend.hw.spi.SpiConfiguration;
+import org.sq5nry.plaszczka.backend.hw.spi.GenericSPIChip;
+import org.sq5nry.plaszczka.backend.hw.spi.SPIConfiguration;
 
 /**
  * The AD9954 is a direct digital synthesizer (DDS) that uses advanced technology, coupled with an internal high speed,
@@ -27,7 +27,7 @@ import org.sq5nry.plaszczka.backend.hw.spi.SpiConfiguration;
  *
  * Basic implementation with no PLL, just frequency setting.
  */
-public class Ad9954 extends GenericSpiChip {
+public class Ad9954 extends GenericSPIChip {
     private static final Logger logger = LoggerFactory.getLogger(Ad9954.class);
 
     private static final byte REG_CFR1Info[] = {0x00};
@@ -42,7 +42,7 @@ public class Ad9954 extends GenericSpiChip {
 
     private GpioPinDigitalOutput reset, update;
 
-    public Ad9954(SpiConfiguration spiConfig, long refClk) {
+    public Ad9954(SPIConfiguration spiConfig, long refClk) {
         super(spiConfig);
         this.refClk = refClk;
     }

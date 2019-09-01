@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class I2cConfiguration {
+public class I2CConfiguration {
     @Value("${i2c.provider.class}")
     private String i2cProviderClass;
 

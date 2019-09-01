@@ -9,13 +9,13 @@ import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 
 import java.io.IOException;
 
-public class GenericI2cChip extends GenericChip {
-    private static final Logger logger = LoggerFactory.getLogger(GenericI2cChip.class);
+public class GenericI2CChip extends GenericChip {
+    private static final Logger logger = LoggerFactory.getLogger(GenericI2CChip.class);
 
     private I2CBus i2CBus;
     private I2CDevice device;
 
-    public GenericI2cChip(int address) {
+    public GenericI2CChip(int address) {
         super(address);
     }
 
@@ -25,7 +25,7 @@ public class GenericI2cChip extends GenericChip {
     }
 
     public GenericChip initialize() throws ChipInitializationException {
-        logger.debug("initialize: entering");
+        logger.info("generic I2C device initializer: entering");
         try {
             device = i2CBus.getDevice(address);
             if ((address >= 0x30 && address <= 0x37) || (address >= 0x50 && address <= 0x5F)) {
@@ -37,6 +37,7 @@ public class GenericI2cChip extends GenericChip {
                 device.write((byte) 0);
             }
             initialized = true;
+            logger.info("generic I2C device initializer: done");
         } catch (IOException e) {
             logger.warn("initialization failed", e);
             initialized = false;

@@ -60,7 +60,7 @@ public class NixieDisplayUnit extends Unit implements FrequencyDisplay, Reinitia
 
     @Override
     public void setFrequency(int frequency) throws IOException {
-        logger.info("setting frequency to {}Hz", frequency);
+        logger.info("setFrequency: {}Hz", frequency);
         this.frequency = frequency;
         update(ALL);
     }

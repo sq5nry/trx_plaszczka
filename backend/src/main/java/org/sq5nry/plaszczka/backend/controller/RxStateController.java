@@ -31,16 +31,16 @@ public class RxStateController {
 
     @RequestMapping(value = "/mgmt/initialize/rx", method = RequestMethod.GET, produces = "application/json")
     public Map<String, Unit.State> initialize() throws Exception {
-        logger.debug("rx path initialize requested");
+        logger.info("rx path initialize requested");
 
         Map<String, Unit.State> states = new HashMap<>();
         for(Unit unit: units.values()) {
             String name = unit.getClass().getSimpleName();
             try {
-                logger.debug("initializing chipset in {}", name);
+                logger.info("initializing chipset in {}", name);
                 unit.initializeChipset();
                 if (unit instanceof Reinitializable) {
-                    logger.debug("initializing unit {}", name);
+                    logger.info("initializing unit {}", name);
                     ((Reinitializable) unit).initializeUnit();
                 }
             } catch (Exception e) {

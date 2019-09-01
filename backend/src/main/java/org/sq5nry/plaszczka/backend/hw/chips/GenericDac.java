@@ -2,9 +2,9 @@ package org.sq5nry.plaszczka.backend.hw.chips;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2CChip;
 
-public abstract class GenericDac extends GenericI2cChip {
+public abstract class GenericDac extends GenericI2CChip {
     private static final Logger logger = LoggerFactory.getLogger(GenericDac.class);
 
     public GenericDac(int address) {

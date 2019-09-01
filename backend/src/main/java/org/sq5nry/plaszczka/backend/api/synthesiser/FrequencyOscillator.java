@@ -4,7 +4,7 @@ import org.sq5nry.plaszczka.backend.impl.Reinitializable;
 
 import java.io.IOException;
 
-public interface Dds extends Reinitializable {
+public interface FrequencyOscillator extends Reinitializable {
     /**
      * Generate frequency
      * @param freq Hz

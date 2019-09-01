@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.sq5nry.plaszczka.backend.hw.common.BusInitializationException;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.spi.SpiInitializer;
+import org.sq5nry.plaszczka.backend.hw.spi.SPIInitializer;
 
 import javax.annotation.PostConstruct;
 
@@ -26,7 +26,7 @@ public class Launcher {
     private I2CBusProvider i2cProv;
 
     @Autowired
-    private SpiInitializer spiProv;
+    private SPIInitializer spiProv;
 
 
     public static void main(String[] args) {

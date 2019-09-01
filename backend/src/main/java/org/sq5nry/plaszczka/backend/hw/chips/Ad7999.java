@@ -2,7 +2,7 @@ package org.sq5nry.plaszczka.backend.hw.chips;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2cChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2CChip;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ import java.io.IOException;
  *
  * https://www.analog.com/en/products/ad7999.html
  */
-public class Ad7999 extends GenericI2cChip {
+public class Ad7999 extends GenericI2CChip {
     private static final Logger logger = LoggerFactory.getLogger(Ad7999.class);
 
     private static final byte CONFIG_CH0 = 0x10;

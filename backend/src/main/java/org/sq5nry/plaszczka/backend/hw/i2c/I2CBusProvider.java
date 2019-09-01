@@ -19,7 +19,7 @@ public class I2CBusProvider {
     private static final Logger logger = LoggerFactory.getLogger(I2CBusProvider.class);
 
     @Autowired
-    private I2cConfiguration i2cConfig;
+    private I2CConfiguration i2cConfig;
 
 
     public I2CBus getBus() throws IOException, I2CFactory.UnsupportedBusNumberException {
