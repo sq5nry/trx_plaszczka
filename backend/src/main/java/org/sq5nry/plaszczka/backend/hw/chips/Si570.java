@@ -35,8 +35,12 @@ public class Si570 extends GenericI2CChip {
     private static final int REG_RES_FRE_MEMCTL = 135;
     private static final int REG_FREEZE_DCO = 137;
 
-    private static final double F0 = 156.250d;
+    private static final double F0 = 9.999951d; //TODO config
     private static final long FRACT_LEN = 1 << 28;
+
+    private static final float FDCO_MIN_GHZ = 4850;
+    private static final float FDCO_MAX_GHZ = 5670;
+
 
     private int dcoHighSpeedDivider;
     private int clkoutOutputDivider;
@@ -66,6 +70,9 @@ public class Si570 extends GenericI2CChip {
 
             byte n1Rf = (byte) getDevice().read(REG_N1_RF_01);
             clkoutOutputDivider = ((hsN1 & 0x1F) << 2) + (n1Rf >> 6);
+            if (1 == (clkoutOutputDivider & 1)) {
+                clkoutOutputDivider++;
+            }
             logger.info("CLK OUT Output Divider={}", clkoutOutputDivider);
 
             long rfreqRaw = Longs.fromByteArray(new byte[]{0,0,0,
@@ -92,14 +99,19 @@ public class Si570 extends GenericI2CChip {
      * @param freq Hz
      */
     public void setFrequency(int freq) throws IOException {
+        clkoutOutputDivider = 16;   //TODO calc
+
         logger.debug("setFrequency: {}Hz", freq);
         double fdco = (freq / 1000000) * dcoHighSpeedDivider * clkoutOutputDivider;
+        if (fdco < FDCO_MIN_GHZ || fdco > FDCO_MAX_GHZ) {
+            throw new IllegalArgumentException("fDCO outside valid range: " + fdco);
+        }
         long newRfreq = (long) ((fdco / fxtal) * FRACT_LEN);
 
         byte[] newRfData = Longs.toByteArray(newRfreq);
-        logger.debug("setFrequency: newRfreq={}", HexUtils.toHexString(newRfData));
+        logger.debug("setFrequency: fDCO={}MHz, newRfreq=0x{}", fdco, HexUtils.toHexString(newRfData));
 
-        getDevice().write(REG_FREEZE_DCO, (byte) 0x14);    //TODO readfirst
+        getDevice().write(REG_FREEZE_DCO, (byte) 0x10);    //TODO readfirst
         getDevice().write(REG_RF_05, newRfData[7]);
         getDevice().write(REG_RF_04, newRfData[6]);
         getDevice().write(REG_RF_03, newRfData[5]);
@@ -108,7 +120,7 @@ public class Si570 extends GenericI2CChip {
         logger.debug("setFrequency: REG_N1_RF_01={}", String. format("%02X", b));
         getDevice().write(REG_N1_RF_01, b);
 
-        getDevice().write(REG_FREEZE_DCO, (byte) 0x04);    //TODO readfirst
+        getDevice().write(REG_FREEZE_DCO, (byte) 0x00);    //TODO readfirst
         getDevice().write(REG_RES_FRE_MEMCTL, (byte) 0x40);    //TODO readfirst
         logger.debug("setFrequency: completed");
     }
