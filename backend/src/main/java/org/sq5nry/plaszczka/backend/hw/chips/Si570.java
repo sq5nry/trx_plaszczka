@@ -22,6 +22,9 @@ import java.io.IOException;
  * reliability. In addition, DSPLL clock synthesis provides superior supply noise
  * rejection, simplifying the task of generating low-jitter clocks in noisy environments
  * typically found in communication systems.
+ *
+ * This driver implements only a narrow output range of 31-36.8MHz as needed by BFO Unit.
+ * For a wider range, HSDIV and N1 coefficients must be estimated and also coarse re-tuning procedure applied.
  */
 public class Si570 extends GenericI2CChip {
     private static final Logger logger = LoggerFactory.getLogger(Si570.class);
@@ -35,25 +38,34 @@ public class Si570 extends GenericI2CChip {
     private static final int REG_RES_FRE_MEMCTL = 135;
     private static final int REG_FREEZE_DCO = 137;
 
-    private static final long F0 = 9999951; //TODO config
+    private static final long F0 = 9999951; //TODO config, a measured value
     private static final double FRACT_LEN = 1 << 28;
 
-    private static final float FDCO_MIN_GHZ = 4850;
-    private static final float FDCO_MAX_GHZ = 5670;
+    private static final float FDCO_MIN_MHZ = 4850;
+    private static final float FDCO_MAX_MHZ = 5670;
 
-    public static final int HSDIV_4 = 0x0;
-    public static final int HSDIV_5 = 0x1;
-    public static final int HSDIV_6 = 0x2;
-    public static final int HSDIV_7 = 0x3;
-    public static final int HSDIV_9 = 0x5;
-    public static final int HSDIV_11 = 0x7;
+    private static final int HS_4 = 0x0;
+    private static final int HS_5 = 0x1;
+    private static final int HS_6 = 0x2;
+    private static final int HS_7 = 0x3;
+    private static final int HS_9 = 0x5;
+    private static final int HS_11 = 0x7;
+    private static final int[] DIV_TO_HS = {0, 0, 0, 0, HS_4, HS_5, HS_6, HS_7, 0, HS_9, 0, HS_11};
+    private static final int[] HS_TO_DIV = {4, 5, 6, 7, 0, 9, 0, 11};
+    private static final int ONE_MHZ = 1000000;
+
+    // these dividers establish 31-36.8MHz fixed output range
+    private static int ASSUMED_HS = HS_11;
+    private static int ASSUMED_N1DIV = 14;
+
+    private static int OUT_MIN_F_HZ;
+    private static int OUT_MAX_F_HZ;
+
+    private static int INITIAL_FREQ = 36000000;
 
     private int dcoHighSpeedDivider;
     private int clkoutOutputDivider;
-    private double rfreq;
-    private double fxtal;
-
-    long rfreqRaw;
+    private double FXTAL;
 
     public Si570(int address) {
         super(address);
@@ -70,122 +82,86 @@ public class Si570 extends GenericI2CChip {
         //read initial oscillator conditions
         logger.debug("initializing Si570");
         try {
-            int hsN1 = getDevice().read(REG_HS_N1);
-            switch (hsN1 >> 5) {
-                case HSDIV_4: dcoHighSpeedDivider = 4; break;
-                case HSDIV_5: dcoHighSpeedDivider = 5; break;
-                case HSDIV_6: dcoHighSpeedDivider = 6; break;
-                case HSDIV_7: dcoHighSpeedDivider = 7; break;
-                case HSDIV_9: dcoHighSpeedDivider = 9; break;
-                case HSDIV_11: dcoHighSpeedDivider = 11; break;
-                default: throw new ChipInitializationException("DCO High Speed Divider value not used: " + hsN1);
-            }
+            final int hsN1 = getDevice().read(REG_HS_N1);
+            dcoHighSpeedDivider = HS_TO_DIV[hsN1 >> 5];
             logger.info("DCO High Speed Divider={}", dcoHighSpeedDivider);
 
-            byte n1Rf = (byte) getDevice().read(REG_N1_RF_01);
-            clkoutOutputDivider = ((hsN1 & 0x1F) << 2) + ((n1Rf & 0x1F) >> 6) + 1;
-            if (1 == (clkoutOutputDivider & 1)) {
-                clkoutOutputDivider++;
-            }
-
+            final byte n1Rf = (byte) getDevice().read(REG_N1_RF_01);
+            clkoutOutputDivider = getN1DividerSetting(hsN1, n1Rf);
             logger.info("CLK OUT Output Divider={}", clkoutOutputDivider);
 
-            rfreqRaw = (byte) (n1Rf & 0x3F);
-            rfreqRaw = (rfreqRaw << 8) + getDevice().read(REG_RF_02);
-            rfreqRaw = (rfreqRaw << 8) + getDevice().read(REG_RF_03);
-            rfreqRaw = (rfreqRaw << 8) + getDevice().read(REG_RF_04);
-            rfreqRaw = (rfreqRaw << 8) + getDevice().read(REG_RF_05);
+            double rfreq = (double) calculateRfreq(n1Rf) / FRACT_LEN;
+            logger.info("RFREQ={}", rfreq);
 
-            rfreq = (double) rfreqRaw / FRACT_LEN;
-            logger.info("rfreqRaw={}, RFREQ={}", rfreqRaw, rfreq);
+            FXTAL = F0 * dcoHighSpeedDivider * clkoutOutputDivider / rfreq;
+            logger.info("actual crystal frequency={}[MHz], DCO running at {}[MHz]", FXTAL, FXTAL * rfreq);
 
-            fxtal = F0 * dcoHighSpeedDivider * clkoutOutputDivider / rfreq;
-            logger.info("actual crystal frequency={}MHz", fxtal);
-            logger.info("DCO running at {}MHz", fxtal * rfreq);
+            OUT_MIN_F_HZ = (int) (FDCO_MIN_MHZ * ONE_MHZ / (HS_TO_DIV[ASSUMED_HS] * ASSUMED_N1DIV));
+            OUT_MAX_F_HZ = (int) (FDCO_MAX_MHZ * ONE_MHZ / (HS_TO_DIV[ASSUMED_HS] * ASSUMED_N1DIV));
+            logger.info("supported output frequency range {}-{}[Hz]", OUT_MIN_F_HZ, OUT_MAX_F_HZ);
 
-            //logger.info("xxx={}, best n={}, best h={}", si570_calc_divs(36000000), out_n1, out_hs_div);
-            clkoutOutputDivider = 14;
-            dcoHighSpeedDivider = 11;
+            //for other frequency ranges, these divider values must be established
+            clkoutOutputDivider = ASSUMED_N1DIV;
+            dcoHighSpeedDivider = HS_TO_DIV[ASSUMED_HS];
+            setFrequency0(INITIAL_FREQ, false);
         } catch (IOException e) {
             throw new ChipInitializationException("failed to read registers for initialization", e);
         }
         return this;
     }
 
-    long out_rfreq;
-    int out_n1;
-    int out_hs_div;
-    int si570_calc_divs(long frequency)
-    {
-        int i;
-        int n1, hs_div;
-        long fdco, best_fdco = Long.MAX_VALUE;
-        int si570_hs_div_values[] = { 11, 9, 7, 6, 5, 4 };
-
-        for (i = 0; i < si570_hs_div_values.length; i++) {
-            hs_div = si570_hs_div_values[i];
-            /* Calculate lowest possible value for n1 */
-            n1 = (int) ((4850000000L / hs_div) / frequency);
-            if (n1 != 0 || (1 == (n1 & 1))) {
-                n1++;
-            }
-            while (n1 <= 128) {
-                fdco = frequency * hs_div * n1;
-                if (fdco > 5670000000L)
-                    break;
-                if (fdco >= 4850000000L && fdco < best_fdco) {
-				out_n1 = n1;
-				out_hs_div = hs_div;
-				out_rfreq = (long) ((fdco << 28) / fxtal);
-                    best_fdco = fdco;
-                }
-                n1 += (n1 == 1 ? 1 : 2);
-            }
-        }
-
-        if (best_fdco == Long.MAX_VALUE)
-            return -1;
-
-        return 0;
-    }
-
-//    /**
-//     * Set frequency in Hz
-//     * @param freq Hz
-//     */
-//    public void setFrequency(double freq) throws IOException {
-//
-//        logger.debug("setFrequency: completed");
-//    }
-
     /**
      * Set frequency in Hz
      * @param freq Hz
      */
     public void setFrequency(int freq) throws IOException {
+        setFrequency0(freq, true);
+    }
+
+    private void setFrequency0(int freq, boolean isSmallChange) throws IOException {
         logger.debug("setFrequency: {}Hz", freq);
-        double fdco = (freq / 1000000) * dcoHighSpeedDivider * clkoutOutputDivider;
-        if (fdco < FDCO_MIN_GHZ || fdco > FDCO_MAX_GHZ) {
+        double fdco = (freq / ONE_MHZ) * dcoHighSpeedDivider * clkoutOutputDivider;
+        if (fdco < FDCO_MIN_MHZ || fdco > FDCO_MAX_MHZ) {
             throw new IllegalArgumentException("fDCO outside valid range: " + fdco);
         }
-        long newRfreq = (long) ((  (fdco*FRACT_LEN) / (fxtal / 1000000)));
+        long newRfreq = (long) (((fdco * FRACT_LEN) / (FXTAL / ONE_MHZ)));
 
         logger.debug("newRfreq={}", newRfreq);
         byte[] newRfData = Longs.toByteArray(newRfreq);
         logger.debug("setFrequency: fDCO={}MHz, newRfreq=0x{}", fdco, HexUtils.toHexString(newRfData));
 
-        write(REG_FREEZE_DCO, (byte) 0x10);
+        writeRegisters(newRfData, isSmallChange);
+        logger.debug("setFrequency: completed");
+    }
 
-        write(REG_HS_N1, (byte) ((HSDIV_11 << 5) | ((clkoutOutputDivider-1) >> 2)));
+    /**
+     * Updates registers.
+     * Divider settings taken from global variables //TODO
+     *
+     * @param newRfData fractional divider setting
+     * @param isSmallChange within +/-3500ppm
+     * @throws IOException
+     */
+    private void writeRegisters(byte[] newRfData, boolean isSmallChange) throws IOException {
+        if (isSmallChange){
+            write(REG_RES_FRE_MEMCTL, (byte) 0x20); // 135@FreezeM
+        } else {
+            write(REG_FREEZE_DCO, (byte) 0x10);     // 137&FreezeDCO
+        }
+
+        write(REG_HS_N1, (byte) ((DIV_TO_HS[dcoHighSpeedDivider] << 5) | ((clkoutOutputDivider-1) >> 2)));
         write(REG_N1_RF_01, (byte) (((clkoutOutputDivider-1) << 6) | (newRfData[3] & 0x3F)));
         write(REG_RF_02, newRfData[4]);
         write(REG_RF_03, newRfData[5]);
         write(REG_RF_04, newRfData[6]);
         write(REG_RF_05, newRfData[7]);
 
-        write(REG_FREEZE_DCO, (byte) 0x00);
-        write(REG_RES_FRE_MEMCTL, (byte) 0x40);
-        logger.debug("setFrequency: completed");
+        if (isSmallChange){
+            write(REG_RES_FRE_MEMCTL, (byte) 0x00); // 135@Un-FreezeM
+        } else {
+            write(REG_FREEZE_DCO, (byte) 0x00);     // 137&Un-FreezeDCO
+            write(REG_RES_FRE_MEMCTL, (byte) 0x40); // 135@NewFreq
+        }
     }
 
     private void write(int reg, byte data) throws IOException {
@@ -206,5 +182,23 @@ public class Si570 extends GenericI2CChip {
         if (1 == (reg & 1)) {
             throw new ChipInitializationException("reset timeout");
         }
+    }
+
+    private long calculateRfreq(byte n1Rf) throws IOException {
+        long rfreqRaw;
+        rfreqRaw = (byte) (n1Rf & 0x3F);
+        rfreqRaw = (rfreqRaw << 8) + getDevice().read(REG_RF_02);
+        rfreqRaw = (rfreqRaw << 8) + getDevice().read(REG_RF_03);
+        rfreqRaw = (rfreqRaw << 8) + getDevice().read(REG_RF_04);
+        rfreqRaw = (rfreqRaw << 8) + getDevice().read(REG_RF_05);
+        return rfreqRaw;
+    }
+
+    private static int getN1DividerSetting(int hsN1, byte n1Rf) {
+        int div = ((hsN1 & 0x1F) << 2) + ((n1Rf & 0x1F) >> 6) + 1;
+        if (1 == (div & 1)) {
+            div++;
+        }
+        return div;
     }
 }
