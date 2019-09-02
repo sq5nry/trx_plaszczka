@@ -1,7 +1,6 @@
 package org.sq5nry.plaszczka.backend.hw.chips;
 
 import com.google.common.primitives.Longs;
-import org.apache.tomcat.util.buf.HexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
@@ -29,6 +28,9 @@ import java.io.IOException;
 public class Si570 extends GenericI2CChip {
     private static final Logger logger = LoggerFactory.getLogger(Si570.class);
 
+    /**
+     * I2C registers
+     */
     private static final int REG_HS_N1 = 7;
     private static final int REG_N1_RF_01 = 8;
     private static final int REG_RF_02 = 9;
@@ -38,11 +40,17 @@ public class Si570 extends GenericI2CChip {
     private static final int REG_RES_FRE_MEMCTL = 135;
     private static final int REG_FREEZE_DCO = 137;
 
-    private static final long F0 = 9999951; //TODO config, a measured value
+    /**
+     * Initial actually measured output frequency in Hz
+     */
+    private static final long F0_HZ = 9999951; //TODO config
     private static final double FRACT_LEN = 1 << 28;
 
-    private static final float FDCO_MIN_MHZ = 4850;
-    private static final float FDCO_MAX_MHZ = 5670;
+    /**
+     * Internal DCO frequency range
+     */
+    private static final long FDCO_MIN_HZ = 4850000000L;
+    private static final long FDCO_MAX_HZ = 5670000000L;
 
     private static final int HS_4 = 0x0;
     private static final int HS_5 = 0x1;
@@ -58,14 +66,15 @@ public class Si570 extends GenericI2CChip {
     private static int ASSUMED_HS = HS_11;
     private static int ASSUMED_N1DIV = 14;
 
-    private static int OUT_MIN_F_HZ;
-    private static int OUT_MAX_F_HZ;
+    // precisely calculated available output frequency range
+    private static long OUT_MIN_F_HZ;
+    private static long OUT_MAX_F_HZ;
 
     private static int INITIAL_FREQ = 36000000;
 
     private int dcoHighSpeedDivider;
     private int clkoutOutputDivider;
-    private double FXTAL;
+    private double FXTAL_HZ;
 
     public Si570(int address) {
         super(address);
@@ -90,14 +99,16 @@ public class Si570 extends GenericI2CChip {
             clkoutOutputDivider = getN1DividerSetting(hsN1, n1Rf);
             logger.info("CLK OUT Output Divider={}", clkoutOutputDivider);
 
-            double rfreq = (double) calculateRfreq(n1Rf) / FRACT_LEN;
+            final long rfr = calculateRfreq(n1Rf);  //12 000 000 000  around +/-1 000 000 000
+
+            final double rfreq = (double) rfr / FRACT_LEN;
             logger.info("RFREQ={}", rfreq);
 
-            FXTAL = F0 * dcoHighSpeedDivider * clkoutOutputDivider / rfreq;
-            logger.info("actual crystal frequency={}[MHz], DCO running at {}[MHz]", FXTAL, FXTAL * rfreq);
+            FXTAL_HZ = (F0_HZ * dcoHighSpeedDivider * clkoutOutputDivider * FRACT_LEN) / rfr;
+            logger.info("actual crystal frequency={}[Hz], DCO running at {}[Hz]", FXTAL_HZ, FXTAL_HZ * rfreq);
 
-            OUT_MIN_F_HZ = (int) (FDCO_MIN_MHZ * ONE_MHZ / (HS_TO_DIV[ASSUMED_HS] * ASSUMED_N1DIV));
-            OUT_MAX_F_HZ = (int) (FDCO_MAX_MHZ * ONE_MHZ / (HS_TO_DIV[ASSUMED_HS] * ASSUMED_N1DIV));
+            OUT_MIN_F_HZ = FDCO_MIN_HZ / (HS_TO_DIV[ASSUMED_HS] * ASSUMED_N1DIV);
+            OUT_MAX_F_HZ = FDCO_MAX_HZ / (HS_TO_DIV[ASSUMED_HS] * ASSUMED_N1DIV);
             logger.info("supported output frequency range {}-{}[Hz]", OUT_MIN_F_HZ, OUT_MAX_F_HZ);
 
             //for other frequency ranges, these divider values must be established
@@ -114,21 +125,30 @@ public class Si570 extends GenericI2CChip {
      * Set frequency in Hz
      * @param freq Hz
      */
-    public void setFrequency(int freq) throws IOException {
+    public void setFrequency(long freq) throws IOException {
+        if (OUT_MIN_F_HZ > freq || freq > OUT_MAX_F_HZ) {
+            throw new IllegalArgumentException("input frequency out of range");
+        }
         setFrequency0(freq, true);
     }
 
-    private void setFrequency0(int freq, boolean isSmallChange) throws IOException {
+    /**
+     * Set frequency in Hz
+     * @param freq Hz
+     * @param isSmallChange +/-3500ppm
+     * @throws IOException
+     */
+    private void setFrequency0(long freq, boolean isSmallChange) throws IOException {
         logger.debug("setFrequency: {}Hz", freq);
-        double fdco = (freq / ONE_MHZ) * dcoHighSpeedDivider * clkoutOutputDivider;
-        if (fdco < FDCO_MIN_MHZ || fdco > FDCO_MAX_MHZ) {
+        final long fdco = freq * dcoHighSpeedDivider * clkoutOutputDivider;
+        if (fdco < FDCO_MIN_HZ || fdco > FDCO_MAX_HZ) {
             throw new IllegalArgumentException("fDCO outside valid range: " + fdco);
         }
-        long newRfreq = (long) (((fdco * FRACT_LEN) / (FXTAL / ONE_MHZ)));
+        long newRfreq = (long) ((fdco / FXTAL_HZ) * FRACT_LEN);
 
         logger.debug("newRfreq={}", newRfreq);
         byte[] newRfData = Longs.toByteArray(newRfreq);
-        logger.debug("setFrequency: fDCO={}MHz, newRfreq=0x{}", fdco, HexUtils.toHexString(newRfData));
+        logger.debug("setFrequency: fDCO={}[Hz], newRfreq={}", fdco, newRfreq);
 
         writeRegisters(newRfData, isSmallChange);
         logger.debug("setFrequency: completed");
@@ -165,7 +185,9 @@ public class Si570 extends GenericI2CChip {
     }
 
     private void write(int reg, byte data) throws IOException {
-        logger.debug("write: reg={}, data=0x{}", reg, String.format("%02X", data));
+        if (logger.isDebugEnabled()) {
+            logger.debug("write: reg={}, data=0x{}", reg, String.format("%02X", data));
+        }
         getDevice().write(reg, data);
     }
 
