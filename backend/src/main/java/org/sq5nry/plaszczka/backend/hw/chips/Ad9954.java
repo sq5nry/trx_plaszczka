@@ -119,8 +119,8 @@ public class Ad9954 extends GenericSPIChip {
     public String toString() {
         return "AD9954{" +
                 "refClk=" + refClk +
-                ", reset=" + reset.getName() +
-                ", update=" + update.getName() +
+                ", reset=" + reset +
+                ", update=" + update +
                 '}';
     }
 }

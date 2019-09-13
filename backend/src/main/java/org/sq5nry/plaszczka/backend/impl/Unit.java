@@ -119,8 +119,8 @@ public abstract class Unit {
     }
 
     public void initializeUnit() throws Exception {
-        logger.debug("default unit initialization: no-op");
         state = State.UNIT_INITIALIZED;
+        logger.info("{}{} default initialization{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
     }
 
     protected SPIConfiguration getSpiConfig() {

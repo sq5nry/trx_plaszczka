@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.Mode;
 import org.sq5nry.plaszczka.backend.api.mixer.HModeMixer;
+import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Ad5321;
@@ -41,6 +42,7 @@ public class FrontEndMixerUnit extends Unit implements HModeMixer, Reinitializab
         adcBias.setPDMode(Ad5321.PD_MODE.PD_NORMAL_OPERATION);
         adcSquarer.setVoltage(0.0f);
         adcSquarer.setPDMode(Ad5321.PD_MODE.PD_NORMAL_OPERATION);
+        logger.info("{}{} initialized{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
     }
 
     @Override

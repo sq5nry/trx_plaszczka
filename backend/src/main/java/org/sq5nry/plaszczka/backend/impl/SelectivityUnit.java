@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.selectivity.Bandwidth;
 import org.sq5nry.plaszczka.backend.api.selectivity.Selectivity;
+import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
@@ -63,6 +64,7 @@ public class SelectivityUnit extends Unit implements Selectivity, Reinitializabl
         logger.info("initializing unit with defaults: {}", defBw);
         Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         expander.writePort(defBw.getP());
+        logger.info("{}{} initialized{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
     }
 
     @Override

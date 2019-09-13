@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.Mode;
 import org.sq5nry.plaszczka.backend.api.detector.Detector;
+import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
@@ -62,10 +63,10 @@ public class QSDUnit extends Unit implements Detector {
     @Override
     public void initializeUnit() throws Exception {
         super.initializeUnit();
-        logger.info("initializing unit with defaults");
         setRoofingFilter(Mode.SSB);
         setEnabled(false);
         update();
+        logger.info("{}{} initialized{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
     }
 
     @Override

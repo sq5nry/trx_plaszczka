@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.display.FrequencyDisplay;
 import org.sq5nry.plaszczka.backend.hw.chips.Mcp23017;
+import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 
@@ -51,6 +52,7 @@ public class NixieDisplayUnit extends Unit implements FrequencyDisplay, Reinitia
         super.initializeUnit();
         initializeExpander((Mcp23017) getChip(EXPANDER_A_I2CADDR));
         initializeExpander((Mcp23017) getChip(EXPANDER_B_I2CADDR));
+        logger.info("{}{} initialized{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
     }
 
     private static void initializeExpander(Mcp23017 expander) throws IOException {

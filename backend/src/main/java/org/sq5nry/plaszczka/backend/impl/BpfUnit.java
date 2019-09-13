@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.inputfilter.Band;
 import org.sq5nry.plaszczka.backend.api.inputfilter.BandPassFilter;
+import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8575;
@@ -54,6 +55,9 @@ public class BpfUnit extends Unit implements BandPassFilter {
         }
 
         public static FeatureBits getByBand(Band band) {
+            if (band == null) {
+                return FeatureBits.NONE;
+            }
             for(FeatureBits featBits: FeatureBits.values()) {
                 if (featBits.relatedBand == band) {
                     return featBits;
@@ -77,6 +81,7 @@ public class BpfUnit extends Unit implements BandPassFilter {
     public void initializeUnit() throws Exception {
         super.initializeUnit();
         update();
+        logger.info("{}{} initialized{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
     }
 
     @Override
@@ -99,9 +104,16 @@ public class BpfUnit extends Unit implements BandPassFilter {
 
     private void update() throws IOException {
         FeatureBits bits = FeatureBits.getByBand(band);
+        ensureBufferInitialized();  //TODO analyze spring initalization order, path from super() leads to here and null buffer as well
         buffer[0] = bits.getP0();
         buffer[1] = (byte) (bits.getP1() | (attenuation << 4));
         ((Pcf8575) getChip(EXPANDER_ADDR)).writePort(buffer);
+    }
+
+    private void ensureBufferInitialized() {
+        if (buffer == null) {
+            buffer = new byte[2];
+        }
     }
 
     public Band getBand() {
