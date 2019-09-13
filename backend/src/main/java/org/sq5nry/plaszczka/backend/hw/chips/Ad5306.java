@@ -95,6 +95,7 @@ public class Ad5306 extends GenericDac {
 
     public Ad5306(int address) {
         super(address);
+        name = "AD5306";
         buffer = new byte[4];
     }
 

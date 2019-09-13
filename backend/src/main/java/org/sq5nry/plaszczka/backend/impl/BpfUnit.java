@@ -18,18 +18,22 @@ public class BpfUnit extends Unit implements BandPassFilter {
     private static final Logger logger = LoggerFactory.getLogger(BpfUnit.class);
 
     private static final int EXPANDER_ADDR = 0x27;//TODO config
+    public static final int MIN_ATTENUATION_DB = 0;
+    public static final int MAX_ATTENUATION_DB = 30;
 
-    private static final String DEFAULT_BAND = "20m"; //TODO from config doesnt work
+    public static final int DEFAULT_ATTENUATION_DB = MAX_ATTENUATION_DB;
+    public static final Band DEFAULT_BAND = Band.NONE;
 
-    private Band band;
-    private byte attenuation = 0;
+    private Band band = DEFAULT_BAND;
+    private byte attenuation = DEFAULT_ATTENUATION_DB;
     private byte[] buffer;
 
     private enum FeatureBits {
         M6(Band.M6, (byte)0x00, (byte)0x02), M10(Band.M10, (byte)0x00, (byte)0x01), M12(Band.M12, (byte)0x80, (byte)0x00),
         M15(Band.M15, (byte)0x40, (byte)0x00), M17(Band.M17, (byte)0x20, (byte)0x00), M20(Band.M20, (byte)0x10, (byte)0x00),
         M30(Band.M30, (byte)0x08, (byte)0x00), M40(Band.M40, (byte)0x04, (byte)0x00), M80(Band.M80, (byte)0x02, (byte)0x00),
-        M160(Band.M160, (byte)0x01, (byte)0x00), M4(Band.M4, (byte)0x00, (byte)0x08), M60(Band.M60, (byte)0x00, (byte)0x04);
+        M160(Band.M160, (byte)0x01, (byte)0x00), M4(Band.M4, (byte)0x00, (byte)0x08), M60(Band.M60, (byte)0x00, (byte)0x04),
+        NONE(Band.NONE, (byte)0x00, (byte)0x00);
 
         Band relatedBand;
         byte p0;
@@ -62,6 +66,7 @@ public class BpfUnit extends Unit implements BandPassFilter {
     @Autowired
     public BpfUnit(I2CBusProvider i2cBusProv) throws Exception {
         super(i2cBusProv);
+        buffer = new byte[2];
     }
 
     @Override
@@ -71,7 +76,7 @@ public class BpfUnit extends Unit implements BandPassFilter {
 
     public void initializeUnit() throws Exception {
         super.initializeUnit();
-        setBand(Band.fromMeters(DEFAULT_BAND));
+        update();
     }
 
     @Override
@@ -82,20 +87,18 @@ public class BpfUnit extends Unit implements BandPassFilter {
     }
 
     @Override
-    public void setAttenuation(int db) throws IOException {
-        if (db < 0 || db > 30) {
-            throw new IllegalArgumentException("Attenuation out of range 0..30dB");
+    public int setAttenuation(int db) throws IOException {
+        if (db < MIN_ATTENUATION_DB || db > MAX_ATTENUATION_DB) {
+            throw new IllegalArgumentException("Attenuation out of range " + MIN_ATTENUATION_DB + ".." + MAX_ATTENUATION_DB + "dB");
         }
-        logger.info("setting attenuation to {}dB", db);
-        this.attenuation = (byte) (db >> 1);
+        attenuation = (byte) (db >> 1);
+        logger.info("requested attenuation {}dB", db);
         update();
+        return getAttenuation();
     }
 
     private void update() throws IOException {
         FeatureBits bits = FeatureBits.getByBand(band);
-        if (buffer == null) {
-            buffer = new byte[2];
-        }
         buffer[0] = bits.getP0();
         buffer[1] = (byte) (bits.getP1() | (attenuation << 4));
         ((Pcf8575) getChip(EXPANDER_ADDR)).writePort(buffer);

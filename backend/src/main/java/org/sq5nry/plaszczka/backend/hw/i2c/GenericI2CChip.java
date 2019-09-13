@@ -5,6 +5,7 @@ import com.pi4j.io.i2c.I2CDevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
+import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class GenericI2CChip extends GenericChip {
             initialized = true;
             logger.info("generic I2C device initializer: done");
         } catch (IOException e) {
-            logger.warn("initialization failed", e);
+            logger.warn(ConsoleColours.RED + "initialization failed for " + getClass().getSimpleName() + ConsoleColours.RESET, e);
             initialized = false;
             throw new ChipInitializationException(e);
         }

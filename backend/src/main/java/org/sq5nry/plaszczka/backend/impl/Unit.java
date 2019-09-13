@@ -5,9 +5,10 @@ import com.pi4j.io.i2c.I2CBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
+import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
-import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2CChip;
 import org.sq5nry.plaszczka.backend.hw.gpio.GpioControllerProvider;
+import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2CChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.spi.SPIConfiguration;
 
@@ -43,7 +44,7 @@ public abstract class Unit {
         bus = i2cBusProv.getBus();
         if (gpioProv != null) gpioController = gpioProv.getGpioController();
 
-        createChipset();
+        createChipset0();
         initializeChipset();
         if (state == State.CHIPSET_INITIALIZED) {
             try {
@@ -57,7 +58,7 @@ public abstract class Unit {
         logger.info("=============== created {}", getName());
     }
 
-    private void createChipset() throws Exception {
+    private void createChipset0() {
         logger.info("createChipset: entering");
         List<GenericChip> chipList = new ArrayList<>();
         createChipset(chipList);
@@ -69,7 +70,12 @@ public abstract class Unit {
         }
     }
 
-    public abstract void createChipset(List<GenericChip> chipset) throws Exception;
+    /**
+     * Create chipset be inserting chips into the list.
+     * @param chipset chip list
+     * @throws Exception
+     */
+    public abstract void createChipset(List<GenericChip> chipset);
 
     public GenericChip getChip(int address) {
         return chipset.get(address);
@@ -102,7 +108,7 @@ public abstract class Unit {
                 }
 
                 chip.initialize();
-                logger.info("initializeChipset: initialization of chip={} complete", chip);
+                logger.info("initializeChipset: {}initialization of chip={} complete{}", ConsoleColours.GREEN, chip, ConsoleColours.RESET);
             }
             state = State.CHIPSET_INITIALIZED;
         } catch(ChipInitializationException e) {

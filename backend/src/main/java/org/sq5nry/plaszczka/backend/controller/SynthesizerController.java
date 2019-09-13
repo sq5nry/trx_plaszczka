@@ -14,15 +14,15 @@ public class SynthesizerController {
     private static final Logger logger = LoggerFactory.getLogger(SynthesizerController.class);
 
     @Autowired
-    VfoUnit ddsUnit;
+    VfoUnit vfoUnit;
 
     @Autowired
     BfoUnit bfoUnit;
 
     @GetMapping(value = "/vfo/{freq}")
-    public String setVfoFrequency(@PathVariable int freq) throws Exception {
+    public String setVfoFrequency(@PathVariable int freq) {
         logger.debug("synthesizer VFO frequency requested {}Hz", freq);
-        ddsUnit.setFrequency(freq);
+        vfoUnit.setFrequency(freq);
         return "result=OK";
     }
 

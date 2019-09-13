@@ -17,7 +17,8 @@ import static org.apache.http.protocol.HTTP.USER_AGENT;
 public class BackendCommunicator {
     private static final Logger logger = Logger.getLogger(BackendCommunicator.class);
 
-    public static final String LO_DDS = "/lo/";
+    public static final String VFO = "/vfo/";
+    public static final String BFO = "/bfo/";
 
     public static final String FREQ_DISPLAY = "/frequencyDisplay/freq/";
 

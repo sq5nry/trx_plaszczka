@@ -54,6 +54,7 @@ public class Ad5242 extends GenericI2CChip {
 
     public Ad5242(int address) {
         super(address);
+        name = "AD5242";
     }
 
     public void setData(int data, Rdac rdac) throws IOException {

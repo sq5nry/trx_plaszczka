@@ -20,6 +20,7 @@ public class Pcf8574 extends GenericI2CChip {
 
     public Pcf8574(int address) {
         super(address);
+        name = "PCF8574";
     }
 
     /**

@@ -16,6 +16,7 @@ import java.io.IOException;
 public class Pcf8575 extends Pcf8574 {
     public Pcf8575(int address) {
         super(address);
+        name = "PCF8575";
     }
 
     public void writePort(byte p0, byte p1) throws IOException {

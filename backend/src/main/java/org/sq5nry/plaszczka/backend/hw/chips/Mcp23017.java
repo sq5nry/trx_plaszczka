@@ -34,6 +34,7 @@ public class Mcp23017 extends GenericI2CChip {
 
     public Mcp23017(int address) {
         super(address);
+        name = "MCP23017";
     }
 
     public void writePort(Mcp23017.Port port, byte value) throws IOException {

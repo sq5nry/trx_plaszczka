@@ -44,6 +44,7 @@ public class Ad9954 extends GenericSPIChip {
 
     public Ad9954(SPIConfiguration spiConfig, long refClk) {
         super(spiConfig);
+        name = "AD9954";
         this.refClk = refClk;
     }
 
@@ -118,8 +119,8 @@ public class Ad9954 extends GenericSPIChip {
     public String toString() {
         return "AD9954{" +
                 "refClk=" + refClk +
-                ", reset=" + reset +
-                ", update=" + update +
+                ", reset=" + reset.getName() +
+                ", update=" + update.getName() +
                 '}';
     }
 }

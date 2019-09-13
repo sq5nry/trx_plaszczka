@@ -63,7 +63,7 @@ public class AudioUnit extends Unit implements AfAmplifier, Reinitializable {
         Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch (channel) {
             case BOTH:
-                audioProc.setChannel(Tda7309.CHANNEL_BOTH); //TODO check if volume set right way. If so, send bytes at once
+                audioProc.setChannel(Tda7309.CHANNEL_BOTH);
                 volume_l = volume_r = volume;
                 break;
             case LEFT:

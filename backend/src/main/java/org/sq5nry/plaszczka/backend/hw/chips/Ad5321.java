@@ -43,6 +43,7 @@ public class Ad5321 extends GenericDac {
 
     public Ad5321(int address) {
         super(address);
+        name = "AD5321";
         pdMode = PD_MODE.PD_POWER_DOWN_HI_Z;
     }
 

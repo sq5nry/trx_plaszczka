@@ -11,7 +11,6 @@ import org.sq5nry.plaszczka.backend.hw.gpio.GpioControllerProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.spi.SPIConfiguration;
 
-import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -27,13 +26,13 @@ public class VfoUnit extends Unit implements FrequencyOscillator {
     }
 
     @Override
-    public void setFrequency(int freq) throws IOException {
+    public void setFrequency(int freq) {
         logger.info("setFrequency: {}Hz", freq);
         dds.setFrequency(freq);
     }
 
     @Override
-    public void createChipset(List<GenericChip> chipset) throws Exception {
+    public void createChipset(List<GenericChip> chipset) {
         logger.info("createChipset: entering");
         chipset.add(dds = new Ad9954(getSpiConfig(), 500000000));
         logger.info("createChipset: DDS={}", dds);

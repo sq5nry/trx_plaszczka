@@ -8,6 +8,7 @@ public interface BandPassFilter {
     /**
      * Enable variable attenuator before a filter
      * @param db Attenuation in dB from 2 to 30[dB]
+     * @return actual set attenuation
      */
-    void setAttenuation(int db) throws IOException;
+    int setAttenuation(int db) throws IOException;
 }

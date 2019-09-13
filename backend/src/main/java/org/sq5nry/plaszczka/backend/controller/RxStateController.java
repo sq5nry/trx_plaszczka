@@ -38,7 +38,7 @@ public class RxStateController {
             String name = unit.getClass().getSimpleName();
             try {
                 logger.info("initializing chipset in {}", name);
-                unit.initializeChipset();
+                unit.initializeChipset();   //TODO how about also initializeUnit separately?
                 if (unit instanceof Reinitializable) {
                     logger.info("initializing unit {}", name);
                     ((Reinitializable) unit).initializeUnit();

@@ -78,6 +78,7 @@ public class Si570 extends GenericI2CChip {
 
     public Si570(int address) {
         super(address);
+        name = "Si570";
     }
 
     @Override

@@ -7,11 +7,17 @@ import org.slf4j.LoggerFactory;
 public abstract class GenericChip {
     private static final Logger logger = LoggerFactory.getLogger(GenericChip.class);
 
+    protected String name;
     protected int address;
     protected boolean initialized;
 
     private GpioController controller;
     private boolean isGpioReal;
+
+    public GenericChip(int address, String name) {
+        this(address);
+        this.name = name;
+    }
 
     public GenericChip(int address) {
         this.address = address;
@@ -22,6 +28,10 @@ public abstract class GenericChip {
 
     public int getAddress() {
         return address;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public abstract boolean needsGpio();
@@ -50,11 +60,6 @@ public abstract class GenericChip {
 
     @Override
     public String toString() {
-        return "GenericChip{" +
-                "address=" + Integer.toHexString(address) +
-                ", initialized=" + initialized +
-                ", controller=" + controller +
-                ", needsGpio=" + needsGpio() +
-                '}';
+        return name + "@" + Integer.toHexString(address) + (needsGpio() ? "/GPIO=" + controller.toString() : "");
     }
 }

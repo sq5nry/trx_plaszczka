@@ -47,6 +47,7 @@ public class Tda7309 extends GenericI2CChip {
 
     public Tda7309(int address) {
         super(address);
+        name = "TDA7309";
     }
 
     //TODO i2c reports error (but chip accepts ok) for any odd value written, need to replace? suppress err for now

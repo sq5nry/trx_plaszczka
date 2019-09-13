@@ -28,9 +28,6 @@ public class GpioTest {
         dev.write((byte) 0x00);
         logger.info("I2CDevice test done");
 
-        //PlatformManager.setPlatform(Platform.BANANAPI);
-        //GpioFactory.setDefaultProvider(new BananaPiGpioProvider());
-
         Pin[] pins = new Pin[]{GPIO_00, GPIO_02};
         GpioPinDigitalOutput[] outs = new GpioPinDigitalOutput[pins.length];
 
