@@ -19,8 +19,11 @@ public class Pcf8574 extends GenericI2CChip {
     private static final Logger logger = LoggerFactory.getLogger(Pcf8574.class);
 
     public Pcf8574(int address) {
-        super(address);
-        name = "PCF8574";
+        super(address, "PCF8574");
+    }
+
+    public Pcf8574(int address, String name) {
+        super(address, name);
     }
 
     /**

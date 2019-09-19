@@ -30,7 +30,7 @@ public abstract class Unit {
     private SPIConfiguration spiConfig;
     private GpioController gpioController;
     private Map<Integer, GenericChip> chipset;
-    State state = State.CREATED;
+    private State state = State.CREATED;
 
     public enum State { CREATED, CHIPSET_INITIALIZED, UNIT_INITIALIZED, FAILED }
 
@@ -45,17 +45,22 @@ public abstract class Unit {
         if (gpioProv != null) gpioController = gpioProv.getGpioController();
 
         createChipset0();
+        initializeChipsetAndUnit();
+        logger.info("=============== created {}", getName());
+    }
+
+    public void initializeChipsetAndUnit() {
         initializeChipset();
         if (state == State.CHIPSET_INITIALIZED) {
             try {
                 initializeUnit();
                 state = State.UNIT_INITIALIZED;
+                logger.info("{}{} initialized{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
             } catch(Exception e) {
                 logger.warn("unit initialization failed", e);
                 state = FAILED;
             }
         }
-        logger.info("=============== created {}", getName());
     }
 
     private void createChipset0() {
@@ -79,15 +84,6 @@ public abstract class Unit {
 
     public GenericChip getChip(int address) {
         return chipset.get(address);
-    }
-
-    /**
-     * Get SPI chip (no address)
-     * TODO: assumed one chip on SPI bus
-     * @return
-     */
-    public GenericChip getChip() {
-        return chipset.values().iterator().next();  //TODO could be 2 chips on SPI
     }
 
     public void initializeChipset() {
@@ -118,10 +114,7 @@ public abstract class Unit {
         logger.info("chipset created & initialized");
     }
 
-    public void initializeUnit() throws Exception {
-        state = State.UNIT_INITIALIZED;
-        logger.info("{}{} default initialization{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
-    }
+    public abstract void initializeUnit() throws Exception;
 
     protected SPIConfiguration getSpiConfig() {
         return spiConfig;

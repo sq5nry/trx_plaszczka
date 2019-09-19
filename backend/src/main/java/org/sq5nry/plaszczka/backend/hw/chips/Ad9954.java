@@ -43,8 +43,7 @@ public class Ad9954 extends GenericSPIChip {
     private GpioPinDigitalOutput reset, update;
 
     public Ad9954(SPIConfiguration spiConfig, long refClk) {
-        super(spiConfig);
-        name = "AD9954";
+        super(spiConfig, "AD9954");
         this.refClk = refClk;
     }
 

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.display.FrequencyDisplay;
 import org.sq5nry.plaszczka.backend.hw.chips.Mcp23017;
-import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 
@@ -20,7 +19,7 @@ import java.util.List;
  * Optional dot marker above a digit; single dot at a time.
  */
 @Component
-public class NixieDisplayUnit extends Unit implements FrequencyDisplay, Reinitializable {
+public class NixieDisplayUnit extends Unit implements FrequencyDisplay {
     private static final Logger logger = LoggerFactory.getLogger(NixieDisplayUnit.class);
 
     private final int EXPANDER_A_I2CADDR = 0x21;
@@ -49,10 +48,8 @@ public class NixieDisplayUnit extends Unit implements FrequencyDisplay, Reinitia
 
     @Override
     public void initializeUnit() throws Exception {
-        super.initializeUnit();
         initializeExpander((Mcp23017) getChip(EXPANDER_A_I2CADDR));
         initializeExpander((Mcp23017) getChip(EXPANDER_B_I2CADDR));
-        logger.info("{}{} initialized{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
     }
 
     private static void initializeExpander(Mcp23017 expander) throws IOException {

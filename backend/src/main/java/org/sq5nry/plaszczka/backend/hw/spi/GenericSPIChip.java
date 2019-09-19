@@ -11,8 +11,8 @@ public abstract class GenericSPIChip extends GenericChip {
     private static final Logger logger = LoggerFactory.getLogger(GenericSPIChip.class);
     private boolean isSpiSimulated;
 
-    public GenericSPIChip(SPIConfiguration spiConfig) {
-        super(spiConfig.getSpiChannel());
+    public GenericSPIChip(SPIConfiguration spiConfig, String name) {
+        super(spiConfig.getSpiChannel(),name);
         isSpiSimulated = spiConfig.isSpiSimulated();
     }
 

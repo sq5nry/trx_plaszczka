@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-public class AudioUnit extends Unit implements AfAmplifier, Reinitializable {
+public class AudioUnit extends Unit implements AfAmplifier {
     private static final Logger logger = LoggerFactory.getLogger(FrontEndMixerUnit.class);
 
     private final int EXPANDER_ADDR = 0x25;
@@ -37,6 +37,11 @@ public class AudioUnit extends Unit implements AfAmplifier, Reinitializable {
     public void createChipset(List<GenericChip> chipset) {
         chipset.add(new Pcf8574(EXPANDER_ADDR));
         chipset.add(new Tda7309(AUDIO_PROCESSOR_ADDR));
+    }
+
+    @Override
+    public void initializeUnit() throws Exception {
+        //TODO maybe mute?
     }
 
     @Override

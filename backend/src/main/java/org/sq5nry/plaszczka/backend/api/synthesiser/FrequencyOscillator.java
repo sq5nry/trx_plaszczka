@@ -1,10 +1,8 @@
 package org.sq5nry.plaszczka.backend.api.synthesiser;
 
-import org.sq5nry.plaszczka.backend.impl.Reinitializable;
-
 import java.io.IOException;
 
-public interface FrequencyOscillator extends Reinitializable {
+public interface FrequencyOscillator {
     /**
      * Generate frequency
      * @param freq Hz

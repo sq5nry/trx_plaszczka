@@ -60,7 +60,6 @@ public class Si570 extends GenericI2CChip {
     private static final int HS_11 = 0x7;
     private static final int[] DIV_TO_HS = {0, 0, 0, 0, HS_4, HS_5, HS_6, HS_7, 0, HS_9, 0, HS_11};
     private static final int[] HS_TO_DIV = {4, 5, 6, 7, 0, 9, 0, 11};
-    private static final int ONE_MHZ = 1000000;
 
     // these dividers establish 31-36.8MHz fixed output range
     private static int ASSUMED_HS = HS_11;
@@ -77,8 +76,7 @@ public class Si570 extends GenericI2CChip {
     private double FXTAL_HZ;
 
     public Si570(int address) {
-        super(address);
-        name = "Si570";
+        super(address, "Si570");
     }
 
     @Override

@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.Mode;
 import org.sq5nry.plaszczka.backend.api.detector.Detector;
-import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
-import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
-import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8575;
+import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
+import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 
 import java.io.IOException;
 import java.util.List;
@@ -62,11 +61,9 @@ public class QSDUnit extends Unit implements Detector {
 
     @Override
     public void initializeUnit() throws Exception {
-        super.initializeUnit();
         setRoofingFilter(Mode.SSB);
         setEnabled(false);
         update();
-        logger.info("{}{} initialized{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
     }
 
     @Override

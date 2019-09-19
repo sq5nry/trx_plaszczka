@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.sq5nry.plaszczka.backend.impl.Reinitializable;
 import org.sq5nry.plaszczka.backend.impl.Unit;
 
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class RxStateController {
     private Map<String, ? extends Unit> units;
 
     @RequestMapping(value = "/mgmt/state/rx", method = RequestMethod.GET, produces = "application/json")
-    public Map<String, Unit.State> getState() throws Exception {
+    public Map<String, Unit.State> getState() {
         logger.debug("state check requested");
         Map<String, Unit.State> states = new HashMap<>();
         for(String unitName: units.keySet()) {
@@ -30,23 +29,17 @@ public class RxStateController {
     }
 
     @RequestMapping(value = "/mgmt/initialize/rx", method = RequestMethod.GET, produces = "application/json")
-    public Map<String, Unit.State> initialize() throws Exception {
+    public Map<String, Unit.State> initialize() {
         logger.info("rx path initialize requested");
 
         Map<String, Unit.State> states = new HashMap<>();
         for(Unit unit: units.values()) {
-            String name = unit.getClass().getSimpleName();
             try {
-                logger.info("initializing chipset in {}", name);
-                unit.initializeChipset();   //TODO how about also initializeUnit separately?
-                if (unit instanceof Reinitializable) {
-                    logger.info("initializing unit {}", name);
-                    ((Reinitializable) unit).initializeUnit();
-                }
+                unit.initializeChipsetAndUnit();
             } catch (Exception e) {
-                logger.warn("initialization error for unit " + name , e);
+                logger.warn("initialization error for unit " + unit.getName() , e);
             } finally {
-                states.put(name, unit.getState());
+                states.put(unit.getName(), unit.getState());
             }
         }
         return states;

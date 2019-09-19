@@ -3,7 +3,7 @@ package org.sq5nry.plaszczka.backend.hw.chips;
 import java.io.IOException;
 
 /**
- * 16-bit I/O expander for the two-line bidirectional bus (I2C) is designed for 2.5-V to 5.5-V VCC	operation.
+ * 16-bit I/O expander for the two-line bidirectional bus (I2C) is designed for 2.5-V to 5.5-V VCC operation.
  * The PCF8575 device provides general-purpose remote I/O expansion for most microcontroller families
  * by way of the I2C interface [serial clock (SCL), serial data (SDA)].
  * The device features a 16-bit quasi-bidirectional input/output (I/O) port (P07–P00, P17–P10), including latched
@@ -15,8 +15,7 @@ import java.io.IOException;
  */
 public class Pcf8575 extends Pcf8574 {
     public Pcf8575(int address) {
-        super(address);
-        name = "PCF8575";
+        super(address, "PCF8575");
     }
 
     public void writePort(byte p0, byte p1) throws IOException {

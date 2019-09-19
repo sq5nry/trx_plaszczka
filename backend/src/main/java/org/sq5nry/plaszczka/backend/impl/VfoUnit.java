@@ -33,9 +33,13 @@ public class VfoUnit extends Unit implements FrequencyOscillator {
 
     @Override
     public void createChipset(List<GenericChip> chipset) {
-        logger.info("createChipset: entering");
         chipset.add(dds = new Ad9954(getSpiConfig(), 500000000));
         logger.info("createChipset: DDS={}", dds);
+    }
+
+    @Override
+    public void initializeUnit() throws Exception {
+
     }
 
     @Override

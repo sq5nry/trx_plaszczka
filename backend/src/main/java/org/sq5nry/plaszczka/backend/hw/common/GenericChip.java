@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 public abstract class GenericChip {
     private static final Logger logger = LoggerFactory.getLogger(GenericChip.class);
 
-    protected String name;
+    private final String name;
     protected int address;
     protected boolean initialized;
 
@@ -15,23 +15,14 @@ public abstract class GenericChip {
     private boolean isGpioReal;
 
     public GenericChip(int address, String name) {
-        this(address);
-        this.name = name;
-    }
-
-    public GenericChip(int address) {
         this.address = address;
-        this.initialized = false;
+        this.name = name;
     }
 
     public abstract GenericChip initialize() throws ChipInitializationException;
 
     public int getAddress() {
         return address;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public abstract boolean needsGpio();
@@ -60,6 +51,6 @@ public abstract class GenericChip {
 
     @Override
     public String toString() {
-        return name + "@" + Integer.toHexString(address) + (needsGpio() ? "/GPIO=" + controller.toString() : "");
+        return name + "_@" + Integer.toHexString(address) + (needsGpio() ? "/GPIO=" + controller.toString() : "");
     }
 }

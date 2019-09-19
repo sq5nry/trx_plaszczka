@@ -10,14 +10,14 @@ import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 
 import java.io.IOException;
 
-public class GenericI2CChip extends GenericChip {
+public abstract class GenericI2CChip extends GenericChip {
     private static final Logger logger = LoggerFactory.getLogger(GenericI2CChip.class);
 
     private I2CBus i2CBus;
     private I2CDevice device;
 
-    public GenericI2CChip(int address) {
-        super(address);
+    public GenericI2CChip(int address, String name) {
+        super(address, name);
     }
 
     @Override

@@ -29,8 +29,7 @@ public class Ad7999 extends GenericI2CChip {
     private byte conversion[];
 
     public Ad7999(int address) {
-        super(address);
-        name = "AD7999";
+        super(address, "AD7999");
         conversion = new byte[2];
     }
 

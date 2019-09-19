@@ -1,10 +1,8 @@
 package org.sq5nry.plaszczka.backend.api.display;
 
-import org.sq5nry.plaszczka.backend.impl.Reinitializable;
-
 import java.io.IOException;
 
-public interface FrequencyDisplay extends Reinitializable {
+public interface FrequencyDisplay {
     /**
      * Display frequency
      * @param freq Hz 0..99999999, truncated to tens

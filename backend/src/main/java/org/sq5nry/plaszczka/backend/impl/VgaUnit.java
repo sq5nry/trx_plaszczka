@@ -5,17 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.vga.IfAmp;
-import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
+import org.sq5nry.plaszczka.backend.hw.chips.*;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.chips.*;
 
 import java.io.IOException;
 import java.util.List;
 
 @Component
-//TODO prohibit calls in FAILED state
-public class VgaUnit extends Unit implements IfAmp, Reinitializable {
+public class VgaUnit extends Unit implements IfAmp {
     private static final Logger logger = LoggerFactory.getLogger(VgaUnit.class);
 
     private final int DAC_IC18 = 0x0e;
@@ -43,7 +41,6 @@ public class VgaUnit extends Unit implements IfAmp, Reinitializable {
         ((Ad5306) getChip(DAC_IC18)).setVRef(3.894f);
         ((Ad5306) getChip(DAC_IC19)).setVRef(5.0f);
         ((Ad7999) getChip(ADC)).configure();
-        logger.info("{}{} initialized{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
     }
 
     /**

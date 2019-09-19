@@ -369,4 +369,12 @@ public class DummyGpioPinDigitalOutput implements GpioPinDigitalOutput {
     public void setShutdownOptions(Boolean aBoolean, PinState pinState, PinPullResistance pinPullResistance, PinMode pinMode) {
 
     }
+
+    @Override
+    public String toString() {
+        return "DummyGpioPin{" +
+                "pin=" + pin +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

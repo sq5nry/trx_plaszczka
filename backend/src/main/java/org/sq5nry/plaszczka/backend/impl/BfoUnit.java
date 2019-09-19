@@ -27,9 +27,12 @@ public class BfoUnit extends Unit implements FrequencyOscillator {
 
     @Override
     public void createChipset(List<GenericChip> chipset) {
-        logger.info("createChipset: entering");
         chipset.add(xo = new Si570(SI570_ADDR));
-        logger.info("createChipset: xo={}", xo);
+    }
+
+    @Override
+    public void initializeUnit() throws Exception {
+        //TODO ?
     }
 
     @Override

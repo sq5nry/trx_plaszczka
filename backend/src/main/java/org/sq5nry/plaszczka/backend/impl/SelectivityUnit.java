@@ -6,15 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sq5nry.plaszczka.backend.api.selectivity.Bandwidth;
 import org.sq5nry.plaszczka.backend.api.selectivity.Selectivity;
-import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
+import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
-import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 
 import java.util.List;
 
 @Component
-public class SelectivityUnit extends Unit implements Selectivity, Reinitializable {
+public class SelectivityUnit extends Unit implements Selectivity {
     private static final Logger logger = LoggerFactory.getLogger(SelectivityUnit.class);
 
     private final int EXPANDER_ADDR = 0x23;
@@ -59,12 +58,10 @@ public class SelectivityUnit extends Unit implements Selectivity, Reinitializabl
 
     @Override
     public void initializeUnit() throws Exception {
-        super.initializeUnit();
         FeatureBits defBw = FeatureBits.BW_NONE;
         logger.info("initializing unit with defaults: {}", defBw);
         Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         expander.writePort(defBw.getP());
-        logger.info("{}{} initialized{}", ConsoleColours.GREEN_BOLD, getName(), ConsoleColours.RESET);
     }
 
     @Override

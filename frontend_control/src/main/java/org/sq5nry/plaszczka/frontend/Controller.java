@@ -38,7 +38,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     public static final String BACKEND_HOST_MOST_REAL = "sq9nry.no-ip.org";
     public static final String BACKEND_PORT = "8090";
 
-    private static final String BACKEND_HOST = BACKEND_RPI1A;
+    private static final String BACKEND_HOST = BACKEND_HOST_REAL;
     private static final String BACKEND_ROOT_URL = "http://" + BACKEND_HOST + ":" + BACKEND_PORT;
     private static final String BACKEND_STOMP_URL = "ws://" + BACKEND_HOST + ":" + BACKEND_PORT + "/vagc-websocket";
 

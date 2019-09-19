@@ -46,13 +46,12 @@ public class Tda7309 extends GenericI2CChip {
     private byte channel = CHANNEL_BOTH;
 
     public Tda7309(int address) {
-        super(address);
-        name = "TDA7309";
+        super(address, "TDA7309");
     }
 
     //TODO i2c reports error (but chip accepts ok) for any odd value written, need to replace? suppress err for now
     private void writeTmp(byte val) throws IOException {
-        byte data = val; //(val & 0xfe)
+        byte data = val;
         if (logger.isDebugEnabled()) {
             logger.debug("write: {}", String.format("%02X", data));
         }

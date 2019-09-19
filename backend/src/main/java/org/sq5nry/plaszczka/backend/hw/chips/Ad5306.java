@@ -94,8 +94,7 @@ public class Ad5306 extends GenericDac {
 
 
     public Ad5306(int address) {
-        super(address);
-        name = "AD5306";
+        super(address, "AD5306");
         buffer = new byte[4];
     }
 
@@ -124,7 +123,9 @@ public class Ad5306 extends GenericDac {
         }
         buffer[0] = (byte) ((control << 4) | ((data & 0x00F0) >> 4));   //MSB
         buffer[1] = (byte) ((data & 0x000F) << 4);                      //LSB
-        logger.debug("setData: {} {}", String.format("%02X", buffer[0]), String.format("%02X", buffer[1]));
+        if (logger.isDebugEnabled()) {
+            logger.debug("setData: {} {}", String.format("%02X", buffer[0]), String.format("%02X", buffer[1]));
+        }
         getDevice().write(DacPointer.fromInt(channel).byteValue(), buffer);
     }
 

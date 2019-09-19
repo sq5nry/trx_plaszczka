@@ -7,8 +7,8 @@ import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2CChip;
 public abstract class GenericDac extends GenericI2CChip {
     private static final Logger logger = LoggerFactory.getLogger(GenericDac.class);
 
-    public GenericDac(int address) {
-        super(address);
+    public GenericDac(int address, String name) {
+        super(address, name);
     }
 
     /**

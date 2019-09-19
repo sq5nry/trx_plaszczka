@@ -32,15 +32,6 @@ public class Mcp23017 extends GenericI2CChip {
     public static final byte IODIR_B = 0x01;
     public static final byte IODIR_ALL_OUTPUTS = 0x00;
 
-    public Mcp23017(int address) {
-        super(address);
-        name = "MCP23017";
-    }
-
-    public void writePort(Mcp23017.Port port, byte value) throws IOException {
-        getDevice().write(port.getAddress(), value);
-    }
-
     public enum Port {
         GPIO_A(0x12), GPIO_B(0x13);
 
@@ -53,5 +44,13 @@ public class Mcp23017 extends GenericI2CChip {
         public byte getAddress() {
             return (byte) addr;
         }
+    }
+
+    public Mcp23017(int address) {
+        super(address, "MCP23017");
+    }
+
+    public void writePort(Mcp23017.Port port, byte value) throws IOException {
+        getDevice().write(port.getAddress(), value);
     }
 }
