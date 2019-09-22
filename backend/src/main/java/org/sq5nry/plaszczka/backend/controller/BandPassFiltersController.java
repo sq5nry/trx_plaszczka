@@ -8,28 +8,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.sq5nry.plaszczka.backend.api.inputfilter.Band;
+import org.sq5nry.plaszczka.backend.api.inputfilter.BandPassFilter;
 import org.sq5nry.plaszczka.backend.impl.BpfUnit;
 
 import java.io.IOException;
 
+/*
+http://localhost:8090/bandPassFilter/band/M20
+ */
 @RestController
-public class BandPassFiltersController {
+public class BandPassFiltersController implements BandPassFilter {
     private static final Logger logger = LoggerFactory.getLogger(BandPassFiltersController.class);
 
     @Autowired
     private BpfUnit bpfUnit;
 
-    @RequestMapping(value = "/bandPassFilter/band/{id}", method = RequestMethod.GET)
-    public String setFrequency(@PathVariable String id) throws IOException {
-        logger.debug("band filter requested, band={}", id);
-        bpfUnit.setBand(Band.fromMeters(id));
-        return "result=" + bpfUnit.getBand();
-    }
-
-    @RequestMapping(value = "/bandPassFilter/attenuator/{id}", method = RequestMethod.GET)
-    public String setMarker(@PathVariable Integer id) throws IOException {
-        logger.debug("attenuator requested, att={}", id);
-        bpfUnit.setAttenuation(id);
-        return "result=att" + bpfUnit.getAttenuation() + "dB";
+    @RequestMapping(value = RESOURCE_PATH, method = RequestMethod.GET)
+    @Override
+    public String setBand(@PathVariable Band band) throws IOException {
+        logger.debug("band filter requested, band={}", band);
+        return bpfUnit.setBand(band);
     }
 }

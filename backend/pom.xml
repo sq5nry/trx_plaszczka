@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>trx-plaszczka</groupId>
 	<artifactId>backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<name>backend</name>
-	<description>Demo project for Spring Boot</description>
+	<description>TRX Płaszczka - backend server</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -77,6 +77,12 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>19.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>trx-plaszczka</groupId>
+			<artifactId>common</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
     </dependencies>
 

@@ -82,10 +82,11 @@ public class BpfUnit extends Unit implements BandPassFilter {
     }
 
     @Override
-    public void setBand(Band band) throws IOException {
+    public String setBand(Band band) throws IOException {
         logger.info("setting band to {}", band);
         this.band = band;
         update();
+        return band.toString();
     }
 
     @Override

@@ -45,7 +45,7 @@ public class AudioUnit extends Unit implements AfAmplifier {
     }
 
     @Override
-    public void setInput(InputSelector mode) throws Exception {
+    public String setInput(InputSelector mode) throws Exception {
         Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch (mode) {
             case II_MONO:
@@ -61,10 +61,12 @@ public class AudioUnit extends Unit implements AfAmplifier {
                 break;
             default: throw new IllegalArgumentException("unknown input: " + mode);
         }
+
+        return mode.name();
     }
 
     @Override
-    public void setVolume(int volume, Channel channel) throws Exception {
+    public String setVolume(Channel channel, Integer volume) throws Exception {
         Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch (channel) {
             case BOTH:
@@ -83,6 +85,8 @@ public class AudioUnit extends Unit implements AfAmplifier {
                  throw new IllegalArgumentException("unknown channel: " + channel);
         }
         audioProc.setVolume(volume);
+
+        return channel + "@-" + volume + "dB";
     }
 
     /**
@@ -94,7 +98,7 @@ public class AudioUnit extends Unit implements AfAmplifier {
     }
 
     @Override
-    public void setMuteLoudness(MuteAndLoudness loudness) throws Exception {
+    public String setMuteLoudness(MuteAndLoudness loudness) throws Exception {
         Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch(loudness) {
             case LOUD_ON_10DB:
@@ -118,10 +122,11 @@ public class AudioUnit extends Unit implements AfAmplifier {
             default:
                 throw new IllegalArgumentException("unknown loudness or mute mode: " + loudness);
         }
+        return loudness.name();
     }
 
     @Override
-    public void setOutputAmplifier(OutputAmplifier amp) throws IOException {
+    public String setOutputAmplifier(OutputAmplifier amp) throws IOException {
         Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         byte data = 0x00;
         if (amp.isHeadphones()) {
@@ -135,6 +140,8 @@ public class AudioUnit extends Unit implements AfAmplifier {
         }
         expander.writePort(data);
         this.outputAmp = amp;
+
+        return amp.toString();
     }
 
     public OutputAmplifier getOutputAmp() {
