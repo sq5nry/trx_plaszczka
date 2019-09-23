@@ -6,30 +6,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.sq5nry.plaszczka.backend.api.synthesiser.Synthesizer;
 import org.sq5nry.plaszczka.backend.impl.BfoUnit;
 import org.sq5nry.plaszczka.backend.impl.VfoUnit;
 
-@RestController
-public class SynthesizerController {
-    private static final Logger logger = LoggerFactory.getLogger(SynthesizerController.class);
+import java.io.IOException;
 
-    @Autowired
-    VfoUnit vfoUnit;
+@RestController
+public class SynthesizerController implements Synthesizer {
+    private static final Logger logger = LoggerFactory.getLogger(SynthesizerController.class);
 
     @Autowired
     BfoUnit bfoUnit;
 
-    @GetMapping(value = "/vfo/{freq}")
-    public String setVfoFrequency(@PathVariable int freq) {
-        logger.debug("synthesizer VFO frequency requested {}Hz", freq);
-        vfoUnit.setFrequency(freq);
-        return "result=OK";
-    }
+    @Autowired
+    VfoUnit vfoUnit;
 
-    @GetMapping(value = "/bfo/{freq}")
-    public String setBfoFrequency(@PathVariable int freq) throws Exception {
+    @GetMapping(value = RESOURCE_PATH_BFO)
+    public void setBfoFrequency(@PathVariable int freq) throws IOException {
         logger.debug("synthesizer BFO frequency requested {}Hz", freq);
         bfoUnit.setFrequency(freq);
-        return "result=OK";
+    }
+
+    @GetMapping(value = RESOURCE_PATH_VFO)
+    public void setVfoFrequency(@PathVariable int freq) throws IOException {
+        logger.debug("synthesizer VFO frequency requested {}Hz", freq);
+        vfoUnit.setFrequency(freq);
     }
 }

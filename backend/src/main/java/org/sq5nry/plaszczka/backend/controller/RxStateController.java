@@ -6,19 +6,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.sq5nry.plaszczka.backend.impl.Unit;
+import org.sq5nry.plaszczka.backend.api.mgmt.ReceiverCtrl;
+import org.sq5nry.plaszczka.backend.common.Unit;
+import org.sq5nry.plaszczka.backend.impl.common.BaseUnit;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class RxStateController {
+public class RxStateController implements ReceiverCtrl {
     private static final Logger logger = LoggerFactory.getLogger(RxStateController.class);
 
     @Autowired
-    private Map<String, ? extends Unit> units;
+    private Map<String, ? extends BaseUnit> units;
 
-    @RequestMapping(value = "/mgmt/state/rx", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = RESOURCE_PATH_STATE, method = RequestMethod.GET, produces = "application/json")
     public Map<String, Unit.State> getState() {
         logger.debug("state check requested");
         Map<String, Unit.State> states = new HashMap<>();
@@ -28,7 +30,7 @@ public class RxStateController {
         return states;
     }
 
-    @RequestMapping(value = "/mgmt/initialize/rx", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = RESOURCE_PATH_INITIALIZE, method = RequestMethod.GET, produces = "application/json")
     public Map<String, Unit.State> initialize() {
         logger.info("rx path initialize requested");
 

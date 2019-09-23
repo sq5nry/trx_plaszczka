@@ -1,10 +1,10 @@
-package org.sq5nry.plaszczka.backend.api.synthesiser;
+package org.sq5nry.plaszczka.backend.impl.common;
 
 import java.io.IOException;
 
 public interface FrequencyOscillator {
     /**
-     * Generate frequency
+     * Set generator's frequency
      * @param freq Hz
      * @throws IOException
      */

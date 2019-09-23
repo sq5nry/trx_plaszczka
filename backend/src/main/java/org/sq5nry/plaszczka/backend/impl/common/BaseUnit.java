@@ -1,9 +1,10 @@
-package org.sq5nry.plaszczka.backend.impl;
+package org.sq5nry.plaszczka.backend.impl.common;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.i2c.I2CBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sq5nry.plaszczka.backend.common.Unit;
 import org.sq5nry.plaszczka.backend.hw.common.ChipInitializationException;
 import org.sq5nry.plaszczka.backend.hw.common.ConsoleColours;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
@@ -17,13 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.sq5nry.plaszczka.backend.impl.Unit.State.FAILED;
+import static org.sq5nry.plaszczka.backend.common.Unit.State.FAILED;
 
 /**
  * A physical realization of a functional module, usually enclosed in a metal box.
  */
-public abstract class Unit {
-    private static final Logger logger = LoggerFactory.getLogger(Unit.class);
+public abstract class BaseUnit implements Unit {
+    private static final Logger logger = LoggerFactory.getLogger(BaseUnit.class);
 
     private I2CBus bus;
 
@@ -32,13 +33,11 @@ public abstract class Unit {
     private Map<Integer, GenericChip> chipset;
     private State state = State.CREATED;
 
-    public enum State { CREATED, CHIPSET_INITIALIZED, UNIT_INITIALIZED, FAILED }
-
-    public Unit(I2CBusProvider i2cBusProv) throws Exception {
+    public BaseUnit(I2CBusProvider i2cBusProv) throws Exception {
         this(i2cBusProv, null, null);
     }
 
-    public Unit(I2CBusProvider i2cBusProv, SPIConfiguration spiConfig, GpioControllerProvider gpioProv) throws Exception {
+    public BaseUnit(I2CBusProvider i2cBusProv, SPIConfiguration spiConfig, GpioControllerProvider gpioProv) throws Exception {
         logger.info("=============== creating {}", getName());
         this.spiConfig = spiConfig;
         bus = i2cBusProv.getBus();
@@ -49,6 +48,7 @@ public abstract class Unit {
         logger.info("=============== created {}", getName());
     }
 
+    @Override
     public void initializeChipsetAndUnit() {
         initializeChipset();
         if (state == State.CHIPSET_INITIALIZED) {
@@ -74,13 +74,6 @@ public abstract class Unit {
             chipset.put(chip.getAddress(), chip);
         }
     }
-
-    /**
-     * Create chipset be inserting chips into the list.
-     * @param chipset chip list
-     * @throws Exception
-     */
-    public abstract void createChipset(List<GenericChip> chipset);
 
     public GenericChip getChip(int address) {
         return chipset.get(address);
@@ -109,20 +102,27 @@ public abstract class Unit {
             state = State.CHIPSET_INITIALIZED;
         } catch(ChipInitializationException e) {
             logger.warn("unit chipset initialization failed", e);
-            state = State.FAILED;
+            state = FAILED;
         }
         logger.info("chipset created & initialized");
     }
-
-    public abstract void initializeUnit() throws Exception;
 
     protected SPIConfiguration getSpiConfig() {
         return spiConfig;
     }
 
+    @Override
     public State getState() {
         return state;
     }
 
-    public abstract String getName();
+    public abstract void initializeUnit() throws Exception;
+
+    /**
+     * Create chipset be inserting chips into the list.
+     *
+     * @param chipset chip list
+     * @throws Exception
+     */
+    public abstract void createChipset(List<GenericChip> chipset);
 }

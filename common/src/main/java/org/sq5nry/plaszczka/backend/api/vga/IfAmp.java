@@ -4,6 +4,22 @@ package org.sq5nry.plaszczka.backend.api.vga;
  * Set-point Reference
  */
 public interface IfAmp {
+    String ROOT = "/ifAmp";
+    String RESOURCE_PATH_VSPH = ROOT + "/decaySpeedInDecayStateForHangMode/{val}";
+    String RESOURCE_PATH_VSPA = ROOT + "/decaySpeedForAttackDecayMode/{val}";
+    String RESOURCE_PATH_VLEAK = ROOT + "/decaySpeedInHangStateForHangMode/{val}";
+    String RESOURCE_PATH_VFLOOR = ROOT + "/noiseFloorCompensation/{val}";
+    String RESOURCE_PATH_VATH = ROOT + "/strategyThreshold/{val}";
+    String RESOURCE_PATH_VHTH = ROOT + "/hangThreshold/{val}";
+    String RESOURCE_PATH_VLOOP = ROOT + "/VLoop/{val}";
+    String RESOURCE_PATH_MAXGAIN = ROOT + "/maximumGain/{val}";
+    String RESOURCE_PATH_VSPD = ROOT + "/maximumHangTimeInHangMode/{val}";
+    String RESOURCE_PATH_ATTACK = ROOT + "/attackTime/{val}";
+    String RESOURCE_PATH_HANG_ON_TRANSMIT = ROOT + "/hangOnTransmit/{flag}";
+    String RESOURCE_PATH_MUTE = ROOT + "/mute/{flag}";
+    String RESOURCE_PATH_VAGC = ROOT + "/ifAmp/vagc";
+    String RESOURCE_PATH_VAGC_STREAM_CONTROL = "TODO";
+
     /**
      * Vsph sets the decay speed during the DECAY state for the AGC in Hang-Mode.
      * Usually a relatively fast decay speed is used. With the speed specified by Vsph,

@@ -5,26 +5,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.sq5nry.plaszczka.backend.api.Mode;
+import org.sq5nry.plaszczka.backend.api.detector.Detector;
 import org.sq5nry.plaszczka.backend.impl.QSDUnit;
 
 @RestController
-public class DetectorController {
+public class DetectorController implements Detector {
     private static final Logger logger = LoggerFactory.getLogger(DetectorController.class);
 
     @Autowired
     QSDUnit detectorUnit;
 
-    @GetMapping(value = "/detector/mode/{mode}")
-    public String setRoofingFilter(@PathVariable String mode) throws Exception {
+    @GetMapping(value = RESOURCE_PATH_ROOFING)
+    @Override
+    public void setRoofingFilter(@PathVariable Mode mode) throws Exception {
         logger.debug("mode requested: {}", mode);
-        detectorUnit.setRoofingFilter(Mode.valueOf(mode.toUpperCase()));
-        return "result=" + detectorUnit.getRoofingFilter();
+        detectorUnit.setRoofingFilter(mode);
     }
 
-    @RequestMapping(value = "/detector/enabled/{enabled}", method = RequestMethod.GET)
-    public String setEnabled(@PathVariable Boolean enabled) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_ENABLE, method = RequestMethod.GET)
+    @Override
+    public void setEnabled(@PathVariable boolean enabled) throws Exception {
         logger.debug("detector enable requested to: {}", enabled);
         detectorUnit.setEnabled(enabled);
-        return "result=enabled:{}" + detectorUnit.isEnabled();
     }
 }

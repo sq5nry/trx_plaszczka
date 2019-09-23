@@ -8,12 +8,14 @@ import org.sq5nry.plaszczka.backend.api.vga.IfAmp;
 import org.sq5nry.plaszczka.backend.hw.chips.*;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
+import org.sq5nry.plaszczka.backend.impl.common.BaseUnit;
+import org.sq5nry.plaszczka.backend.impl.common.VParam;
 
 import java.io.IOException;
 import java.util.List;
 
 @Component
-public class VgaUnit extends Unit implements IfAmp {
+public class VgaUnit extends BaseUnit implements IfAmp {
     private static final Logger logger = LoggerFactory.getLogger(VgaUnit.class);
 
     private final int DAC_IC18 = 0x0e;

@@ -1,4 +1,4 @@
-package org.sq5nry.plaszczka.backend.impl;
+package org.sq5nry.plaszczka.backend.impl.common;
 
 /**
  * Mostly for initial live testing where modules are re-connected thus re-powered.

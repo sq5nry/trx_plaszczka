@@ -9,12 +9,13 @@ import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.chips.Tda7309;
+import org.sq5nry.plaszczka.backend.impl.common.BaseUnit;
 
 import java.io.IOException;
 import java.util.List;
 
 @Component
-public class AudioUnit extends Unit implements AfAmplifier {
+public class AudioUnit extends BaseUnit implements AfAmplifier {
     private static final Logger logger = LoggerFactory.getLogger(FrontEndMixerUnit.class);
 
     private final int EXPANDER_ADDR = 0x25;

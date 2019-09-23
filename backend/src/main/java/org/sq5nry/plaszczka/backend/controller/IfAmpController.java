@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.sq5nry.plaszczka.backend.api.vga.IfAmp;
 import org.sq5nry.plaszczka.backend.impl.VgaUnit;
 
 import java.util.Calendar;
@@ -25,7 +26,7 @@ import java.util.concurrent.ScheduledFuture;
 
 @RestController
 @EnableScheduling
-public class IfAmpController implements SchedulingConfigurer {
+public class IfAmpController implements IfAmp, SchedulingConfigurer {
     private static final Logger logger = LoggerFactory.getLogger(IfAmpController.class);
 
     public static final int STREAMER_CTRL_RESP_STARTED = -1;
@@ -44,95 +45,95 @@ public class IfAmpController implements SchedulingConfigurer {
     private int period = Integer.MAX_VALUE;
 
 
-    @RequestMapping(value = "/ifAmp/decaySpeedInDecayStateForHangMode/{val}", method = RequestMethod.GET)
-    public String setDecaySpeedInDecayStateForHangMode(@PathVariable Float val) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_VSPH, method = RequestMethod.GET)
+    @Override
+    public void setDecaySpeedInDecayStateForHangMode(@PathVariable float val) throws Exception {
         logger.debug("Vsph (DecaySpeedInDecayStateForHangMode) to {}", val);
         vgaUnit.setDecaySpeedInDecayStateForHangMode(val);
-        return "result=OK";
     }
 
-    @RequestMapping(value = "/ifAmp/decaySpeedForAttackDecayMode/{val}", method = RequestMethod.GET)
-    public String setDecaySpeedForAttackDecayMode(@PathVariable Float val) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_VSPA, method = RequestMethod.GET)
+    @Override
+    public void setDecaySpeedForAttackDecayMode(@PathVariable float val) throws Exception {
         logger.debug("Vspa (DecaySpeedForAttackDecayMode) to {}", val);
         vgaUnit.setDecaySpeedForAttackDecayMode(val);
-        return "result=OK";
     }
 
-    @RequestMapping(value = "/ifAmp/decaySpeedInHangStateForHangMode/{val}", method = RequestMethod.GET)
-    public String setDecaySpeedInHangStateForHangMode(@PathVariable Float val) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_VLEAK, method = RequestMethod.GET)
+    @Override
+    public void setDecaySpeedInHangStateForHangMode(@PathVariable float val) throws Exception {
         logger.debug("Vleak (DecaySpeedInHangStateForHangMode) to {}", val);
         vgaUnit.setDecaySpeedInHangStateForHangMode(val);
-        return "result=OK";
     }
 
-    @RequestMapping(value = "/ifAmp/noiseFloorCompensation/{val}", method = RequestMethod.GET)
-    public String setNoiseFloorCompensation(@PathVariable Float val) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_VFLOOR, method = RequestMethod.GET)
+    @Override
+    public void setNoiseFloorCompensation(@PathVariable float val) throws Exception {
         logger.debug("Vfloor (NoiseFloorCompensation) to {}", val);
         vgaUnit.setNoiseFloorCompensation(val);
-        return "result=OK";
     }
 
-    @RequestMapping(value = "/ifAmp/strategyThreshold/{val}", method = RequestMethod.GET)
-    public String setStrategyThreshold(@PathVariable Float val) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_VATH, method = RequestMethod.GET)
+    @Override
+    public void setStrategyThreshold(@PathVariable float val) throws Exception {
         logger.debug("Vath (StrategyThreshold) to {}", val);
         vgaUnit.setStrategyThreshold(val);
-        return "result=OK";
     }
 
-    @RequestMapping(value = "/ifAmp/hangThreshold/{val}", method = RequestMethod.GET)
-    public String setHangThreshold(@PathVariable Float val) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_VHTH, method = RequestMethod.GET)
+    @Override
+    public void setHangThreshold(@PathVariable float val) throws Exception {
         logger.debug("Vhth (HangThreshold) to {}", val);
         vgaUnit.setHangThreshold(val);
-        return "result=OK";
     }
 
-
-    @RequestMapping(value = "/ifAmp/VLoop/{val}", method = RequestMethod.GET)
-    public String setVLoop(@PathVariable Float val) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_VLOOP, method = RequestMethod.GET)
+    @Override
+    public void setVLoop(@PathVariable float val) throws Exception {
         logger.info("Vloop (VLoop) to {}", val);
         vgaUnit.setVLoop(val);
-        return "result=OK";
     }
 
-    @RequestMapping(value = "/ifAmp/maximumGain/{val}", method = RequestMethod.GET)
-    public String setMaximumGain(@PathVariable Float val) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_MAXGAIN, method = RequestMethod.GET)
+    @Override
+    public void setMaximumGain(@PathVariable float val) throws Exception {
         logger.info("MaximumGain (Vgain) to {}", val);
         vgaUnit.setMaximumGain(val);
-        return "result=OK";
     }
 
-    @RequestMapping(value = "/ifAmp/maximumHangTimeInHangMode/{val}", method = RequestMethod.GET)
-    public String setMaximumHangTimeInHangMode(@PathVariable Float val) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_VSPD, method = RequestMethod.GET)
+    @Override
+    public void setMaximumHangTimeInHangMode(@PathVariable float val) throws Exception {
         logger.info("MaximumHangTimeInHangMode (Vspd) to {}", val);
         vgaUnit.setMaximumHangTimeInHangMode(val);
-        return "result=OK";
     }
 
-    @RequestMapping(value = "/ifAmp/attackTime/{val}", method = RequestMethod.GET)
-    public String setAttackTime(@PathVariable Float val) throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_ATTACK, method = RequestMethod.GET)
+    @Override
+    public void setAttackTime(@PathVariable float val) throws Exception {
         logger.info("AttackTime (Attack) to {}", val);
         vgaUnit.setAttackTime(val);
-        return "result=OK";
     }
 
-    @RequestMapping(value = "/ifAmp/hangOnTransmit/{val}", method = RequestMethod.GET)
-    public String setHangOnTransmit(@PathVariable Boolean val) throws Exception {
-        logger.info("setHangOnTransmit to {}", val);
-        vgaUnit.setHangOnTransmit(val);
-        return "result=OK";
+    @RequestMapping(value = RESOURCE_PATH_HANG_ON_TRANSMIT, method = RequestMethod.GET)
+    @Override
+    public void setHangOnTransmit(@PathVariable boolean flag) throws Exception {
+        logger.info("setHangOnTransmit to {}", flag);
+        vgaUnit.setHangOnTransmit(flag);
     }
 
-    @RequestMapping(value = "/ifAmp/mute/{val}", method = RequestMethod.GET)
-    public String setMute(@PathVariable Boolean val) throws Exception {
-        logger.info("setMute to {}", val);
-        vgaUnit.setMute(val);
-        return "result=OK";
+    @RequestMapping(value = RESOURCE_PATH_MUTE, method = RequestMethod.GET)
+    @Override
+    public void setMute(@PathVariable boolean flag) throws Exception {
+        logger.info("setMute to {}", flag);
+        vgaUnit.setMute(flag);
     }
 
-    @RequestMapping(value = "/ifAmp/vagc", method = RequestMethod.GET)
-    public String getVagc() throws Exception {
+    @RequestMapping(value = RESOURCE_PATH_VAGC, method = RequestMethod.GET)
+    @Override
+    public int getVAgc() throws Exception {
         logger.debug("getVagc");
-        return String.valueOf(vgaUnit.getVAgc());
+        return vgaUnit.getVAgc();
     }
 
     @MessageMapping("/vagc_stream_control")

@@ -3,6 +3,12 @@ package org.sq5nry.plaszczka.backend.api.display;
 import java.io.IOException;
 
 public interface FrequencyDisplay {
+    String ROOT = "/frequencyDisplay";
+    String RESOURCE_PATH_SET_FREQUENCY = ROOT + "/freq/{freq}";
+    String RESOURCE_PATH_SET_MARKER= ROOT + "/marker/{id}";
+    String RESOURCE_PATH_SET_BLANK_LEADING_ZEROES = ROOT + "/blanking/{freq}";
+    String RESOURCE_PATH_INITIALIZE = ROOT + "/initialize";
+
     /**
      * Display frequency
      * @param freq Hz 0..99999999, truncated to tens
@@ -23,5 +29,5 @@ public interface FrequencyDisplay {
      * Do not display leading zeroes. Implementation should usually enable it by default.
      * @param blankLeadingZeroes
      */
-    void setBlankLeadingZeroes(boolean blankLeadingZeroes);
+    void setBlankLeadingZeroes(boolean blankLeadingZeroes) throws IOException;
 }

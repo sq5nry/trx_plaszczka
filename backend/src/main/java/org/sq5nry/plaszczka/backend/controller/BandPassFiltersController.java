@@ -25,8 +25,8 @@ public class BandPassFiltersController implements BandPassFilter {
 
     @RequestMapping(value = RESOURCE_PATH, method = RequestMethod.GET)
     @Override
-    public String setBand(@PathVariable Band band) throws IOException {
+    public void setBand(@PathVariable Band band) throws IOException {
         logger.debug("band filter requested, band={}", band);
-        return bpfUnit.setBand(band);
+        bpfUnit.setBand(band);
     }
 }

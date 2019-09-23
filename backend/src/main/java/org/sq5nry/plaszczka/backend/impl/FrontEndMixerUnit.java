@@ -11,12 +11,13 @@ import org.sq5nry.plaszczka.backend.hw.chips.GenericDac;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
+import org.sq5nry.plaszczka.backend.impl.common.BaseUnit;
 
 import java.io.IOException;
 import java.util.List;
 
 @Component
-public class FrontEndMixerUnit extends Unit implements HModeMixer {
+public class FrontEndMixerUnit extends BaseUnit implements HModeMixer {
     private static final Logger logger = LoggerFactory.getLogger(FrontEndMixerUnit.class);
 
     private final int EXPANDER_ADDR = 0x3f;

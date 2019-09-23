@@ -1,7 +1,7 @@
-package org.sq5nry.plaszczka.backend.impl;
+package org.sq5nry.plaszczka.backend.impl.common;
 
 /**
- * Unit-to-unit scaling with 2-point linear approximation.
+ * BaseUnit-to-unit scaling with 2-point linear approximation.
  */
 public final class VParam {
     public VParam(String name, String inUnit, float min, float max, float fullScale, float scalingFactorX, float scalingFactorY, float b, boolean proportional, float recommended) {
@@ -60,7 +60,7 @@ public final class VParam {
             this.param = vParam;
         }
 
-        VParam getParam() {
+        public VParam getParam() {
             return param;
         }
     }

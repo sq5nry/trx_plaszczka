@@ -10,12 +10,13 @@ import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8575;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
+import org.sq5nry.plaszczka.backend.impl.common.BaseUnit;
 
 import java.io.IOException;
 import java.util.List;
 
 @Component
-public class QSDUnit extends Unit implements Detector {
+public class QSDUnit extends BaseUnit implements Detector {
     private static final Logger logger = LoggerFactory.getLogger(QSDUnit.class);
 
     private final int EXPANDER_ADDR = 0x26;

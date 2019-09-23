@@ -4,17 +4,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.sq5nry.plaszczka.backend.api.inputfilter.Attenuator;
 import org.sq5nry.plaszczka.backend.api.inputfilter.Band;
 import org.sq5nry.plaszczka.backend.api.inputfilter.BandPassFilter;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8575;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
+import org.sq5nry.plaszczka.backend.impl.common.BaseUnit;
 
 import java.io.IOException;
 import java.util.List;
 
 @Component
-public class BpfUnit extends Unit implements BandPassFilter {
+public class BpfUnit extends BaseUnit implements BandPassFilter, Attenuator {
     private static final Logger logger = LoggerFactory.getLogger(BpfUnit.class);
 
     private static final int EXPANDER_ADDR = 0x27;//TODO config
@@ -82,11 +84,10 @@ public class BpfUnit extends Unit implements BandPassFilter {
     }
 
     @Override
-    public String setBand(Band band) throws IOException {
+    public void setBand(Band band) throws IOException {
         logger.info("setting band to {}", band);
         this.band = band;
         update();
-        return band.toString();
     }
 
     @Override

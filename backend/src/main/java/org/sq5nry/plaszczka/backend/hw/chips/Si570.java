@@ -22,7 +22,7 @@ import java.io.IOException;
  * rejection, simplifying the task of generating low-jitter clocks in noisy environments
  * typically found in communication systems.
  *
- * This driver implements only a narrow output range of 31-36.8MHz as needed by BFO Unit.
+ * This driver implements only a narrow output range of 31-36.8MHz as needed by BFO BaseUnit.
  * For a wider range, HSDIV and N1 coefficients must be estimated and also coarse re-tuning procedure applied.
  */
 public class Si570 extends GenericI2CChip {

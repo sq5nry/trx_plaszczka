@@ -4,17 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.sq5nry.plaszczka.backend.api.synthesiser.FrequencyOscillator;
 import org.sq5nry.plaszczka.backend.hw.chips.Ad9954;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.gpio.GpioControllerProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.spi.SPIConfiguration;
+import org.sq5nry.plaszczka.backend.impl.common.FrequencyOscillator;
+import org.sq5nry.plaszczka.backend.impl.common.BaseUnit;
 
 import java.util.List;
 
 @Component
-public class VfoUnit extends Unit implements FrequencyOscillator {
+public class VfoUnit extends BaseUnit implements FrequencyOscillator {
     private static final Logger logger = LoggerFactory.getLogger(VfoUnit.class);
 
     private Ad9954 dds;

@@ -9,11 +9,12 @@ import org.sq5nry.plaszczka.backend.api.selectivity.Selectivity;
 import org.sq5nry.plaszczka.backend.hw.chips.Pcf8574;
 import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
+import org.sq5nry.plaszczka.backend.impl.common.BaseUnit;
 
 import java.util.List;
 
 @Component
-public class SelectivityUnit extends Unit implements Selectivity {
+public class SelectivityUnit extends BaseUnit implements Selectivity {
     private static final Logger logger = LoggerFactory.getLogger(SelectivityUnit.class);
 
     private final int EXPANDER_ADDR = 0x23;
