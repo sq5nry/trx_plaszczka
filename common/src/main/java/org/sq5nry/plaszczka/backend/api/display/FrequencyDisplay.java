@@ -5,8 +5,8 @@ import java.io.IOException;
 public interface FrequencyDisplay {
     String ROOT = "/frequencyDisplay";
     String RESOURCE_PATH_SET_FREQUENCY = ROOT + "/freq/{freq}";
-    String RESOURCE_PATH_SET_MARKER= ROOT + "/marker/{id}";
-    String RESOURCE_PATH_SET_BLANK_LEADING_ZEROES = ROOT + "/blanking/{freq}";
+    String RESOURCE_PATH_SET_MARKER= ROOT + "/marker/{position}";
+    String RESOURCE_PATH_SET_BLANK_LEADING_ZEROES = ROOT + "/blanking/{enabled}";
     String RESOURCE_PATH_INITIALIZE = ROOT + "/initialize";
 
     /**
