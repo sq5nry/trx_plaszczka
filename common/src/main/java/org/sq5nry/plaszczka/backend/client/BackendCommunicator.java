@@ -19,8 +19,6 @@ import org.sq5nry.plaszczka.backend.api.vga.IfAmp;
 import org.sq5nry.plaszczka.backend.client.communicators.*;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.apache.http.protocol.HTTP.USER_AGENT;
 
@@ -62,6 +60,15 @@ public class BackendCommunicator implements RequestSender {
         ifAmp = new IfAmpCommunicator(this);
     }
 
+    public BackendCommunicator(String host, int port) {
+        this("http://" + host + ":" + port);
+    }
+
+    @Override
+    public String getRootURL() {
+        return rootUrl;
+    }
+
     @Override
     public String sendRequest(String path) throws IOException {
         logger.debug("sendRequest: " + path);
@@ -87,29 +94,6 @@ public class BackendCommunicator implements RequestSender {
         return response.getEntity().getContent().readAllBytes().toString();
     }
 
-    public Map queryState() {
-        String url = rootUrl + "INITIALIZE";    //TODO URL PATH?
-        logger.debug("sendRequest: " + url);
-
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(url);
-
-        // add request header
-        request.addHeader("User-Agent", USER_AGENT);
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-            if (response.getEntity().getContentLength() != 0) {
-                ObjectMapper mapper = new ObjectMapper();
-                return mapper.readValue(response.getEntity().getContent(), Map.class);
-            }
-        } catch (IOException e) {
-            logger.warn("error sending request to backend", e);
-        }
-        logger.debug("response: " + response == null ? "null" : response.getStatusLine());
-        return new HashMap();
-    }
-
     public Detector getDetector() {
         return detector;
     }
@@ -126,10 +110,6 @@ public class BackendCommunicator implements RequestSender {
         return attenuator;
     }
 
-    public ReceiverCtrl getReceiverCtrl() {
-        return receiverCtrl;
-    }
-
     public HModeMixer gethModeMixer() {
         return hModeMixer;
     }
@@ -144,5 +124,9 @@ public class BackendCommunicator implements RequestSender {
 
     public IfAmp getIfAmp() {
         return ifAmp;
+    }
+
+    public ReceiverCtrl getReceiverCtrl() {
+        return receiverCtrl;
     }
 }

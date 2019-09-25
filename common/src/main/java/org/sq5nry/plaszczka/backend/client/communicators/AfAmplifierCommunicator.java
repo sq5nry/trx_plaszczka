@@ -1,6 +1,7 @@
-package org.sq5nry.plaszczka.backend.client;
+package org.sq5nry.plaszczka.backend.client.communicators;
 
 import org.sq5nry.plaszczka.backend.api.audio.*;
+import org.sq5nry.plaszczka.backend.client.RequestSender;
 import org.sq5nry.plaszczka.backend.client.communicators.BaseCommunicator;
 
 public class AfAmplifierCommunicator extends BaseCommunicator implements AfAmplifier {
