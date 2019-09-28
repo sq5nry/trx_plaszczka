@@ -41,7 +41,7 @@ public class AudioUnit extends BaseUnit implements AfAmplifier {
     }
 
     @Override
-    public void initializeUnit() throws Exception {
+    public void initializeUnit() throws IOException {
         //TODO maybe mute?
     }
 

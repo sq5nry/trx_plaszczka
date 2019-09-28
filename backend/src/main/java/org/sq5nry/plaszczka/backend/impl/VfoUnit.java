@@ -9,8 +9,8 @@ import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.gpio.GpioControllerProvider;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.spi.SPIConfiguration;
-import org.sq5nry.plaszczka.backend.impl.common.FrequencyOscillator;
 import org.sq5nry.plaszczka.backend.impl.common.BaseUnit;
+import org.sq5nry.plaszczka.backend.impl.common.FrequencyOscillator;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class VfoUnit extends BaseUnit implements FrequencyOscillator {
     }
 
     @Override
-    public void initializeUnit() throws Exception {
+    public void initializeUnit() {
 
     }
 

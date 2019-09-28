@@ -3,6 +3,8 @@ package org.sq5nry.plaszczka.backend.hw.chips;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 /**
  * The AD5306 is a quad 8-bit buffered voltage output DACs in 16-lead TSSOP packages that operate from a single 2.5 V
  * to 5.5 V supply, consuming 500 μA at 3 V. Their on-chip output amplifiers allow rail-to-rail output swing with a slew
@@ -114,7 +116,7 @@ public class Ad5306 extends GenericDac {
     }
 
     @Override
-    public void setData(int data, int channel) throws Exception {
+    public void setData(int data, int channel) throws IOException {
         if (data<0 || data>MAX) {
             if (data>MAX) data = MAX;
             if (data<0) data = 0;
@@ -130,7 +132,7 @@ public class Ad5306 extends GenericDac {
     }
 
     @Override
-    public void setData(int data) throws Exception {
+    public void setData(int data) throws IOException {
         throw new UnsupportedOperationException("multi-channel device");
     }
 }

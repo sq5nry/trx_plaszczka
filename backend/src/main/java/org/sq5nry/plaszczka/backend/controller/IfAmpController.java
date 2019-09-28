@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.sq5nry.plaszczka.backend.api.vga.IfAmp;
 import org.sq5nry.plaszczka.backend.impl.VgaUnit;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -47,91 +48,91 @@ public class IfAmpController implements IfAmp, SchedulingConfigurer {
 
     @RequestMapping(value = RESOURCE_PATH_VSPH, method = RequestMethod.GET)
     @Override
-    public void setDecaySpeedInDecayStateForHangMode(@PathVariable float val) throws Exception {
+    public void setDecaySpeedInDecayStateForHangMode(@PathVariable float val) throws IOException {
         logger.debug("Vsph (DecaySpeedInDecayStateForHangMode) to {}", val);
         vgaUnit.setDecaySpeedInDecayStateForHangMode(val);
     }
 
     @RequestMapping(value = RESOURCE_PATH_VSPA, method = RequestMethod.GET)
     @Override
-    public void setDecaySpeedForAttackDecayMode(@PathVariable float val) throws Exception {
+    public void setDecaySpeedForAttackDecayMode(@PathVariable float val) throws IOException {
         logger.debug("Vspa (DecaySpeedForAttackDecayMode) to {}", val);
         vgaUnit.setDecaySpeedForAttackDecayMode(val);
     }
 
     @RequestMapping(value = RESOURCE_PATH_VLEAK, method = RequestMethod.GET)
     @Override
-    public void setDecaySpeedInHangStateForHangMode(@PathVariable float val) throws Exception {
+    public void setDecaySpeedInHangStateForHangMode(@PathVariable float val) throws IOException {
         logger.debug("Vleak (DecaySpeedInHangStateForHangMode) to {}", val);
         vgaUnit.setDecaySpeedInHangStateForHangMode(val);
     }
 
     @RequestMapping(value = RESOURCE_PATH_VFLOOR, method = RequestMethod.GET)
     @Override
-    public void setNoiseFloorCompensation(@PathVariable float val) throws Exception {
+    public void setNoiseFloorCompensation(@PathVariable float val) throws IOException {
         logger.debug("Vfloor (NoiseFloorCompensation) to {}", val);
         vgaUnit.setNoiseFloorCompensation(val);
     }
 
     @RequestMapping(value = RESOURCE_PATH_VATH, method = RequestMethod.GET)
     @Override
-    public void setStrategyThreshold(@PathVariable float val) throws Exception {
+    public void setStrategyThreshold(@PathVariable float val) throws IOException {
         logger.debug("Vath (StrategyThreshold) to {}", val);
         vgaUnit.setStrategyThreshold(val);
     }
 
     @RequestMapping(value = RESOURCE_PATH_VHTH, method = RequestMethod.GET)
     @Override
-    public void setHangThreshold(@PathVariable float val) throws Exception {
+    public void setHangThreshold(@PathVariable float val) throws IOException {
         logger.debug("Vhth (HangThreshold) to {}", val);
         vgaUnit.setHangThreshold(val);
     }
 
     @RequestMapping(value = RESOURCE_PATH_VLOOP, method = RequestMethod.GET)
     @Override
-    public void setVLoop(@PathVariable float val) throws Exception {
+    public void setVLoop(@PathVariable float val) throws IOException {
         logger.info("Vloop (VLoop) to {}", val);
         vgaUnit.setVLoop(val);
     }
 
     @RequestMapping(value = RESOURCE_PATH_MAXGAIN, method = RequestMethod.GET)
     @Override
-    public void setMaximumGain(@PathVariable float val) throws Exception {
+    public void setMaximumGain(@PathVariable float val) throws IOException {
         logger.info("MaximumGain (Vgain) to {}", val);
         vgaUnit.setMaximumGain(val);
     }
 
     @RequestMapping(value = RESOURCE_PATH_VSPD, method = RequestMethod.GET)
     @Override
-    public void setMaximumHangTimeInHangMode(@PathVariable float val) throws Exception {
+    public void setMaximumHangTimeInHangMode(@PathVariable float val) throws IOException {
         logger.info("MaximumHangTimeInHangMode (Vspd) to {}", val);
         vgaUnit.setMaximumHangTimeInHangMode(val);
     }
 
     @RequestMapping(value = RESOURCE_PATH_ATTACK, method = RequestMethod.GET)
     @Override
-    public void setAttackTime(@PathVariable float val) throws Exception {
+    public void setAttackTime(@PathVariable float val) throws IOException {
         logger.info("AttackTime (Attack) to {}", val);
         vgaUnit.setAttackTime(val);
     }
 
     @RequestMapping(value = RESOURCE_PATH_HANG_ON_TRANSMIT, method = RequestMethod.GET)
     @Override
-    public void setHangOnTransmit(@PathVariable boolean flag) throws Exception {
+    public void setHangOnTransmit(@PathVariable boolean flag) throws IOException {
         logger.info("setHangOnTransmit to {}", flag);
         vgaUnit.setHangOnTransmit(flag);
     }
 
     @RequestMapping(value = RESOURCE_PATH_MUTE, method = RequestMethod.GET)
     @Override
-    public void setMute(@PathVariable boolean flag) throws Exception {
+    public void setMute(@PathVariable boolean flag) throws IOException {
         logger.info("setMute to {}", flag);
         vgaUnit.setMute(flag);
     }
 
     @RequestMapping(value = RESOURCE_PATH_VAGC, method = RequestMethod.GET)
     @Override
-    public int getVAgc() throws Exception {
+    public int getVAgc() throws IOException {
         logger.debug("getVagc");
         return vgaUnit.getVAgc();
     }

@@ -32,7 +32,7 @@ public class BfoUnit extends BaseUnit implements FrequencyOscillator {
     }
 
     @Override
-    public void initializeUnit() throws Exception {
+    public void initializeUnit() throws IOException {
         //TODO ?
     }
 

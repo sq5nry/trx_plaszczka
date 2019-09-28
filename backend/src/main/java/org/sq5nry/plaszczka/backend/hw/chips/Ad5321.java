@@ -86,7 +86,7 @@ public class Ad5321 extends GenericDac {
     }
 
     @Override
-    public void setData(int data, int channel) throws Exception {
+    public void setData(int data, int channel) throws IOException {
         throw new UnsupportedOperationException("single channel only");
     }
 }

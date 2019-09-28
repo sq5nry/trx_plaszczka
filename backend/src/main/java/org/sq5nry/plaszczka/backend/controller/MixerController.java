@@ -10,6 +10,8 @@ import org.sq5nry.plaszczka.backend.api.Mode;
 import org.sq5nry.plaszczka.backend.api.mixer.HModeMixer;
 import org.sq5nry.plaszczka.backend.impl.FrontEndMixerUnit;
 
+import java.io.IOException;
+
 @RestController
 public class MixerController implements HModeMixer {
     private static final Logger logger = LoggerFactory.getLogger(MixerController.class);
@@ -19,21 +21,21 @@ public class MixerController implements HModeMixer {
 
     @GetMapping(value = RESOURCE_PATH_ROOFING)
     @Override
-    public void setRoofingFilter(@PathVariable Mode mode) throws Exception {
+    public void setRoofingFilter(@PathVariable Mode mode) throws IOException {
         logger.debug("post-mixer roofing mode requested, v={}", mode);
         mixerService.setRoofingFilter(mode);
     }
 
     @GetMapping(value = RESOURCE_PATH_BIAS)
     @Override
-    public void setBiasPoint(@PathVariable float val) throws Exception {
+    public void setBiasPoint(@PathVariable float val) throws IOException {
         logger.debug("mixer bias voltage requested, v={}", val);
         mixerService.setBiasPoint(val);
     }
 
     @GetMapping(value = RESOURCE_PATH_SQUARER)
     @Override
-    public void setSquarerThreshold(@PathVariable float val) throws Exception {
+    public void setSquarerThreshold(@PathVariable float val) throws IOException {
         logger.debug("squarer threshold requested, v={}", val);
         mixerService.setSquarerThreshold(val);
     }

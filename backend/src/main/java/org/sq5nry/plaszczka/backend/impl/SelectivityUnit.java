@@ -11,6 +11,7 @@ import org.sq5nry.plaszczka.backend.hw.common.GenericChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.impl.common.BaseUnit;
 
+import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -58,7 +59,7 @@ public class SelectivityUnit extends BaseUnit implements Selectivity {
     }
 
     @Override
-    public void initializeUnit() throws Exception {
+    public void initializeUnit() throws IOException {
         FeatureBits defBw = FeatureBits.BW_NONE;
         logger.info("initializing unit with defaults: {}", defBw);
         Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
@@ -66,7 +67,7 @@ public class SelectivityUnit extends BaseUnit implements Selectivity {
     }
 
     @Override
-    public void setFilter(Bandwidth bandwidth) throws Exception {
+    public void setFilter(Bandwidth bandwidth) throws IOException {
         logger.info("setting {} selectivity filter", bandwidth);
         this.bw = bandwidth;
         FeatureBits bw = FeatureBits.getByBandwidth(bandwidth);
@@ -76,7 +77,7 @@ public class SelectivityUnit extends BaseUnit implements Selectivity {
     }
 
     @Override
-    public void bypass() throws Exception {
+    public void bypass() throws IOException {
         logger.info("setting bandwidth filter: all-pass");
         Pcf8574 expander = (Pcf8574) getChip(EXPANDER_ADDR);
         expander.writePort(FeatureBits.BW_ALLBAND.getP());

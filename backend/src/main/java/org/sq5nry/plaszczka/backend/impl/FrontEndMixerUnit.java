@@ -41,7 +41,7 @@ public class FrontEndMixerUnit extends BaseUnit implements HModeMixer {
     }
 
     @Override
-    public void initializeUnit() throws Exception {
+    public void initializeUnit() throws IOException {
         Ad5321 adcBias = (Ad5321) getChip(DAC_BIAS_ADDR);
         Ad5321 adcSquarer = (Ad5321) getChip(DAC_SQUARER_ADDR);
         adcBias.setVoltage(0.0f);
@@ -51,7 +51,7 @@ public class FrontEndMixerUnit extends BaseUnit implements HModeMixer {
     }
 
     @Override
-    public void setBiasPoint(float voltage) throws Exception {
+    public void setBiasPoint(float voltage) throws IOException {
         logger.info("setting mixer trafo bias point at {}V", voltage);
         GenericDac dac = (GenericDac) getChip(DAC_BIAS_ADDR);
         dac.setVoltage(voltage);
@@ -63,7 +63,7 @@ public class FrontEndMixerUnit extends BaseUnit implements HModeMixer {
     }
 
     @Override
-    public void setSquarerThreshold(float percentage) throws Exception {
+    public void setSquarerThreshold(float percentage) throws IOException {
         logger.info("setting squarer threshold at {}%", percentage);
         GenericDac dac = (GenericDac) getChip(DAC_SQUARER_ADDR);
         dac.setData((int) ((dac.getMaxData()*percentage)/100));

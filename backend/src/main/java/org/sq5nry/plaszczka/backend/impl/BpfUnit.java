@@ -79,7 +79,7 @@ public class BpfUnit extends BaseUnit implements BandPassFilter, Attenuator {
         chipset.add(new Pcf8575(EXPANDER_ADDR));
     }
 
-    public void initializeUnit() throws Exception {
+    public void initializeUnit() throws IOException {
         update();
     }
 

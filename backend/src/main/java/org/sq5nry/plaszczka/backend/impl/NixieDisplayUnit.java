@@ -48,7 +48,7 @@ public class NixieDisplayUnit extends BaseUnit implements FrequencyDisplay {
     }
 
     @Override
-    public void initializeUnit() throws Exception {
+    public void initializeUnit() throws IOException {
         initializeExpander((Mcp23017) getChip(EXPANDER_A_I2CADDR));
         initializeExpander((Mcp23017) getChip(EXPANDER_B_I2CADDR));
     }

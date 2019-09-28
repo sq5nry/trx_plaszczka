@@ -13,6 +13,7 @@ import org.sq5nry.plaszczka.backend.hw.i2c.GenericI2CChip;
 import org.sq5nry.plaszczka.backend.hw.i2c.I2CBusProvider;
 import org.sq5nry.plaszczka.backend.hw.spi.SPIConfiguration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -116,7 +117,7 @@ public abstract class BaseUnit implements Unit {
         return state;
     }
 
-    public abstract void initializeUnit() throws Exception;
+    public abstract void initializeUnit() throws IOException;
 
     /**
      * Create chipset be inserting chips into the list.
