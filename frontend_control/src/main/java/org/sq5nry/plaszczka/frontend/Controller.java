@@ -154,6 +154,8 @@ public class Controller implements Initializable, MessageHandler.Whole<String>, 
         audio_input.getSelectionModel().selectFirst();
         setAudioInput("I/Q stereo");
         setAudioOut();
+
+        comm.getSynthesizer().setBfoFrequency(36006000);    //TODO from control
     }
 
     /*

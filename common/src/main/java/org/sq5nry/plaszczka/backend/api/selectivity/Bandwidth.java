@@ -20,4 +20,8 @@ public enum Bandwidth {
     public String toString() {
         return freq + "Hz";
     }
+
+    public int getBandwidth() {
+        return freq;
+    }
 }

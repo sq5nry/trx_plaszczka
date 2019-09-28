@@ -11,7 +11,7 @@ public class SelectivityCommunicator extends BaseCommunicator implements Selecti
 
     @Override
     public void setFilter(Bandwidth bw) {
-        requestSender.sendRequest(Selectivity.RESOURCE_PATH_BANDWIDTH.replace("{bw}", "" + bw));
+        requestSender.sendRequest(Selectivity.RESOURCE_PATH_BANDWIDTH.replace("{bw}", bw.name()));
     }
 
     @Override
