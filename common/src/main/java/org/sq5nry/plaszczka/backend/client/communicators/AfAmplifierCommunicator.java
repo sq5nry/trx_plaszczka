@@ -15,7 +15,7 @@ public class AfAmplifierCommunicator extends BaseCommunicator implements AfAmpli
 
     @Override
     public String setVolume(Channel channel, Integer volume) {
-        return requestSender.sendRequest(AfAmplifier.RESOURCE_PATH_VOLUME.replace("{volume}", "" + volume));
+        return requestSender.sendRequest(AfAmplifier.RESOURCE_PATH_VOLUME.replace("{channel}", channel.name()).replace("{volume}", "" + volume));
     }
 
     @Override

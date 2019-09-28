@@ -60,12 +60,12 @@ public class IfAmpCommunicator extends BaseCommunicator implements IfAmp {
 
     @Override
     public void setHangOnTransmit(boolean enabled) {
-        requestSender.sendRequest(IfAmp.RESOURCE_PATH_HANG_ON_TRANSMIT.replace("{val}", Boolean.toString(enabled)));
+        requestSender.sendRequest(IfAmp.RESOURCE_PATH_HANG_ON_TRANSMIT.replace("{flag}", Boolean.toString(enabled)));
     }
 
     @Override
     public void setMute(boolean enabled) {
-        requestSender.sendRequest(IfAmp.RESOURCE_PATH_MUTE.replace("{val}", Boolean.toString(enabled)));
+        requestSender.sendRequest(IfAmp.RESOURCE_PATH_MUTE.replace("{flag}", Boolean.toString(enabled)));
     }
 
     @Override

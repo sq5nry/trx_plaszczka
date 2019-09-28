@@ -47,10 +47,8 @@ public class OutputAmplifier {
 
     @Override
     public String toString() {
-        return "OutputAmplifier{" +
-                (headphones ? "headphones," : ",")+
-                (speaker ? "speaker," : ",")+
-                (rec ? "rec," : ",")+
-                '}';
+        return (headphones ? "headphones_" : "") +
+               (speaker ? "speaker_," : "")+
+               (rec ? "rec_" : "");
     }
 }

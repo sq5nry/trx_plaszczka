@@ -475,19 +475,19 @@ public class Controller implements Initializable, MessageHandler.Whole<String>, 
                 }
 
                 if (lastRvol != -vol && lastLvol != -vol) {
-                    comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.BOTH, vol);
+                    comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.BOTH, Math.abs(vol));
                     lastChannel = "BOTH";
                     lastLvol = lastRvol = -vol;
                 }
 
             } else {
                 if (channel == Channel.L && (lastLvol != -vol)) {
-                    comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.LEFT, vol);
+                    comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.LEFT, Math.abs(vol));
                     lastChannel = "LEFT";
                     lastLvol = -vol;
                 }
                 if (channel == Channel.R && (lastRvol != -vol)) {
-                    comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.RIGHT, vol);
+                    comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.RIGHT, Math.abs(vol));
                     lastChannel = "RIGHT";
                     lastRvol = -vol;
                 }
@@ -638,7 +638,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String>, 
     private void bpfBandChanged(ActionEvent event) throws IOException {
         logger.debug("bpfBandChanged: " + event);
         String band = ((RadioButton) event.getSource()).getId().substring(4);
-        comm.getBandPassFilter().setBand(Band.valueOf(band));
+        comm.getBandPassFilter().setBand(Band.fromMeters(band));
         if (band.equals("6m")) {
             MHz = "50";
             freq_slider_khz.setMajorTickUnit(25);
@@ -728,7 +728,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String>, 
         } else if ("Bypass".equals(value)) {
             comm.getSelectivity().setFilter(Bandwidth.ALL_BAND);
         } else {
-            comm.getSelectivity().setFilter(Bandwidth.valueOf(value));
+            comm.getSelectivity().setFilter(Bandwidth.fromBandwidth(Integer.parseInt(value)));
         }
     }
 
