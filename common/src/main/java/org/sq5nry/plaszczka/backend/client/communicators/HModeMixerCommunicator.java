@@ -10,17 +10,17 @@ public class HModeMixerCommunicator extends BaseCommunicator implements HModeMix
     }
 
     @Override
-    public void setBiasPoint(float val) throws Exception {
+    public void setBiasPoint(float val) {
         requestSender.sendRequest(HModeMixer.RESOURCE_PATH_BIAS.replace("{val}", Float.toString(val)));
     }
 
     @Override
-    public void setSquarerThreshold(float percentage) throws Exception {
+    public void setSquarerThreshold(float percentage) {
         requestSender.sendRequest(HModeMixer.RESOURCE_PATH_SQUARER.replace("{val}", Float.toString(percentage)));
     }
 
     @Override
-    public void setRoofingFilter(Mode mode) throws Exception {
+    public void setRoofingFilter(Mode mode) {
         requestSender.sendRequest(HModeMixer.RESOURCE_PATH_ROOFING.replace("{mode}", mode.name()));
     }
 }

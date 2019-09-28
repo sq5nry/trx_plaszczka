@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.sq5nry.plaszczka.backend.api.audio.*;
 import org.sq5nry.plaszczka.backend.impl.AudioUnit;
 
+import java.io.IOException;
+
 /*
 http://localhost:8090/audio/input/QQ_MONO
 http://localhost:8090/audio/volume/LEFT/20
@@ -26,14 +28,14 @@ public class AudioController implements AfAmplifier {
 
     @RequestMapping(value = RESOURCE_PATH_INPUT, method = RequestMethod.GET)
     @Override
-    public String setInput(@PathVariable InputSelector mode) throws Exception {
+    public String setInput(@PathVariable InputSelector mode) throws IOException {
         logger.debug("audio input setting requested: {}", mode);
         return audioUnit.setInput(mode);
     }
 
     @RequestMapping(value = RESOURCE_PATH_VOLUME, method = RequestMethod.GET)
     @Override
-    public String setVolume(@PathVariable Channel channel, @PathVariable Integer volume) throws Exception {
+    public String setVolume(@PathVariable Channel channel, @PathVariable Integer volume) throws IOException {
         logger.debug("volume change requested for channel {} to -{}dB", channel, volume);
         audioUnit.setVolume(channel, volume);
         int[] vol = audioUnit.getVolume();
@@ -42,14 +44,14 @@ public class AudioController implements AfAmplifier {
 
     @RequestMapping(value = RESOURCE_PATH_MUTE_LOUDNESS, method = RequestMethod.GET)
     @Override
-    public String setMuteLoudness(@PathVariable MuteAndLoudness mode) throws Exception {
+    public String setMuteLoudness(@PathVariable MuteAndLoudness mode) throws IOException {
         logger.debug("mute/loudness setting requested: {}", mode);
         return audioUnit.setMuteLoudness(mode);
     }
 
     @RequestMapping(value = RESOURCE_PATH_OUTPUT_AMPLIFIER, method = RequestMethod.GET)
     @Override
-    public String setOutputAmplifier(@PathVariable OutputAmplifier output) throws Exception {
+    public String setOutputAmplifier(@PathVariable OutputAmplifier output) throws IOException {
         logger.debug("routing to output amplifier(s) {} requested", output);
         audioUnit.setOutputAmplifier(output);
         return audioUnit.getOutputAmp().toString();

@@ -1,5 +1,7 @@
 package org.sq5nry.plaszczka.backend.api.audio;
 
+import java.io.IOException;
+
 public interface AfAmplifier {
     String ROOT = "/audio";
     String RESOURCE_PATH_INPUT = ROOT + "/input/{mode}";
@@ -12,26 +14,26 @@ public interface AfAmplifier {
      * @param mode
      * @return result
      */
-    String setInput(InputSelector mode) throws Exception;
+    String setInput(InputSelector mode) throws IOException;
 
     /**
      * Set volume.
      * @param channel
      * @param volume -dB, 0..-95dB
      */
-    String setVolume(Channel channel, Integer volume) throws Exception;
+    String setVolume(Channel channel, Integer volume) throws IOException;
 
     /**
      * Set loud or mute effects.
      * @param loudness
      * @return result
      */
-    String setMuteLoudness(MuteAndLoudness loudness) throws Exception;
+    String setMuteLoudness(MuteAndLoudness loudness) throws IOException;
 
     /**
      * Set output amplifier(s).
      * @param amp which output amplifier(s) is(are) enabled
      * @return result
      */
-    String setOutputAmplifier(OutputAmplifier amp) throws Exception;
+    String setOutputAmplifier(OutputAmplifier amp) throws IOException;
 }

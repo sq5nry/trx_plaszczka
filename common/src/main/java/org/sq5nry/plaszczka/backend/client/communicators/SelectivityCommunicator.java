@@ -10,12 +10,12 @@ public class SelectivityCommunicator extends BaseCommunicator implements Selecti
     }
 
     @Override
-    public void setFilter(Bandwidth bw) throws Exception {
+    public void setFilter(Bandwidth bw) {
         requestSender.sendRequest(Selectivity.RESOURCE_PATH_BANDWIDTH.replace("{bw}", "" + bw));
     }
 
     @Override
-    public void bypass() throws Exception {
+    public void bypass() {
         requestSender.sendRequest(Selectivity.RESOURCE_PATH_BYPASS);
     }
 }

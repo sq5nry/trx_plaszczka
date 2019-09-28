@@ -46,7 +46,7 @@ public class AudioUnit extends BaseUnit implements AfAmplifier {
     }
 
     @Override
-    public String setInput(InputSelector mode) throws Exception {
+    public String setInput(InputSelector mode) throws IOException {
         Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch (mode) {
             case II_MONO:
@@ -67,7 +67,7 @@ public class AudioUnit extends BaseUnit implements AfAmplifier {
     }
 
     @Override
-    public String setVolume(Channel channel, Integer volume) throws Exception {
+    public String setVolume(Channel channel, Integer volume) throws IOException {
         Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch (channel) {
             case BOTH:
@@ -99,7 +99,7 @@ public class AudioUnit extends BaseUnit implements AfAmplifier {
     }
 
     @Override
-    public String setMuteLoudness(MuteAndLoudness loudness) throws Exception {
+    public String setMuteLoudness(MuteAndLoudness loudness) throws IOException {
         Tda7309 audioProc = (Tda7309) getChip(AUDIO_PROCESSOR_ADDR);
         switch(loudness) {
             case LOUD_ON_10DB:

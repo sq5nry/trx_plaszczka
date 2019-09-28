@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface RequestSender {
     String getRootURL();
-    String sendRequest(String path) throws IOException;
+    String sendRequest(String path);
 }

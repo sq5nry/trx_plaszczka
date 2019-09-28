@@ -11,6 +11,7 @@ import org.sq5nry.plaszczka.backend.client.RequestSender;
 import org.sq5nry.plaszczka.backend.common.Unit;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,8 +40,9 @@ public class ReceiverCtrlCommunicator extends BaseCommunicator implements Receiv
         try {
             response = client.execute(request);
             if (response.getEntity().getContentLength() != 0) {
-                ObjectMapper mapper = new ObjectMapper();
-                return mapper.readValue(response.getEntity().getContent(), Map.class);
+                final ObjectMapper mapper = new ObjectMapper();
+                final InputStream content = response.getEntity().getContent();
+                return mapper.readValue(content, Map.class);
             }
         } catch (IOException e) {
             logger.warn("error sending request to backend", e);

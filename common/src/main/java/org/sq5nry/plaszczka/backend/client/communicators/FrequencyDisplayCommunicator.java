@@ -11,17 +11,17 @@ public class FrequencyDisplayCommunicator extends BaseCommunicator implements Fr
     }
 
     @Override
-    public void setFrequency(int freq) throws IOException {
+    public void setFrequency(int freq) {
         requestSender.sendRequest(FrequencyDisplayCommunicator.RESOURCE_PATH_SET_FREQUENCY.replace("{freq}", Float.toString(freq)));
     }
 
     @Override
-    public void setMarker(int position) throws IOException {
+    public void setMarker(int position) {
         requestSender.sendRequest(FrequencyDisplayCommunicator.RESOURCE_PATH_SET_MARKER.replace("{position}", Integer.toString(position)));
     }
 
     @Override
-    public void setBlankLeadingZeroes(boolean blankLeadingZeroes) throws IOException {
+    public void setBlankLeadingZeroes(boolean blankLeadingZeroes) {
         requestSender.sendRequest(FrequencyDisplayCommunicator.RESOURCE_PATH_SET_BLANK_LEADING_ZEROES.replace("{enabled}", Boolean.toString(blankLeadingZeroes)));
     }
 }

@@ -17,9 +17,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import org.apache.log4j.Logger;
 import org.sq5nry.plaszczka.backend.api.Mode;
-import org.sq5nry.plaszczka.backend.api.audio.Channel;
-import org.sq5nry.plaszczka.backend.api.audio.MuteAndLoudness;
+import org.sq5nry.plaszczka.backend.api.audio.*;
+import org.sq5nry.plaszczka.backend.api.inputfilter.Band;
+import org.sq5nry.plaszczka.backend.api.selectivity.Bandwidth;
 import org.sq5nry.plaszczka.backend.client.BackendCommunicator;
+import org.sq5nry.plaszczka.backend.client.ExceptionHandler;
 import org.sq5nry.plaszczka.backend.common.Unit;
 import org.sq5nry.plaszczka.frontend.comm.VAgcStreamController;
 import org.sq5nry.plaszczka.frontend.comm.WsStompClient;
@@ -33,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable, MessageHandler.Whole<String> {
+public class Controller implements Initializable, MessageHandler.Whole<String>, ExceptionHandler {
     private static final Logger logger = Logger.getLogger(Controller.class);
 
     public static final String BACKEND_HOST_LOCAL = "127.0.0.1";
@@ -120,7 +122,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         }
     }
 
-    @FXML private void setDefaultsRequested(ActionEvent event) {
+    @FXML private void setDefaultsRequested(ActionEvent event) throws Exception {
         setAttenuation();
         bpf_20m.fire();
         setMixerSquarer();
@@ -145,7 +147,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         setVath();
         setVhth();
         setDetectorMode();
-        comm.sendRequest(BackendCommunicator.DETECTOR_ENA + "1");   //workaround
+        comm.getDetector().setEnabled(true);   //workaround
         setVolume(0, Channel.R);
         setVolume(0, Channel.L);
 
@@ -171,13 +173,13 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     public static final int LO_FREQ = 9000000;
 
     @FXML
-    private void freqChanged(ActionEvent e) throws IOException {
+    private void freqChanged(ActionEvent e) {
         setDispFreq();
     }
 
     String MHz = "14";
 
-    private void setDispFreq() throws IOException {
+    private void setDispFreq() {
         logger.debug("freqChanged");
 
         double khz_raw = freq_slider_khz.getValue();
@@ -190,7 +192,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         setFreq0(Hz, int_khz);
     }
 
-    private void setFreq0(String Hz, int int_khz) throws IOException {
+    private void setFreq0(String Hz, int int_khz) {
         freq_mhz.textProperty().setValue(MHz);
 
         String kHz = DEC_FORMAT_3DIG.format(int_khz);
@@ -205,11 +207,15 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         } else if (mixing_l.isSelected()) {
             freq = Math.abs(freq - LO_FREQ);
         }
-        comm.getSynthesizer().setVfoFrequency(freq);
-        comm.getFrequencyDisplay().setFrequency(Integer.parseInt(freqString));
+        try {
+            comm.getSynthesizer().setVfoFrequency(freq);
+            comm.getFrequencyDisplay().setFrequency(Integer.parseInt(freqString));
+        } catch (IOException e) {
+            logger.warn(e);
+        }
     }
 
-    private void fineAdjustHz() throws IOException {
+    private void fineAdjustHz() {
         double hz_raw = freq_slider_hz.getValue();
         String Hz = DEC_FORMAT_3DIG.format(hz_raw);
         freq_hz.textProperty().setValue(Hz);
@@ -236,7 +242,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML TextField vga_vloop_disp;
 
     @FXML
-    private void vgaOpenLoopRequested(ActionEvent event) throws Exception {
+    private void vgaOpenLoopRequested(ActionEvent event) throws IOException {
         comm.getIfAmp().setVLoop(131);
         boolean isOpen = ((ToggleButton)event.getSource()).isSelected();
         vga_vloop.setDisable(isOpen);   //deactivate manual gain control
@@ -247,28 +253,36 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         }
     }
 
-    private void setIfGain() throws Exception {
+    private void setIfGain() {
         float gain = (float) vga_ifGain.getValue();
-        comm.getIfAmp().setMaximumGain(gain);
+        try {
+            comm.getIfAmp().setMaximumGain(gain);
+        } catch (IOException e) {
+            logger.warn(e);
+        }
         vga_ifGain_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(gain));
     }
 
-    private void setVLoop() throws Exception {
+    private void setVLoop() {
         float val = (float) vga_vloop.getValue();
-        comm.getIfAmp().setVLoop(val);
+        try {
+            comm.getIfAmp().setVLoop(val);
+        } catch (IOException e) {
+            logger.warn(e);
+        }
         vga_vloop_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(val));
     }
 
     @FXML private CheckBox vga_mute;
     @FXML
-    private void vgaMuteRequested() throws Exception {
+    private void vgaMuteRequested() throws IOException {
         comm.getIfAmp().setMute(
                 vga_mute.isSelected());
     }
 
     @FXML private CheckBox vga_hangOnTx;
     @FXML
-    private void vgaHangOnTxRequested() throws Exception {
+    private void vgaHangOnTxRequested() throws IOException {
         comm.getIfAmp().setHangOnTransmit(
                 vga_hangOnTx.isSelected());
     }
@@ -276,11 +290,11 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     ///////////////////////////////////////////////////////
     @FXML TextField vga_Vhth;
     @FXML
-    private void vgaVhthChanged(ActionEvent event) throws Exception {
+    private void vgaVhthChanged(ActionEvent event) throws IOException {
         setVhth();
     }
 
-    private void setVhth() throws Exception {
+    private void setVhth() throws IOException {
         comm.getIfAmp().setHangThreshold(
                 Float.parseFloat(
                         vga_Vhth.textProperty().getValue()));
@@ -291,11 +305,11 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML TextField vga_Vath_disp;
 
     @FXML
-    private void vgaVathChanged(ActionEvent event) throws Exception {
+    private void vgaVathChanged(ActionEvent event) throws IOException {
         setVath();
     }
 
-    private void setVath() throws Exception {
+    private void setVath() throws IOException {
         comm.getIfAmp().setStrategyThreshold(
                 Float.parseFloat(
                         vga_Vath_disp.textProperty().getValue()));
@@ -306,11 +320,11 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML TextField vga_Vfloor_disp;
 
     @FXML
-    private void vgaVfloorChanged(ActionEvent event) throws Exception {
+    private void vgaVfloorChanged(ActionEvent event) throws IOException {
         setVfloor();
     }
 
-    private void setVfloor() throws Exception {
+    private void setVfloor() throws IOException {
         comm.getIfAmp().setNoiseFloorCompensation(
                 Float.parseFloat(
                         vga_Vfloor_disp.textProperty().getValue()));
@@ -322,14 +336,18 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML TextField vga_Vspa_disp;
 
     @FXML
-    private void vgaVspaChanged(ActionEvent event) throws Exception {
+    private void vgaVspaChanged(ActionEvent event) throws IOException {
         setVspa();
     }
 
-    private void setVspa() throws Exception {
+    private void setVspa() {
         String val = DEC_FORMAT_2DIG.format(vga_Vspa.getValue());
         vga_Vspa_disp.textProperty().setValue(val);
-        comm.getIfAmp().setDecaySpeedForAttackDecayMode(Float.parseFloat(val));
+        try {
+            comm.getIfAmp().setDecaySpeedForAttackDecayMode(Float.parseFloat(val));
+        } catch (IOException e) {
+            logger.warn(e);
+        }
     }
     ///////////////////////////////////////////////////////
 
@@ -338,14 +356,18 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML TextField vga_Vsph_disp;
 
     @FXML
-    private void vgaVsphChanged(ActionEvent event) throws Exception {
+    private void vgaVsphChanged(ActionEvent event) throws IOException {
         setVsph();
     }
 
-    private void setVsph() throws Exception {
+    private void setVsph() {
         String val = DEC_FORMAT_2DIG.format(vga_Vsph.getValue());
         vga_Vsph_disp.textProperty().setValue(val);
-        comm.getIfAmp().setDecaySpeedInDecayStateForHangMode(Float.parseFloat(val));
+        try {
+            comm.getIfAmp().setDecaySpeedInDecayStateForHangMode(Float.parseFloat(val));
+        } catch (IOException e) {
+            logger.warn(e);
+        }
     }
     ///////////////////////////////////////////////////////
 
@@ -354,14 +376,18 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML TextField vga_Vspd_disp;
 
     @FXML
-    private void vgaVspdChanged(ActionEvent event) throws Exception {
+    private void vgaVspdChanged(ActionEvent event) {
         setVspd();
     }
 
-    private void setVspd() throws Exception {
+    private void setVspd() {
         String val = DEC_FORMAT_2DIG.format(vga_Vspd.getValue());
         vga_Vspd_disp.textProperty().setValue(val);
-        comm.getIfAmp().setMaximumHangTimeInHangMode(Float.parseFloat(val));
+        try {
+            comm.getIfAmp().setMaximumHangTimeInHangMode(Float.parseFloat(val));
+        } catch (IOException e) {
+            logger.warn(e);
+        }
     }
     ///////////////////////////////////////////////////////
 
@@ -370,14 +396,18 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML TextField vga_Attack_disp;
 
     @FXML
-    private void vgaAttackChanged(ActionEvent event) throws Exception {
+    private void vgaAttackChanged(ActionEvent event) {
         setAttack();
     }
 
-    private void setAttack() throws Exception {
+    private void setAttack() {
         String val = DEC_FORMAT_2DIG.format(vga_Attack.getValue());
         vga_Attack_disp.textProperty().setValue(val);
-        comm.getIfAmp().setAttackTime(Float.parseFloat(val));
+        try {
+            comm.getIfAmp().setAttackTime(Float.parseFloat(val));
+        } catch (IOException e) {
+            logger.warn(e);
+        }
     }
     ///////////////////////////////////////////////////////
 
@@ -386,14 +416,18 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML TextField vga_Vleak_disp;
 
     @FXML
-    private void vgaVleakChanged(ActionEvent event) throws Exception {
+    private void vgaVleakChanged(ActionEvent event) {
         setVleak();
     }
 
-    private void setVleak() throws Exception {
+    private void setVleak() {
         String val = DEC_FORMAT_2DIG.format(vga_Vleak.getValue());
         vga_Vleak_disp.textProperty().setValue(val);
-        comm.getIfAmp().setDecaySpeedInHangStateForHangMode(Float.parseFloat(val));
+        try {
+            comm.getIfAmp().setDecaySpeedInHangStateForHangMode(Float.parseFloat(val));
+        } catch (IOException e) {
+            logger.warn(e);
+        }
     }
     ///////////////////////////////////////////////////////
 
@@ -413,7 +447,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML private CheckBox audio_out_rec;
     @FXML private ChoiceBox audio_input;
 
-    @FXML private void muteLoudChanged(ActionEvent e) throws Exception {
+    @FXML private void muteLoudChanged(ActionEvent e) throws IOException {
         String command;
         switch (((RadioButton) e.getSource()).getId()) {
             case "mute_slow": command = "SLOW_SOFT_MUTE"; break;
@@ -431,31 +465,35 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     String lastChannel;
     int lastLvol = 1, lastRvol = 1;
 
-    private void setVolume(int vol, Channel channel) throws Exception {
-        if (audioLRCoupled) {
-            if (channel == Channel.L) { //TODO check coupler
-                audio_r_vol.setValue(vol);
+    private void setVolume(int vol, Channel channel) {
+        try {
+            if (audioLRCoupled) {
+                if (channel == Channel.L) { //TODO check coupler
+                    audio_r_vol.setValue(vol);
+                } else {
+                    audio_l_vol.setValue(vol);
+                }
+
+                if (lastRvol != -vol && lastLvol != -vol) {
+                    comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.BOTH, vol);
+                    lastChannel = "BOTH";
+                    lastLvol = lastRvol = -vol;
+                }
+
             } else {
-                audio_l_vol.setValue(vol);
+                if (channel == Channel.L && (lastLvol != -vol)) {
+                    comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.LEFT, vol);
+                    lastChannel = "LEFT";
+                    lastLvol = -vol;
+                }
+                if (channel == Channel.R && (lastRvol != -vol)) {
+                    comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.RIGHT, vol);
+                    lastChannel = "RIGHT";
+                    lastRvol = -vol;
+                }
             }
-
-            if (lastRvol != -vol && lastLvol != -vol) {
-                comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.BOTH, vol);
-                lastChannel = "BOTH";
-                lastLvol = lastRvol = -vol;
-            }
-
-        } else {
-            if (channel == Channel.L && (lastLvol != -vol)) {
-                comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.LEFT, vol);
-                lastChannel = "LEFT";
-                lastLvol = -vol;
-            }
-            if (channel == Channel.R && (lastRvol != -vol)) {
-                comm.getAfAmplifier().setVolume(org.sq5nry.plaszczka.backend.api.audio.Channel.RIGHT, vol);
-                lastChannel = "RIGHT";
-                lastRvol = -vol;
-            }
+        } catch(IOException e) {
+            logger.warn(e);
         }
     }
 
@@ -481,21 +519,25 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
             case "I/Q stereo": r = "IQ_STEREO"; break;
             case "I/Q off": r = "IQ_OFF"; break;
         }
-        comm.sendRequest(BackendCommunicator.AUDIO_INPUT + r);
+        try {
+            comm.getAfAmplifier().setInput(InputSelector.valueOf(r));
+        } catch (IOException e) {
+            logger.warn(e);
+        }
     }
 
     @FXML
-    private void audioOutChanged(ActionEvent event) {
+    private void audioOutChanged(ActionEvent event) throws IOException {
         logger.debug("audioOutChanged: " + event);
         setAudioOut();
     }
 
-    private void setAudioOut() {
+    private void setAudioOut() throws IOException {
         StringBuffer buf = new StringBuffer("_");
         if (audio_out_headphones.isSelected()) buf.append("head_");
         if (audio_out_rec.isSelected()) buf.append("rec_");
         if (audio_out_speaker.isSelected()) buf.append("speaker_");
-        comm.sendRequest(BackendCommunicator.AUDIO_OUTPUT + buf.toString());
+        comm.getAfAmplifier().setOutputAmplifier(new OutputAmplifier(buf.toString()));
     }
 
     /*
@@ -508,16 +550,24 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML private ComboBox mix_roof;
 
     public static final DecimalFormat DEC_FORMAT_1_2DIG = new DecimalFormat("#.00");
-    private void setMixerSquarer() throws Exception {
+    private void setMixerSquarer() {
         float fill = (float) mix_squarer.getValue();
-        comm.gethModeMixer().setSquarerThreshold(fill);
-        mix_squarer_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(fill) + "%");
+        try {
+            comm.gethModeMixer().setSquarerThreshold(fill);
+            mix_squarer_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(fill) + "%");
+        } catch (IOException e) {
+            logger.warn(e);
+        }
     }
 
-    private void setMixerBias() throws Exception {
+    private void setMixerBias() {
         float bias = (float) mix_bias.getValue();
-        comm.gethModeMixer().setBiasPoint(bias);
-        mix_bias_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(bias) + "V");
+        try {
+            comm.gethModeMixer().setBiasPoint(bias);
+            mix_bias_disp.textProperty().setValue(DEC_FORMAT_2DIG.format(bias) + "V");
+        } catch (IOException e) {
+            logger.warn(e);
+        }
     }
 
     @FXML
@@ -529,7 +579,12 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     private void setMixRoofing() {
         String roof = (String) mix_roof.getValue();
         logger.debug("mixRoofingChanged: set to " + roof);
-        debounceWithBackendReq(BackendCommunicator.MIXER_ROOFING + roof);
+        //debounceWithBackendReq(BackendCommunicator.MIXER_ROOFING + roof);
+        try {
+            comm.gethModeMixer().setRoofingFilter(Mode.valueOf(roof));  //TODO debounce
+        } catch (IOException e) {
+            logger.warn(e);
+        }
     }
 
     /*
@@ -540,28 +595,37 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
 
     private int prevAtt = 0;
     private void setAttenuation() {
-        int att = (int) att_reg.getValue();
-        att -= att % 2; //adjust to 2dB step
-        if (att != prevAtt) {
-            int finalAtt = att;
-            debounceWithBackendReq(BackendCommunicator.ATT + finalAtt);
+        try {
+            int att = (int) att_reg.getValue();
+            att -= att % 2; //adjust to 2dB step
+            if (att != prevAtt) {
+                int finalAtt = att;
+                //debounceWithBackendReq(BackendCommunicator.ATT + finalAtt);
+                comm.getAttenuator().setAttenuation(finalAtt);  //TODO debounce
+            }
+            prevAtt = att;
+            att_disp.textProperty().setValue(att + "dB");
+        } catch (IOException e) {
+        logger.warn(e);
         }
-        prevAtt = att;
-        att_disp.textProperty().setValue(att + "dB");
     }
 
     private void debounceWithBackendReq(String cmd) {
         Platform.runLater(() -> {
-            comm.sendRequest(BackendCommunicator.AUDIO_MUTELOUD + "SLOW_SOFT_MUTE");
-            comm.sendRequest(BackendCommunicator.IFAMP_MUTE + "1");
-            comm.sendRequest(cmd);
             try {
-                Thread.currentThread().sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                comm.getAfAmplifier().setMuteLoudness(MuteAndLoudness.SLOW_SOFT_MUTE);
+                comm.getIfAmp().setMute(true);
+                comm.sendRequest(cmd);
+                try {
+                    Thread.currentThread().sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                comm.getIfAmp().setMute(false);
+                comm.getAfAmplifier().setMuteLoudness(MuteAndLoudness.SOFT_MUTE_OFF);
+            } catch (IOException e) {
+                logger.warn(e);
             }
-            comm.sendRequest(BackendCommunicator.IFAMP_MUTE + "0");
-            comm.sendRequest(BackendCommunicator.AUDIO_MUTELOUD + "SOFT_MUTE_OFF");
         });
     }
 
@@ -571,10 +635,10 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
      * BFP
      */
     @FXML
-    private void bpfBandChanged(ActionEvent event) {
+    private void bpfBandChanged(ActionEvent event) throws IOException {
         logger.debug("bpfBandChanged: " + event);
         String band = ((RadioButton) event.getSource()).getId().substring(4);
-        debounceWithBackendReq(BackendCommunicator.BAND + band);
+        comm.getBandPassFilter().setBand(Band.valueOf(band));
         if (band.equals("6m")) {
             MHz = "50";
             freq_slider_khz.setMajorTickUnit(25);
@@ -652,19 +716,19 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
     @FXML private ComboBox selectivity;
 
     @FXML
-    private void selectivityChanged(ActionEvent event) {
+    private void selectivityChanged(ActionEvent event) throws IOException {
         logger.debug("selectivityChanged: " + event);
         setSelectivity();
     }
 
-    private void setSelectivity() {
+    private void setSelectivity() throws IOException {
         String value = (String) selectivity.getValue();
         if ("None".equals(value)) {
-            debounceWithBackendReq(BackendCommunicator.SELECTIVITY_BW + "0");
+            comm.getSelectivity().setFilter(Bandwidth.DISABLED);
         } else if ("Bypass".equals(value)) {
-            debounceWithBackendReq(BackendCommunicator.SELECTIVITY_BYPASS);
+            comm.getSelectivity().setFilter(Bandwidth.ALL_BAND);
         } else {
-            debounceWithBackendReq(BackendCommunicator.SELECTIVITY_BW + value);
+            comm.getSelectivity().setFilter(Bandwidth.valueOf(value));
         }
     }
 
@@ -686,7 +750,7 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         setDetectorMode();
     }
 
-    private void setDetectorMode() throws Exception {
+    private void setDetectorMode() throws IOException {
         comm.getDetector().setRoofingFilter(Mode.valueOf(det_mode.getValue().toString()));
     }
 
@@ -755,5 +819,11 @@ public class Controller implements Initializable, MessageHandler.Whole<String> {
         } else {
             label.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
         }
+    }
+
+    public String handleException(IOException e) {
+        //TODO reflect on gui?
+        logger.warn("exception while executing a backend request", e);
+        return "xxx";   //TODO
     }
 }

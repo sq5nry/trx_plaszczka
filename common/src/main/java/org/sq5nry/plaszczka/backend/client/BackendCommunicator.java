@@ -1,6 +1,5 @@
 package org.sq5nry.plaszczka.backend.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -11,6 +10,7 @@ import org.sq5nry.plaszczka.backend.api.audio.*;
 import org.sq5nry.plaszczka.backend.api.detector.Detector;
 import org.sq5nry.plaszczka.backend.api.display.FrequencyDisplay;
 import org.sq5nry.plaszczka.backend.api.inputfilter.Attenuator;
+import org.sq5nry.plaszczka.backend.api.inputfilter.BandPassFilter;
 import org.sq5nry.plaszczka.backend.api.mgmt.ReceiverCtrl;
 import org.sq5nry.plaszczka.backend.api.mixer.HModeMixer;
 import org.sq5nry.plaszczka.backend.api.selectivity.Selectivity;
@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import static org.apache.http.protocol.HTTP.USER_AGENT;
 
-public class BackendCommunicator implements RequestSender {
+public class BackendCommunicator implements RequestSender, ExceptionHandler {
     private static final Logger logger = Logger.getLogger(BackendCommunicator.class);
 
     public static final String BACKEND_HOST_LOCAL = "127.0.0.1";
@@ -44,6 +44,8 @@ public class BackendCommunicator implements RequestSender {
     private Synthesizer synthesizer;
     private IfAmp ifAmp;
     private ReceiverCtrl receiverCtrl;
+    private ExceptionHandler exceptionHandler;
+    private BandPassFilter inputBPFComminicator;
 
     private String rootUrl;
 
@@ -58,10 +60,16 @@ public class BackendCommunicator implements RequestSender {
         selectivity = new SelectivityCommunicator(this);
         synthesizer = new SynthesizerCommunicator(this);
         ifAmp = new IfAmpCommunicator(this);
+        inputBPFComminicator = new InputBPFComminicator(this);
+        exceptionHandler = this;
     }
 
     public BackendCommunicator(String host, int port) {
         this("http://" + host + ":" + port);
+    }
+
+    public void setExceptionHandler(ExceptionHandler exceptionHandler) {
+        this.exceptionHandler = exceptionHandler;
     }
 
     @Override
@@ -70,7 +78,7 @@ public class BackendCommunicator implements RequestSender {
     }
 
     @Override
-    public String sendRequest(String path) throws IOException {
+    public String sendRequest(String path){
         logger.debug("sendRequest: " + path);
 
         RequestConfig requestConfig = RequestConfig.custom()
@@ -91,7 +99,16 @@ public class BackendCommunicator implements RequestSender {
             return "";
         }
         logger.debug("response code: " + response.getStatusLine().getStatusCode());
-        return response.getEntity().getContent().readAllBytes().toString();
+        try {
+            return response.getEntity().getContent().readAllBytes().toString();
+        } catch (IOException e) {
+            return exceptionHandler.handleException(e);
+        }
+    }
+
+    public String handleException(IOException e) {
+        logger.warn("exception while executing a backend request", e);
+        return e.getLocalizedMessage();
     }
 
     public Detector getDetector() {
@@ -124,6 +141,10 @@ public class BackendCommunicator implements RequestSender {
 
     public IfAmp getIfAmp() {
         return ifAmp;
+    }
+
+    public BandPassFilter getBandPassFilter() {
+        return inputBPFComminicator;
     }
 
     public ReceiverCtrl getReceiverCtrl() {

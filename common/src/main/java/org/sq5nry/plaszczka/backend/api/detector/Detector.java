@@ -2,6 +2,8 @@ package org.sq5nry.plaszczka.backend.api.detector;
 
 import org.sq5nry.plaszczka.backend.api.Mode;
 
+import java.io.IOException;
+
 public interface Detector {
     String ROOT = "/detector";
     String RESOURCE_PATH_ROOFING = ROOT + "/mode/{mode}";
@@ -11,11 +13,11 @@ public interface Detector {
      * Pre-detector roofing filter.
      * @param mode
      */
-    void setRoofingFilter(Mode mode) throws Exception;
+    void setRoofingFilter(Mode mode) throws IOException;
 
     /**
      * Enable main QSD.
      * @param enabled
      */
-    void setEnabled(boolean enabled) throws Exception;
+    void setEnabled(boolean enabled) throws IOException;
 }
