@@ -12,12 +12,12 @@ public class FrequencyDisplayCommunicator extends BaseCommunicator implements Fr
 
     @Override
     public void setFrequency(int freq) {
-        requestSender.sendRequest(FrequencyDisplayCommunicator.RESOURCE_PATH_SET_FREQUENCY.replace("{freq}", Float.toString(freq)));
+        requestSender.sendRequest(FrequencyDisplayCommunicator.RESOURCE_PATH_SET_FREQUENCY.replace("{freq}", "" + freq));
     }
 
     @Override
     public void setMarker(int position) {
-        requestSender.sendRequest(FrequencyDisplayCommunicator.RESOURCE_PATH_SET_MARKER.replace("{position}", Integer.toString(position)));
+        requestSender.sendRequest(FrequencyDisplayCommunicator.RESOURCE_PATH_SET_MARKER.replace("{position}", "" + position));
     }
 
     @Override
