@@ -1,10 +1,15 @@
 package org.sq5nry.plaszczka.backend.client;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.sq5nry.plaszczka.backend.api.audio.*;
 import org.sq5nry.plaszczka.backend.api.detector.Detector;
@@ -19,6 +24,8 @@ import org.sq5nry.plaszczka.backend.api.vga.IfAmp;
 import org.sq5nry.plaszczka.backend.client.communicators.*;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
 
 import static org.apache.http.protocol.HTTP.USER_AGENT;
 
@@ -99,8 +106,12 @@ public class BackendCommunicator implements RequestSender, ExceptionHandler {
             return "";
         }
         logger.debug("response code: " + response.getStatusLine().getStatusCode());
+        final HttpEntity entity = response.getEntity();
+        final ContentType ct = ContentType.getOrDefault(entity);
+        final StringWriter writer = new StringWriter();
         try {
-            return response.getEntity().getContent().readAllBytes().toString();
+            IOUtils.copy(entity.getContent(), writer, ct.getCharset());
+            return writer.toString();
         } catch (IOException e) {
             return exceptionHandler.handleException(e);
         }
